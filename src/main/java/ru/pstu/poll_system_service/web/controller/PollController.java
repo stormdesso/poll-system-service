@@ -2,10 +2,10 @@ package ru.pstu.poll_system_service.web.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
+import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.entity.Page;
 import ru.pstu.poll_system_service.web.dto.MessageDto;
 import ru.pstu.poll_system_service.web.dto.PollAnswerDto;
@@ -16,19 +16,22 @@ import java.util.List;
 
 @RequestMapping("/poll")
 @Controller
+@RequiredArgsConstructor
 public class PollController{
+
+    private final PollService pollService;
 
     @Operation(description = "Получить отфильтрованный список опросов")
     @ResponseBody
     @GetMapping("/filtered_list")
     public Page<PollDto> getFilteredPolls(
-            @Parameter(description = "Название поля по которому будет осуществляться сортировка")
+            @Parameter(description = "Название поля по которому будет осуществляться сортировка(asc - default, desc -fieldName)")
             @RequestParam(required = false) String sort,
             @Parameter(description = "Количество результатов на странице")
-            @RequestParam(required = false) Integer limit,
-            @Parameter(description = "Номер страницы с результатом") @RequestParam(required = false) Integer page
+            @RequestParam(required = false) Long limit,
+            @Parameter(description = "Номер страницы с результатом") @RequestParam(required = false) Long page
     ){
-        return new Page<>(); //todo: mock
+        return pollService.getFilteredPolls(sort, limit, page);
     }
 
     @Operation(description = "Получить список сообщений в чате опроса")
