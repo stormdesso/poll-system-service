@@ -5,13 +5,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.pstu.poll_system_service.data.service.MessageService;
 import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.entity.Page;
 import ru.pstu.poll_system_service.web.dto.MessageDto;
-import ru.pstu.poll_system_service.web.dto.PollValueDto;
 import ru.pstu.poll_system_service.web.dto.PollDto;
+import ru.pstu.poll_system_service.web.dto.PollValueDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequestMapping("/poll")
@@ -20,6 +20,8 @@ import java.util.List;
 public class PollController{
 
     private final PollService pollService;
+    private final MessageService messageService;
+
 
     @Operation(description = "Получить отфильтрованный список опросов")
     @ResponseBody
@@ -41,7 +43,7 @@ public class PollController{
             @Parameter(description = "Идентификатор опроса")
             @RequestParam(required = true) Long pollId
     ){
-        return new ArrayList<>(); //todo: mock
+        return messageService.getMessages(pollId);
     }
 
     @Operation(description = "Отправить сообщение в чате опроса")
