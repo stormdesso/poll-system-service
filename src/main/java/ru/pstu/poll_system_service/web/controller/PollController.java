@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.entity.Page;
 import ru.pstu.poll_system_service.web.dto.MessageDto;
-import ru.pstu.poll_system_service.web.dto.PollAnswerDto;
+import ru.pstu.poll_system_service.web.dto.PollValueDto;
 import ru.pstu.poll_system_service.web.dto.PollDto;
 
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class PollController{
             @Parameter(description = "Идентификатор опроса")
             @RequestParam(required = true) Long pollId,
             @Parameter(description = "Вариант опроса")
-            @RequestBody(required = true) PollAnswerDto pollAnswerDto
+            @RequestBody(required = true) PollValueDto pollAnswerDto
     ){
         //todo: mock
     }

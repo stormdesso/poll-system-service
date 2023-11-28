@@ -3,7 +3,7 @@ package ru.pstu.poll_system_service.data.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
-import ru.pstu.poll_system_service.data.entity.Poll;
+import ru.pstu.poll_system_service.data.model.Poll;
 
 @Repository
 public interface PollRepository extends JpaRepository<Poll, Long> , JpaSpecificationExecutor<Poll>{

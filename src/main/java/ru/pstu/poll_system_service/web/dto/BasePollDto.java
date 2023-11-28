@@ -14,9 +14,12 @@ public abstract class BasePollDto{
     @Schema(description = "Название опроса")
     private String name;
 
+    @Schema(description = "Дата начала проведения")
     private Date startDate;
+    @Schema(description = "Дата окончания")
     private Date endDate;
 
+    @Schema(description = "Статус")
     private String status;
 
     @Schema(description = "Число проголосовавших в опросе")

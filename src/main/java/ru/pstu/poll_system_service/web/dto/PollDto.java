@@ -1,6 +1,7 @@
 package ru.pstu.poll_system_service.web.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,8 +16,12 @@ import java.util.List;
 @Schema(description = "Опрос")
 public class PollDto extends BasePollDto{
 
+    @Schema(description = "Описание")
     private String description;
 
-    private boolean userIsVoted;
-    private List<PollAnswerDto> pollAnswerDto;
+    @Schema(description = "Признак проголосовал ли пользователь, который запрашивал опрос")
+    private boolean userIsVoted; //todo: как прикручу Security, промаппить поле
+
+    @Schema(description = "Варианты ответов")
+    private List<PollValueDto> pollValues;
 }

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.pstu.poll_system_service.data.entity.Poll;
+import ru.pstu.poll_system_service.data.model.Poll;
 import ru.pstu.poll_system_service.data.mapper.PollMapper;
 import ru.pstu.poll_system_service.data.repository.PollRepository;
 import ru.pstu.poll_system_service.data.utils.FilterUtil;
@@ -21,8 +21,9 @@ public class PollServiceImpl implements PollService{
 
     public Page<PollDto> getFilteredPolls(String sortingField, Long limit, Long page) {
 
-        String sortDirection = FilterUtil.getSortDirection(sortingField);
+        String sortDirection = FilterUtil.getSortDirection(sortingField);   //  todo: переделать на класс PollFilter
         sortingField = FilterUtil.formatSortingField(sortingField);
+
 
         Pageable pageable = PageRequest.of( page.intValue(), limit.intValue(), getSort(sortingField, sortDirection) );
 

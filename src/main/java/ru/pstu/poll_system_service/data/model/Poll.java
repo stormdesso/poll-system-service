@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.data.entity;
+package ru.pstu.poll_system_service.data.model;
 
 import lombok.Data;
 import org.hibernate.annotations.Formula;
@@ -6,6 +6,7 @@ import ru.pstu.poll_system_service.data.enums.StatusEnum;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "poll", schema = "public")
@@ -57,6 +58,6 @@ public class Poll{
             "WHERE upfu.poll_id = id AND upfu.user_id = aa.user_id))")
     private Long maxNumberVoted;
 
-
-    //  todo: варианты ответа в формате OneToMany
+    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, targetEntity = PollValue.class, fetch = FetchType.EAGER)
+    private List<PollValue> pollValues;
 }

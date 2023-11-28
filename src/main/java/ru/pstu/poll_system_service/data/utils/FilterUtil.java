@@ -1,5 +1,7 @@
 package ru.pstu.poll_system_service.data.utils;
 
+import org.springframework.util.StringUtils;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +37,13 @@ public class FilterUtil{
     public static void validateFields(String sortingField ,List<String> fields){
         if(!fields.contains(sortingField)){
             throw new IllegalArgumentException();
+        }
+    }
+
+    //  todo:для валидации
+    public static void validateParameters(String fieldName, Long limit, Long page){
+        if(!StringUtils.hasText(fieldName)){
+
         }
     }
 
