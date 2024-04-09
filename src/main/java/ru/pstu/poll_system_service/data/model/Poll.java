@@ -4,7 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.Formula;
 import ru.pstu.poll_system_service.data.enums.StatusEnum;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 

@@ -1,19 +1,32 @@
 server:
+  tomcat.threads.max: 200
   port: 8080
 
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-
 spring:
+  application:
+    name: "@project.name@"
+    description: "@project.description@"
+    version: "@project.version@"
+
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/polls_system_db?currentSchema=public
     username: admin
     password: admin
+    hikari:
+      connectionTimeout: 60000
+      idleTimeout: 60000
+      maxLifetime: 300000
+      minimumIdle: 5
+      maximumPoolSize: 10
+  sql.init.encoding: UTF-8
 
   jpa:
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+logging:
+  level:
+    ru.pstu.poll_system_service: debug

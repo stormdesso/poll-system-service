@@ -3,7 +3,7 @@ package ru.pstu.poll_system_service.data.model;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity

@@ -11,10 +11,11 @@ import ru.pstu.poll_system_service.web.common.entity.Page;
 import ru.pstu.poll_system_service.web.dto.MessageDto;
 import ru.pstu.poll_system_service.web.dto.PollDto;
 import ru.pstu.poll_system_service.web.dto.PollValueDto;
+import ru.pstu.poll_system_service.web.filter.PollFilter;
 
 import java.util.List;
 
-@RequestMapping("/poll")
+@RequestMapping("/api/v1/poll")
 @Controller
 @RequiredArgsConstructor
 public class PollController{
@@ -33,7 +34,7 @@ public class PollController{
             @RequestParam(required = false) Long limit,
             @Parameter(description = "Номер страницы с результатом") @RequestParam(required = false) Long page
     ){
-        return pollService.getFilteredPolls(sort, limit, page);
+        return pollService.getFilteredPolls(new PollFilter(sort, limit, page));
     }
 
     @Operation(description = "Получить список сообщений в чате опроса")

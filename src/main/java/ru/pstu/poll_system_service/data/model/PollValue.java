@@ -3,7 +3,7 @@ package ru.pstu.poll_system_service.data.model;
 import lombok.Data;
 import org.hibernate.annotations.Formula;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "poll_value", schema = "public")
