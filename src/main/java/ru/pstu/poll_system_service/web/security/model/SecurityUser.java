@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.web.security;
+package ru.pstu.poll_system_service.web.security.model;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;

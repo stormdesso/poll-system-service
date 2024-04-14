@@ -1,68 +1,71 @@
 package ru.pstu.poll_system_service.web.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.pstu.poll_system_service.web.jwt.AuthProvider;
-import ru.pstu.poll_system_service.web.jwt.JWTLoginFilter;
-
-import java.util.Collections;
+import ru.pstu.poll_system_service.business.aspect.SecurityPermissionEvaluator;
+import ru.pstu.poll_system_service.data.service.UserService;
+import ru.pstu.poll_system_service.web.security.jwt.JwtAuthenticationFilter;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 
-@EnableWebSecurity
 @Configuration
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig{
 
-    private AuthenticationProvider authenticationProvider;
-    private static final String LOGIN_URL = "/login";
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final UserService userService;
+    private static final String AUTH_URL = "/api/v1/auth/**";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement(httpSecuritySessionManagementConfigurer ->
-                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(auth -> auth
+        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> request
                         .requestMatchers(GET, getSwaggerPatterns()).permitAll()
-                        .requestMatchers(POST, LOGIN_URL).permitAll()
+                        .requestMatchers(POST, AUTH_URL).permitAll()
                         .anyRequest().authenticated())
-                .addFilterBefore(new JWTLoginFilter(LOGIN_URL, authenticationManager()),
-                        UsernamePasswordAuthenticationFilter.class);
+                .sessionManagement( manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
+
     @Bean
-    public ProviderManager authenticationManager() {
-        return new ProviderManager(Collections.singletonList(authenticationProvider));
+    public SecurityPermissionEvaluator securityPermissionEvaluator() {
+        return new SecurityPermissionEvaluator();
     }
 
-    @Lazy
-    @Autowired
-    @Qualifier("AuthProvider")
-    public void setAuthenticationProvider(AuthenticationProvider authenticationProvider) {
-        this.authenticationProvider = authenticationProvider;
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new StandardPasswordEncoder();// SHA-256
     }
 
-    @Bean("AuthProvider")
-    public AuthProvider authenticationProvider(UserDetailsService userDetailsService) {
-        var provider = new AuthProvider();
-        provider.setUserDetailsService(userDetailsService);
-        return provider;
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userService.userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
 
     private static String[] getSwaggerPatterns() {
         return new String[] {

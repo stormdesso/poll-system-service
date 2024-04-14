@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.pstu.poll_system_service.business.aspect.HasPermission;
 import ru.pstu.poll_system_service.data.service.MessageService;
 import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.entity.Page;
@@ -14,6 +15,9 @@ import ru.pstu.poll_system_service.web.dto.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
 import java.util.List;
+
+import static ru.pstu.poll_system_service.web.security.constant.SystemObjectConstants.POLL;
+import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.READ;
 
 @RequestMapping("/api/v1/poll")
 @Controller
@@ -25,6 +29,7 @@ public class PollController{
 
 
     @Operation(description = "Получить отфильтрованный список опросов")
+    @HasPermission(resource = POLL, action = READ)
     @ResponseBody
     @GetMapping("/filtered_list")
     public Page<PollDto> getFilteredPolls(

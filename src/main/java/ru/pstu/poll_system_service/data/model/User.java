@@ -35,9 +35,9 @@ public class User{
     @Column(name = "email")
     String email;
 
-    @Column(name = "isBlocked")
+    @Column(name = "is_blocked")
     boolean isBlocked;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Role.class)
-    List<Long> role;
+    List<Role> role;
 }

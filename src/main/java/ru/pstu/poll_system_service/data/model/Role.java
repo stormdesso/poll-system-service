@@ -1,10 +1,9 @@
 package ru.pstu.poll_system_service.data.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @Entity
@@ -15,4 +14,7 @@ public class Role{
 
     @Column(name = "role_name")
     String roleName;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Privilege.class)
+    List<Privilege> privilege;
 }
