@@ -1,16 +1,21 @@
 package ru.pstu.poll_system_service.data.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import ru.pstu.poll_system_service.data.model.Poll;
 import ru.pstu.poll_system_service.data.mapper.PollMapper;
+import ru.pstu.poll_system_service.data.model.Poll;
+import ru.pstu.poll_system_service.data.model.UserAnswer;
 import ru.pstu.poll_system_service.data.repository.PollRepository;
+import ru.pstu.poll_system_service.data.repository.UserAnswerRepository;
+import ru.pstu.poll_system_service.web.common.UserDetailsUtil;
 import ru.pstu.poll_system_service.web.common.entity.Page;
-import ru.pstu.poll_system_service.web.dto.PollDto;
+import ru.pstu.poll_system_service.web.dto.poll.PollDto;
+import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
 @Service
@@ -18,6 +23,7 @@ import ru.pstu.poll_system_service.web.filter.PollFilter;
 public class PollServiceImpl implements PollService{
 
     private final PollRepository pollRepository;
+    private final UserAnswerRepository userAnswerRepository;
 
 //    public Page<PollDto> getFilteredPolls(String sortingField, Long limit, Long page) {
 //
@@ -51,5 +57,45 @@ public class PollServiceImpl implements PollService{
             return Sort.by(Sort.Direction.fromString(sortOrder), sortingField);
         }
         return Sort.unsorted();
+    }
+
+    @Override
+    @Transactional
+    public void vote(Long pollId,PollValueDto pollValueDto){
+
+        // todo: может ли челик голосовать в этом опросе (не скрыт ли опрос, доступен ли он ему по адресу)
+        // todo: проверить имеющуюся систему голосования
+
+        Long userId =  UserDetailsUtil.getCurrentUserIdFromContext();
+
+        var poll = pollRepository.findById(pollId).orElseThrow(()
+                -> new IllegalArgumentException("Опрос не существует!"));
+
+        //проверяем существует ли такой вариант ответа у опроса
+        poll.getPollValues().stream()
+                .filter( pollValue -> pollValueDto.getId().equals(pollValue.getId()) )
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Вариант ответа не существует!"));
+
+        var votes = userAnswerRepository.getNumberOfVotesByUser(userId, pollId);
+        if (poll.getMaxNumberAnswersByUser() <= votes){
+            throw new IllegalArgumentException(
+                    "Максимальное число вариантов ответа для пользователя, " +
+                            "за которые он может проголосовать в данном опросе: " + poll.getMaxNumberAnswersByUser() +
+                            " текущее число голосов: " + votes
+            );
+        }
+
+        if (!userAnswerRepository.existsByUserIdEqualsAndPollValueIdEquals(userId, pollValueDto.getId()))
+        {
+            throw new IllegalArgumentException("Нельзя проголосовать за один вариант ответа более 1 раза!");
+        }
+
+        userAnswerRepository.save(
+                UserAnswer.builder()
+                        .userId(userId)
+                        .pollValueId(pollValueDto.getId())
+                        .build()
+        );
     }
 }

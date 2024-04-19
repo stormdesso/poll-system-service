@@ -10,8 +10,8 @@ import ru.pstu.poll_system_service.data.service.MessageService;
 import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.entity.Page;
 import ru.pstu.poll_system_service.web.dto.MessageDto;
-import ru.pstu.poll_system_service.web.dto.PollDto;
-import ru.pstu.poll_system_service.web.dto.PollValueDto;
+import ru.pstu.poll_system_service.web.dto.poll.PollDto;
+import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
 import java.util.List;
@@ -68,11 +68,9 @@ public class PollController{
     @ResponseBody
     @PostMapping("/vote")
     public void vote(
-            @Parameter(description = "Идентификатор опроса")
-            @RequestParam(required = true) Long pollId,
-            @Parameter(description = "Вариант опроса")
-            @RequestBody(required = true) PollValueDto pollAnswerDto
+            @Parameter(description = "Идентификатор опроса") @RequestParam(required = true) Long pollId,
+            @Parameter(description = "Вариант опроса") @RequestBody(required = true) PollValueDto pollValueDto
     ){
-        //todo: mock
+        pollService.vote(pollId, pollValueDto);
     }
 }

@@ -1,10 +1,10 @@
-package ru.pstu.poll_system_service.web.dto;
+package ru.pstu.poll_system_service.web.dto.poll;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 /**
- * Вариант опроса
+ Вариант опроса
  * */
 @Data
 @Schema(description = "Вариант ответа опроса")

@@ -1,10 +1,10 @@
 package ru.pstu.poll_system_service.data.model;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Formula;
 import ru.pstu.poll_system_service.data.enums.StatusEnum;
 
-import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 
@@ -43,9 +43,6 @@ public class Poll{
     @Column(name = "status", nullable = false)
     private StatusEnum status;
 
-    @Column(name = "number_votes", nullable = false)
-    private Long numberVotes;
-
     @Column(name = "description", nullable = false, length = 1000)
     private String description;
 
@@ -60,4 +57,14 @@ public class Poll{
 
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, targetEntity = PollValue.class, fetch = FetchType.EAGER)
     private List<PollValue> pollValues;
+
+    @Column(name = "max_number_answers_by_user")
+    private Long maxNumberAnswersByUser;
+
+    /**
+    Возвращает число проголосовавших в опросе
+    * */
+    public Long getNumberVotes(){
+        return getPollValues().stream().mapToLong(PollValue::getVotes).sum();
+    }
 }
