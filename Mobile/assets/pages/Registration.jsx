@@ -68,7 +68,7 @@ export const Registration = ({ navigation }) => {
 
   return (
     <SafeAreaView style={AuthPageStyle.container}>
-      <ScrollView style={AuthPageStyle.scrollView}>
+      <ScrollView contentContainerStyle={AuthPageStyle.scrollView}>
         <View style={AuthPageStyle.inputBlock}>
           <InputDataBlock
             label="ФИО"

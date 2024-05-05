@@ -1,4 +1,6 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Platform } from "react-native";
+import { View, TextInput, Button, Text } from "react-native";
 
-export default function PollPage() {}
+export const PollPage = () => {
+  return <Text>Опросы</Text>;
+};

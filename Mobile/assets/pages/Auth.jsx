@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextInput,
   SafeAreaView,
@@ -28,11 +28,26 @@ export const Auth = ({ navigation }) => {
   const [getErrorText, setErrorText] = useState("");
 
   const validationData = () => {
-    [errorStatus, errorText] = validationDataInAuth(
+    const [statusError, textError] = validationDataInAuth(
       loginInputValue,
       passwordInputValue
     );
+    Object.keys(statusError).forEach((key) => {
+      setErrorStatus((prevError) => ({
+        ...prevError,
+        [key]: statusError[key],
+      }));
+    });
+    setErrorText(textError);
   };
+
+  useEffect(() => {
+    // Проверяем, был ли сделан ввод данных и была ли выполнена валидация
+    if (getErrorText === "true") {
+      console.log(getErrorText);
+      navigation.navigate("PollPage");
+    }
+  }, [getErrorText]);
 
   return (
     <SafeAreaView style={AuthPageStyle.container}>
@@ -56,12 +71,18 @@ export const Auth = ({ navigation }) => {
       </View>
 
       <View style={AuthPageStyle.buttonBlock}>
-        <Button label="Войти" onPress={() => validationData()} />
+        <Button
+          label="Войти"
+          onPress={() => {
+            validationData();
+          }}
+        />
         <Button
           label="Зарегистрироваться"
           onPress={() => navigation.navigate("Registration")}
         />
       </View>
+      <Text>{getErrorText}</Text>
     </SafeAreaView>
   );
 };

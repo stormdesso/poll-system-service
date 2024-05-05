@@ -11,13 +11,19 @@ export const AuthPageStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "whitesmoke",
-    justifyContent: "center",
     padding: 16,
+    justifyContent: "center",
+  },
+
+  scrollView: {
+    justifyContent: "center",
+    flex: 1,
   },
 
   //Стиль блока с текстовыми полями
   inputBlock: {
     alignItems: "center",
+    justifyContent: "center",
   },
 
   //Стиль блока с текстовым полем и наименованием поля
@@ -95,12 +101,5 @@ export const AuthPageStyle = StyleSheet.create({
   errorTextInput: {
     borderColor: "red", // Красная рамка
     borderWidth: 1,
-  },
-
-  //Скроллер
-  scrollContent: {
-    backgroundColor: "pink",
-    flexGrow: 1,
-    zIndex: 999,
   },
 });
