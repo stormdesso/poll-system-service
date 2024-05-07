@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react";
-import {
-  TextInput,
-  SafeAreaView,
-  View,
-  Pressable,
-  Text,
-  Image,
-} from "react-native";
-import { AuthPageStyle } from "../Style/AuthPageStyle";
-import validationDataInAuth from "../scripts/validationDataInAuth";
+import { SafeAreaView, View, Text } from "react-native";
+import { AuthAndRegistrationStyle } from "../style/AuthAndRegistrationStyle";
 
-import InputDataBlock from "../elements/InputDataBlock";
-import InputPasswordBlock from "../elements/InputPasswordBlock";
-import Button from "../elements/Button";
+import validationDataInAuth from "../../scripts/validationDataInAuth";
+import GetToken from "../../APIConnection/GetToken";
+
+import Input from "../../elements/simpleElements/Input";
+import InputPassword from "../../elements/simpleElements/InputPassword";
+import Button from "../../elements/simpleElements/Button";
 
 export const Auth = ({ navigation }) => {
   //Поле для хранения введенного логина
@@ -27,8 +22,10 @@ export const Auth = ({ navigation }) => {
 
   const [getErrorText, setErrorText] = useState("");
 
-  const validationData = () => {
-    const [statusError, textError] = validationDataInAuth(
+  const [getAuthSucsess, setAuthSucsess] = useState(false);
+
+  const validationData = async () => {
+    const [statusError, textError, success] = validationDataInAuth(
       loginInputValue,
       passwordInputValue
     );
@@ -39,21 +36,33 @@ export const Auth = ({ navigation }) => {
       }));
     });
     setErrorText(textError);
+    setAuthSucsess(success);
+    // GetPollList()
+    // if (success) {
+    //   const result = await GetToken(loginInputValue, passwordInputValue);
+    //   if (result.success) {
+    //     // Аутентификация прошла успешно, можно перейти на следующий экран или выполнить другие действия
+    //     setAuthSucsess(result.success);
+    //   } else {
+    //     setErrorText(result.error);
+    //     setAuthSucsess(result.success);
+    //   }
+    // }
   };
 
   useEffect(() => {
     // Проверяем, был ли сделан ввод данных и была ли выполнена валидация
-    if (getErrorText === "true") {
-      console.log(getErrorText);
-      navigation.navigate("PollPage");
+    if (getAuthSucsess === true) {
+      console.log(getAuthSucsess);
+      navigation.navigate("UserPage");
     }
-  }, [getErrorText]);
+  }, [getAuthSucsess]);
 
   return (
-    <SafeAreaView style={AuthPageStyle.container}>
-      <Text style={AuthPageStyle.labelInputText}>Авторизация</Text>
-      <View style={AuthPageStyle.inputBlock}>
-        <InputDataBlock
+    <SafeAreaView style={AuthAndRegistrationStyle.container}>
+      <Text style={AuthAndRegistrationStyle.labelInputText}>Авторизация</Text>
+      <View style={AuthAndRegistrationStyle.inputBlock}>
+        <Input
           label="Логин"
           value={loginInputValue}
           error={getErrorStatus.login}
@@ -61,7 +70,7 @@ export const Auth = ({ navigation }) => {
           keyboardType="default"
         />
 
-        <InputPasswordBlock
+        <InputPassword
           label="Пароль"
           value={passwordInputValue}
           error={getErrorStatus.password}
@@ -70,7 +79,7 @@ export const Auth = ({ navigation }) => {
         />
       </View>
 
-      <View style={AuthPageStyle.buttonBlock}>
+      <View style={AuthAndRegistrationStyle.buttonBlock}>
         <Button
           label="Войти"
           onPress={() => {

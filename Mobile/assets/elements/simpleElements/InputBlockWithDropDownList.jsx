@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { TextInput, View, Text, TouchableOpacity } from "react-native";
 
-import { AuthPageStyle } from "../Style/AuthPageStyle";
-import AddressApiToRegistration from "../APIConnection/addressApiToRegistration";
+import { SimpleElementsStyle } from "../SimpleElementsStyle";
+import AddressApiToRegistration from "../../APIConnection/addressApiToRegistration";
 
-export default function InputAddressBlock({
+export default function InputWithDropDownList({
   label,
   value,
   error,
@@ -40,14 +40,14 @@ export default function InputAddressBlock({
 
   return (
     <>
-      <View style={AuthPageStyle.authTextElementBoxAddress}>
-        <Text style={AuthPageStyle.labelInputText}>{label}</Text>
+      <View style={SimpleElementsStyle.authTextElementBoxAddress}>
+        <Text style={SimpleElementsStyle.labelInputText}>{label}</Text>
         <TextInput
           placeholder={label}
           keyboardType={keyboardType}
           style={[
-            AuthPageStyle.authTextInputElement,
-            error === true ? AuthPageStyle.errorTextInput : null,
+            SimpleElementsStyle.authTextInputElement,
+            error === true ? SimpleElementsStyle.errorTextInput : null,
           ]}
           onChangeText={(text) => {
             handleChangeText(text, "address");
@@ -58,7 +58,7 @@ export default function InputAddressBlock({
         />
       </View>
       {isListOpen && addressInfo.length > 0 && (
-        <View style={AuthPageStyle.dropdown}>{renderAddressItems()}</View>
+        <View style={SimpleElementsStyle.dropdown}>{renderAddressItems()}</View>
       )}
     </>
   );

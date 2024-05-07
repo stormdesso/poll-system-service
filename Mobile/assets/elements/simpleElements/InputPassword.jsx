@@ -1,31 +1,26 @@
 import React, { useState } from "react";
 import { TextInput, View, Pressable, Text, Image } from "react-native";
 
-import { AuthPageStyle } from "../Style/AuthPageStyle";
+import { SimpleElementsStyle } from "../SimpleElementsStyle";
 
-import openEyeImage from "../img/open-eye.png";
-import closeEyeImage from "../img/close-eye.png";
+import openEyeImage from "../../Img/Icon/open-eye.png";
+import closeEyeImage from "../../Img/Icon/close-eye.png";
 
-export default function InputPasswordBlock({
-  label,
-  value,
-  error,
-  onChangeText,
-}) {
+export default function InputPassword({ label, value, error, onChangeText }) {
   const [passwordVision, setPasswordVision] = useState({
     passwordInputVision: true,
     passwordInputVisionImage: closeEyeImage,
   });
 
   return (
-    <View style={AuthPageStyle.authTextElementBox}>
-      <Text style={AuthPageStyle.labelInputText}>{label}</Text>
+    <View style={SimpleElementsStyle.authTextElementBox}>
+      <Text style={SimpleElementsStyle.labelInputText}>{label}</Text>
       <TextInput
         placeholder={label}
         secureTextEntry={passwordVision.passwordInputVision}
         style={[
-          AuthPageStyle.authTextInputElement,
-          error === true ? AuthPageStyle.errorTextInput : null,
+          SimpleElementsStyle.authTextInputElement,
+          error === true ? SimpleElementsStyle.errorTextInput : null,
         ]}
         onChangeText={onChangeText}
         value={value}

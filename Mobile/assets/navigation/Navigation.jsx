@@ -1,29 +1,23 @@
-import { Auth } from "../pages/Auth";
-import { PollPage } from "../pages/PollPage";
-import { Registration } from "../pages/Registration";
+import MainNavigation from "./MainNavigation/MainNavigation"
+import UserNavigation from "./usersTabNavigation/User/UserNavigation"
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 const Stack = createStackNavigator();
 
-export default function mainNavigation() {
+export default function Navigation() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Auth">
         <Stack.Screen
-          name="Auth"
-          component={Auth}
+          name="MainNavigation"
+          component={MainNavigation}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="PollPage"
-          component={PollPage}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Registration"
-          component={Registration}
+          name="UserNavigation"
+          component={UserNavigation}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
