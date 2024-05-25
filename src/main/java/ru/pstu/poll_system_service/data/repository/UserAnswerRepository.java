@@ -6,6 +6,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.pstu.poll_system_service.data.model.UserAnswer;
 
+/**
+ Репозиторий для ответов пользователя
+ */
+
 @Repository
 public interface UserAnswerRepository extends JpaRepository<UserAnswer, Long>{
 
