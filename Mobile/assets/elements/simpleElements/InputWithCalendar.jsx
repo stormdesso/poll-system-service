@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { TextInput, View, Text, Modal } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-import { AuthPageStyle } from "../Style/AuthPageStyle";
+import { SimpleElementsStyle } from "../SimpleElementsStyle";
 
-export default function InputDateBlock({
+export default function InputWithCalendar({
   label,
   value,
   error,
@@ -32,14 +32,14 @@ export default function InputDateBlock({
   };
 
   return (
-    <View style={AuthPageStyle.authTextElementBox}>
-      <Text style={AuthPageStyle.labelInputText}>{label}</Text>
+    <View style={SimpleElementsStyle.authTextElementBox}>
+      <Text style={SimpleElementsStyle.labelInputText}>{label}</Text>
       <TextInput
         placeholder={label}
         keyboardType={keyboardType}
         style={[
-          AuthPageStyle.authTextInputElement,
-          error === true ? AuthPageStyle.errorTextInput : null,
+          SimpleElementsStyle.authTextInputElement,
+          error === true ? SimpleElementsStyle.errorTextInput : null,
         ]}
         onFocus={showDatePicker}
         value={value}

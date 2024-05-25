@@ -1,23 +1,16 @@
 import React, { useState } from "react";
-import {
-  SafeAreaView,
-  View,
-  Pressable,
-  Text,
-  ScrollView,
-  FlatList,
-} from "react-native";
+import { SafeAreaView, View, Text, ScrollView } from "react-native";
 
-import { AuthPageStyle } from "../Style/AuthPageStyle";
+import { AuthAndRegistrationStyle } from "../style/AuthAndRegistrationStyle";
 
-import phoneNumberMask from "../scripts/phoneNumberMask";
-import validationDataInRegistration from "../scripts/validationDataInRegistration";
+import phoneNumberMask from "../../scripts/phoneNumberMask";
+import validationDataInRegistration from "../../scripts/validationDataInRegistration";
 
-import InputDataBlock from "../elements/InputDataBlock";
-import InputPasswordBlock from "../elements/InputPasswordBlock";
-import InputAddressBlock from "../elements/InputAddressBlock";
-import InputDateBlock from "../elements/InputDateBlock";
-import Button from "../elements/Button";
+import Input from "../../elements/simpleElements/Input";
+import InputPassword from "../../elements/simpleElements/InputPassword";
+import InputBlockWithDropDownList from "../../elements/simpleElements/InputBlockWithDropDownList";
+import InputWithCalendar from "../../elements/simpleElements/InputWithCalendar";
+import Button from "../../elements/simpleElements/Button";
 
 export const Registration = ({ navigation }) => {
   //Изменение текста в полях
@@ -67,10 +60,10 @@ export const Registration = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={AuthPageStyle.container}>
-      <ScrollView contentContainerStyle={AuthPageStyle.scrollView}>
-        <View style={AuthPageStyle.inputBlock}>
-          <InputDataBlock
+    <SafeAreaView style={AuthAndRegistrationStyle.container}>
+      <ScrollView contentContainerStyle={AuthAndRegistrationStyle.scrollView}>
+        <View style={AuthAndRegistrationStyle.inputBlock}>
+          <Input
             label="ФИО"
             value={inputValues.name}
             error={getErrorStatus.name}
@@ -78,7 +71,7 @@ export const Registration = ({ navigation }) => {
             keyboardType="default"
           />
 
-          <InputDateBlock
+          <InputWithCalendar
             label="Дата рождения"
             value={inputValues.dateBirth}
             error={getErrorStatus.dateBirth}
@@ -86,7 +79,7 @@ export const Registration = ({ navigation }) => {
             keyboardType="default"
           />
 
-          <InputAddressBlock
+          <InputBlockWithDropDownList
             label="Адрес проживания"
             value={inputValues.address}
             error={getErrorStatus.address}
@@ -96,7 +89,7 @@ export const Registration = ({ navigation }) => {
             keyboardType="default"
           />
 
-          <InputDataBlock
+          <Input
             label="Логин"
             value={inputValues.login}
             error={getErrorStatus.login}
@@ -104,7 +97,7 @@ export const Registration = ({ navigation }) => {
             keyboardType="default"
           />
 
-          <InputPasswordBlock
+          <InputPassword
             label="Пароль"
             value={inputValues.password}
             error={getErrorStatus.password}
@@ -112,7 +105,7 @@ export const Registration = ({ navigation }) => {
             keyboardType="default"
           />
 
-          <InputPasswordBlock
+          <InputPassword
             label="Повторите пароль"
             value={inputValues.repeatPassword}
             error={getErrorStatus.repeatPassword}
@@ -120,7 +113,7 @@ export const Registration = ({ navigation }) => {
             keyboardType="default"
           />
 
-          <InputDataBlock
+          <Input
             label="Номер телефона"
             value={inputValues.phoneNumber}
             error={getErrorStatus.phoneNumber}
@@ -130,7 +123,7 @@ export const Registration = ({ navigation }) => {
             keyboardType="numeric"
           />
 
-          <InputDataBlock
+          <Input
             label="Электронная почта"
             value={inputValues.email}
             error={getErrorStatus.email}
@@ -139,7 +132,7 @@ export const Registration = ({ navigation }) => {
           />
         </View>
 
-        <View style={AuthPageStyle.buttonBlock}>
+        <View style={AuthAndRegistrationStyle.buttonBlock}>
           <Button label="Зарегистрироваться" onPress={() => validationData()} />
 
           <Button label="Назад" onPress={() => navigation.navigate("Auth")} />

@@ -1,25 +1,12 @@
 import { StyleSheet } from "react-native";
 
-const buttonColor = "#304FFE";
+const buttonColor = "#5C6BC0";
 const buttonTextColor = "#fff";
 const inputBlockBackgroundColor = "#E8EAF6";
 const inputBlockBorderColor = "#9FA9DA";
 const textColor = "#9E9E9E";
 
-export const AuthPageStyle = StyleSheet.create({
-  //Стиль для всей страницы
-  container: {
-    flex: 1,
-    backgroundColor: "whitesmoke",
-    padding: 16,
-    justifyContent: "center",
-  },
-
-  scrollView: {
-    justifyContent: "center",
-    flex: 1,
-  },
-
+export const SimpleElementsStyle = StyleSheet.create({
   //Стиль блока с текстовыми полями
   inputBlock: {
     alignItems: "center",
