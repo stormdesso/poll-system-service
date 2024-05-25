@@ -36,12 +36,7 @@ public class JwtServiceImpl implements JwtService {
 
     @Override
     public String addAuthentication(UserDetails userDetails,HttpServletResponse response){
-        String token = generateToken(new HashMap<>(), userDetails);
-        response.addHeader(AUTH_HEADER, token);
-        var cookie = new Cookie(AUTH_HEADER, token);
-        cookie.setMaxAge((int)(EXPIRATION_DATE/1000L));
-        response.addCookie(cookie);
-        return token;
+        return generateToken(new HashMap<>(), userDetails);
     }
 
     @Override
