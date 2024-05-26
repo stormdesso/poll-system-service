@@ -16,8 +16,8 @@ import ru.pstu.poll_system_service.web.filter.PollFilter;
 
 import java.util.List;
 
+import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.*;
 import static ru.pstu.poll_system_service.web.security.constant.SystemObjectConstants.POLL;
-import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.READ;
 
 @RequestMapping("/api/v1/poll")
 @Controller
@@ -43,6 +43,7 @@ public class PollController{
     }
 
     @Operation(description = "Получить список сообщений в чате опроса")
+    @HasPermission(resource = POLL, action = READ)
     @ResponseBody
     @GetMapping("/messages")
     public List<MessageDto> getMessages(
@@ -53,6 +54,7 @@ public class PollController{
     }
 
     @Operation(description = "Отправить сообщение в чате опроса")
+    @HasPermission(resource = POLL, action = CREATE)
     @ResponseBody
     @PostMapping("/send_message")
     public void sendMessage(
@@ -65,6 +67,7 @@ public class PollController{
     }
 
     @Operation(description = "Проголосовать в опросе")
+    @HasPermission(resource = POLL, action = WRITE)
     @ResponseBody
     @PostMapping("/vote")
     public void vote(

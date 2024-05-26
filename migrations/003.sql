@@ -330,3 +330,37 @@ SELECT pg_catalog.setval('public.users_answer_id_seq', 6, true);
 -- PostgreSQL database dump complete
 --
 
+drop table public.file_db
+
+alter table file
+    drop column url;
+
+alter table file
+    add data bytea default '' not null;
+
+comment on column file.data is 'колонка для хранения файлов';
+
+DELETE
+FROM public.file
+WHERE id = 6;
+
+DELETE
+FROM public.file
+WHERE id = 5;
+
+DELETE
+FROM public.file
+WHERE id = 7;
+
+alter table file
+    alter column data drop not null;
+
+alter table file
+    alter column data drop default;
+
+alter table file
+    alter column data set not null;
+
+alter table file
+    add type varchar(20) default 'unknown' not null;
+

@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.data.service;
+package ru.pstu.poll_system_service.data.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -12,22 +12,22 @@ import ru.pstu.poll_system_service.data.model.Poll;
 import ru.pstu.poll_system_service.data.model.UserAnswer;
 import ru.pstu.poll_system_service.data.repository.PollRepository;
 import ru.pstu.poll_system_service.data.repository.UserAnswerRepository;
-import ru.pstu.poll_system_service.web.common.UserDetailsUtil;
+import ru.pstu.poll_system_service.data.service.GeneralService;
+import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.entity.Page;
 import ru.pstu.poll_system_service.web.dto.poll.PollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
-import java.util.List;
-
-import static ru.pstu.poll_system_service.data.enums.StatusEnum.active;
+import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserIdFromContext;
 
 @Service
 @RequiredArgsConstructor
-public class PollServiceImpl implements PollService{
+public class PollServiceImpl implements PollService {
 
     private final PollRepository pollRepository;
     private final UserAnswerRepository userAnswerRepository;
+    private final GeneralService generalService;
 
 //    public Page<PollDto> getFilteredPolls(String sortingField, Long limit, Long page) {
 //
@@ -46,6 +46,8 @@ public class PollServiceImpl implements PollService{
 
     @Override
     public Page<PollDto> getFilteredPolls(PollFilter pollFilter){
+        //todo: возвращать список только доступных опросов
+
         Pageable pageable = PageRequest.of( pollFilter.getPage().intValue(), pollFilter.getLimit().intValue(),
                 getSort(pollFilter.getSortableField(), pollFilter.getDirection()) );
 
@@ -56,19 +58,15 @@ public class PollServiceImpl implements PollService{
                 pollEntitiesPage.getTotalElements(), pollEntitiesPage.stream().count());
     }
 
-    private List<Poll> findAvailablePolls(){
-        var user =  UserDetailsUtil.getCurrentUserFromContext();
-        return pollRepository.getAvailablePollsForUser(user.getAddressId(),user.getId());
-    }
+//    private List<Poll> findAvailablePolls(){
+//        var user =  UserDetailsUtil.getCurrentUserFromContext();
+//        return pollRepository.getAvailablePollsForUser(user.getAddressId(),user.getId());
+//    }
 
     private Poll getPoll(Long pollId){
-        var user =  UserDetailsUtil.getCurrentUserFromContext();
         var poll = pollRepository.findPollByIdEquals(pollId).orElseThrow(()
                 -> new IllegalArgumentException("Опрос не существует или не доступен!"));
-
-        if (!poll.getStatus().equals(active) || !pollRepository.pollIsAvailable(poll.getId(), user.getId()))
-            throw new IllegalArgumentException("Опрос не доступен для пользователя!");
-
+        generalService.hasAccessToPoll(pollId);
         return poll;
     }
 
@@ -84,7 +82,7 @@ public class PollServiceImpl implements PollService{
     public void vote(Long pollId,PollValueDto pollValueDto){
         // todo: проверить имеющуюся систему голосования
 
-        Long userId =  UserDetailsUtil.getCurrentUserIdFromContext();
+        Long userId =  getCurrentUserIdFromContext();
 
         var poll = getPoll(pollId);
 

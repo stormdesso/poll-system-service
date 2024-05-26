@@ -1,10 +1,11 @@
-package ru.pstu.poll_system_service.data.service;
+package ru.pstu.poll_system_service.data.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.pstu.poll_system_service.data.mapper.MessageMapper;
 import ru.pstu.poll_system_service.data.model.Message;
 import ru.pstu.poll_system_service.data.repository.MessageRepository;
+import ru.pstu.poll_system_service.data.service.MessageService;
 import ru.pstu.poll_system_service.web.dto.MessageDto;
 
 import java.util.Comparator;
