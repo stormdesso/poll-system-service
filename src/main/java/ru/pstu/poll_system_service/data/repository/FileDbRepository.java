@@ -21,6 +21,8 @@ public interface FileDbRepository extends JpaRepository<FileEntity, Long>{
     Set<Long> getFilesIdsByPollId(@Param("pollId") Long pollId);
 
     Set<FileEntity> findByIdIn(Set<Long> id);
+
+    List<FileEntity> findFileEntitiesByIdIsIn(Collection<Long> filesIds);
 }
 
 

@@ -11,15 +11,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
 import ru.pstu.poll_system_service.data.service.FileService;
+import ru.pstu.poll_system_service.web.dto.FileDto;
 import ru.pstu.poll_system_service.web.dto.FileInfoDto;
 
 import java.io.IOException;
 import java.util.List;
 
-import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.READ;
+import static org.springframework.http.MediaType.MULTIPART_FORM_DATA_VALUE;
+import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.*;
 import static ru.pstu.poll_system_service.web.security.constant.SystemObjectConstants.POLL;
 
-@Controller
+@RestController
 @RequestMapping("/api/v1/file")
 @RequiredArgsConstructor
 @Slf4j
@@ -39,30 +41,44 @@ public class FileController{
     }
 
     @Operation(description = "Скачать файлы, связанные с опросом")
+    @HasPermission(resource = POLL, action = READ)
     @ResponseBody
     @PostMapping("/download_list")
-    public void downloadFilesList(
+    public List<FileDto>  downloadFilesList(
             @Parameter(description = "Идентификатор опроса")
             @RequestParam(required = true) Long pollId,
             @Parameter(description = "Список идентификаторов файлов")
             @RequestBody(required = true) List<Long> ids
     ){
-        fileService.getFilesListByPollId(pollId, ids);
+        return fileService.getFilesListByPollId(pollId, ids);
     }
 
-    @PostMapping("/upload")
+    @Operation(description = "Загрузить файлы на сервер")
+    @HasPermission(resource = POLL, action = CREATE)
+    @ResponseBody
+    @PostMapping(value = "/upload", consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<FileInfoDto>> upload(
-            @RequestParam(required = true) List<MultipartFile> files,
+            //@RequestParam(required = true)
+            @RequestParam("files") MultipartFile[] files,
             @RequestParam(required = true) Long pollId) {
-
         try {
-            var list = fileService.save(files, pollId);
-            return new ResponseEntity<>(list, HttpStatus.OK);
+            var savedFilesInfos = fileService.save(List.of(files), pollId);
+            return new ResponseEntity<>(savedFilesInfos, HttpStatus.OK);
         } catch (IOException e) {
             log.error("Ошибка при попытке сохранить файл :{}", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+    @Operation(description = "Удалить файлы по id")
+    @HasPermission(resource = POLL, action = DELETE)
+    @ResponseBody
+    @DeleteMapping(value = "/delete")
+    public void delete(
+            @Parameter(description = "Идентификаторы файлов")
+            @RequestParam(required = true) List<Long> ids
+    ){
+        fileService.delete(ids);
     }
 
 }

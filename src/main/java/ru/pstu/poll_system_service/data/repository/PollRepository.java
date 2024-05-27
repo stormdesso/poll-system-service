@@ -36,9 +36,21 @@ public interface PollRepository extends JpaRepository<Poll, Long> , JpaSpecifica
             "            )", nativeQuery = true)
     boolean pollIsAvailableForUser(@Param("pollId") Long pollId,@Param("userId") Long userId);
 
+    /**
+     Проверяет опросы:
+     - является ли он active
+     - не скрыт ли он от пользователя
+     - доступен ли он по адресу пользователя
+     */
+    @Query(value = "select COUNT(*) > 0 from apartment_address AS a_p\n" +
+            "    left join poll AS p on a_p.address_id = p.adress_id\n" +
+            "        where p.status = 'active' and a_p.user_id = :userId and (p.id in :pollIds) and a_p.user_id not in (\n" +
+            "            select u_p_u.user_id from unavailable_poll_for_user as u_p_u\n" +
+            "                     where u_p_u.user_id = :userId\n" +
+            "            )", nativeQuery = true)
+    boolean pollsIsAvailableForUser(@Param("pollIds") List<Long> pollIds,@Param("userId") Long userId);
+
     Optional<Poll> findPollByIdEquals(Long id);
-
-
 //    /**
 //     Проверяет не скрыт ли опрос для конкретного пользователя
 //     */

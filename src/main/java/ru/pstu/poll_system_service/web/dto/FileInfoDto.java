@@ -14,4 +14,7 @@ public class FileInfoDto{
 
     @Schema(description = "Тип файла")
     private String type;
+
+    @Schema(description = "Размер файла")
+    private String size;
 }

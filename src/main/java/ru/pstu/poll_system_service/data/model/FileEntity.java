@@ -6,13 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "file")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileEntity{
+public class FileEntity implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +26,13 @@ public class FileEntity{
     @Column(name = "original_name", nullable = false)
     private String originalName;
 
-    @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "data", nullable = false)
     private byte[] data;
 
     @Column(name = "type", nullable = false)
     private String type;
+
+    @Column(name = "size", nullable = false)
+    private String size;
 }

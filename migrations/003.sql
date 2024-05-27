@@ -364,3 +364,7 @@ alter table file
 alter table file
     add type varchar(20) default 'unknown' not null;
 
+alter table file
+    add size varchar(10) not null;
+
+comment on column file.size is 'Размер файла';

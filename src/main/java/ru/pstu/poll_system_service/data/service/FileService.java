@@ -11,4 +11,6 @@ public interface FileService{
     List<FileInfoDto> getFilesInfosByPollId(Long pollId);
     List<FileDto> getFilesListByPollId(Long pollId, List<Long> filesIds);
     List<FileInfoDto> save(List<MultipartFile> files, Long pollId) throws IOException;
+
+    void delete (List<Long> ids);
 }
