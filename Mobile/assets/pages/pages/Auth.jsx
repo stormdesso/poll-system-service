@@ -52,7 +52,7 @@ export const Auth = ({ navigation }) => {
   useEffect(() => {
     // Проверяем, был ли сделан ввод данных и была ли выполнена валидация
     if (getAuthSucsess === true) {
-      console.log(getAuthSucsess);
+      setAuthSucsess(false)
       navigation.navigate("UserPage");
     }
   }, [getAuthSucsess]);
