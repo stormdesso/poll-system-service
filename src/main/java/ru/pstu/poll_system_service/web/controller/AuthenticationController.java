@@ -17,8 +17,8 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
 
     @PostMapping("/signin")
-    public void signIn(@RequestBody AccountCredentials request) {
-        authenticationService.signIn(request);
+    public JwtAuthenticationResponse signIn(@RequestBody AccountCredentials request) {
+        return authenticationService.signIn(request);
     }
 
     @PostMapping("/signup")

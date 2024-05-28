@@ -18,6 +18,10 @@ import ru.pstu.poll_system_service.web.dto.poll.PollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
+import java.util.List;
+
+import static ru.pstu.poll_system_service.data.enums.StatusEnum.active;
+
 @Service
 @RequiredArgsConstructor
 public class PollServiceImpl implements PollService{
@@ -52,6 +56,22 @@ public class PollServiceImpl implements PollService{
                 pollEntitiesPage.getTotalElements(), pollEntitiesPage.stream().count());
     }
 
+    private List<Poll> findAvailablePolls(){
+        var user =  UserDetailsUtil.getCurrentUserFromContext();
+        return pollRepository.getAvailablePollsForUser(user.getAddressId(),user.getId());
+    }
+
+    private Poll getPoll(Long pollId){
+        var user =  UserDetailsUtil.getCurrentUserFromContext();
+        var poll = pollRepository.findPollByIdEquals(pollId).orElseThrow(()
+                -> new IllegalArgumentException("Опрос не существует или не доступен!"));
+
+        if (!poll.getStatus().equals(active) || !pollRepository.pollIsAvailable(poll.getId(), user.getId()))
+            throw new IllegalArgumentException("Опрос не доступен для пользователя!");
+
+        return poll;
+    }
+
     private Sort getSort(String sortingField, String sortOrder) {
         if (sortingField != null && !sortingField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
             return Sort.by(Sort.Direction.fromString(sortOrder), sortingField);
@@ -62,14 +82,11 @@ public class PollServiceImpl implements PollService{
     @Override
     @Transactional
     public void vote(Long pollId,PollValueDto pollValueDto){
-
-        // todo: может ли челик голосовать в этом опросе (не скрыт ли опрос, доступен ли он ему по адресу)
         // todo: проверить имеющуюся систему голосования
 
         Long userId =  UserDetailsUtil.getCurrentUserIdFromContext();
 
-        var poll = pollRepository.findById(pollId).orElseThrow(()
-                -> new IllegalArgumentException("Опрос не существует!"));
+        var poll = getPoll(pollId);
 
         //проверяем существует ли такой вариант ответа у опроса
         poll.getPollValues().stream()
@@ -86,7 +103,7 @@ public class PollServiceImpl implements PollService{
             );
         }
 
-        if (!userAnswerRepository.existsByUserIdEqualsAndPollValueIdEquals(userId, pollValueDto.getId()))
+        if (userAnswerRepository.existsByUserIdEqualsAndPollValueIdEquals(userId, pollValueDto.getId()))
         {
             throw new IllegalArgumentException("Нельзя проголосовать за один вариант ответа более 1 раза!");
         }

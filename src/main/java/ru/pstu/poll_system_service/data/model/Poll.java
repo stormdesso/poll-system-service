@@ -1,5 +1,6 @@
 package ru.pstu.poll_system_service.data.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.Formula;
@@ -16,7 +17,7 @@ public class Poll{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private  Long id;
 
     @Column(name = "creator_user_id", nullable = false)
     private Long creatorUserId;
@@ -24,8 +25,8 @@ public class Poll{
 //    @Column(name = "poll_shedule_id", nullable = false)
 //    private Long pollScheduleId;
 //
-//    @Column(name = "adress_id", nullable = false)
-//    private Long addressId;
+    @Column(name = "adress_id", nullable = false)
+    private Long addressId;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
@@ -53,7 +54,7 @@ public class Poll{
             "WHERE aa.address_id = (SELECT p.adress_id FROM poll AS p WHERE p.id = id) " +
             "AND NOT EXISTS (SELECT 1 FROM unavailable_poll_for_user AS upfu " +
             "WHERE upfu.poll_id = id AND upfu.user_id = aa.user_id))")
-    private Long maxNumberVoted;
+    private Long maxNumberVoted = null;
 
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, targetEntity = PollValue.class, fetch = FetchType.EAGER)
     private List<PollValue> pollValues;

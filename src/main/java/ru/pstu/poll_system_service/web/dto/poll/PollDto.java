@@ -15,6 +15,9 @@ import java.util.List;
 @Schema(description = "Опрос")
 public class PollDto extends BasePollDto{
 
+    @Schema(description = "Идентификатор опроса")
+    private Long id;
+
     @Schema(description = "Описание")
     private String description;
 
