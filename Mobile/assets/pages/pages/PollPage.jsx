@@ -30,12 +30,11 @@ export const PollPage = () => {
 
     setLoading(true);
 
-    // Вызываем вашу функцию GetPollList с номером страницы
+    // Вызываем функцию GetPollList с номером страницы
     GetPollList(page)
       .then(responseJson => {
         setData(prevData => [...prevData, ...responseJson]);
-        console.log(responseJson)
-        // Предполагая, что вам также возвращается общее количество страниц
+        // Общее количество траниц
         setTotalPages(responseJson.totalPages);
         setLoading(false);
       })
