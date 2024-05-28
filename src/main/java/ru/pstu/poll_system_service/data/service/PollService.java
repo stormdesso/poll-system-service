@@ -6,7 +6,8 @@ import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
 public interface PollService{
-    Page<PollDto> getFilteredPolls(PollFilter pollFilter);
+    Page<PollDto> getFilteredPollsForUser(PollFilter pollFilter);
+    Page<PollDto> getFilteredPollsForAdmin(PollFilter pollFilter);
 
     void vote(Long pollId,  PollValueDto pollValueDto);
 }

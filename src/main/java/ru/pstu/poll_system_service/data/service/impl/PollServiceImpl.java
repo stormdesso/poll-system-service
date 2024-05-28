@@ -19,6 +19,7 @@ import ru.pstu.poll_system_service.web.dto.poll.PollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
+import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserFromContext;
 import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserIdFromContext;
 
 @Service
@@ -45,8 +46,26 @@ public class PollServiceImpl implements PollService {
 //    }
 
     @Override
-    public Page<PollDto> getFilteredPolls(PollFilter pollFilter){
-        //todo: возвращать список только доступных опросов
+    public Page<PollDto> getFilteredPollsForUser(PollFilter pollFilter){
+        Long addressId = getCurrentUserFromContext().getAddressId();
+
+        Pageable pageable = PageRequest.of( pollFilter.getPage().intValue(), pollFilter.getLimit().intValue(),
+                getSort(pollFilter.getSortableField(), pollFilter.getDirection()) );
+
+        var ids = pollRepository.getAvailablePollsIdsForUser(addressId, getCurrentUserIdFromContext());
+        org.springframework.data.domain.Page<Poll> pollEntitiesPage = pollRepository.findAllByIdIn(ids, pageable);
+
+        var pollDtoPage =  new Page<>(PollMapper.INSTANCE.toPollDtos(pollEntitiesPage.getContent()),
+                pollEntitiesPage.getTotalElements(), pollEntitiesPage.stream().count());
+
+        pollDtoPage.getItems().forEach(pd ->
+                pd.setMaxNumberVoted(pollRepository.getMaxNumberVoted(pd.getId())));
+
+        return pollDtoPage;
+    }
+
+    @Override
+    public Page<PollDto> getFilteredPollsForAdmin(PollFilter pollFilter){
 
         Pageable pageable = PageRequest.of( pollFilter.getPage().intValue(), pollFilter.getLimit().intValue(),
                 getSort(pollFilter.getSortableField(), pollFilter.getDirection()) );
@@ -54,14 +73,14 @@ public class PollServiceImpl implements PollService {
         org.springframework.data.domain.Page<Poll> pollEntitiesPage = pollRepository.findAll((Specification<Poll>) null,
                 pageable);
 
-        return new Page<>(PollMapper.INSTANCE.toPollDtos(pollEntitiesPage.getContent()),
+        var pollDtoPage =  new Page<>(PollMapper.INSTANCE.toPollDtos(pollEntitiesPage.getContent()),
                 pollEntitiesPage.getTotalElements(), pollEntitiesPage.stream().count());
-    }
 
-//    private List<Poll> findAvailablePolls(){
-//        var user =  UserDetailsUtil.getCurrentUserFromContext();
-//        return pollRepository.getAvailablePollsForUser(user.getAddressId(),user.getId());
-//    }
+        pollDtoPage.getItems().forEach(pd ->
+                pd.setMaxNumberVoted(pollRepository.getMaxNumberVoted(pd.getId())));
+
+        return pollDtoPage;
+    }
 
     private Poll getPoll(Long pollId){
         var poll = pollRepository.findPollByIdEquals(pollId).orElseThrow(()
@@ -76,6 +95,7 @@ public class PollServiceImpl implements PollService {
         }
         return Sort.unsorted();
     }
+
 
     @Override
     @Transactional

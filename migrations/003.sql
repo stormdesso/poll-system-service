@@ -368,3 +368,6 @@ alter table file
     add size varchar(10) not null;
 
 comment on column file.size is 'Размер файла';
+
+comment on table apartment is '0 - значение для администраторов, если они не имеют квартиры в доме';
+
