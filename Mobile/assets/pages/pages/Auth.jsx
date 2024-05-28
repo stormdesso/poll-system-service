@@ -21,7 +21,6 @@ export const Auth = ({ navigation }) => {
   });
 
   const [getErrorText, setErrorText] = useState("");
-
   const [getAuthSucsess, setAuthSucsess] = useState(false);
 
   const validationData = async () => {
@@ -36,18 +35,18 @@ export const Auth = ({ navigation }) => {
       }));
     });
     setErrorText(textError);
-    setAuthSucsess(success);
-    // GetPollList()
-    // if (success) {
-    //   const result = await GetToken(loginInputValue, passwordInputValue);
-    //   if (result.success) {
-    //     // Аутентификация прошла успешно, можно перейти на следующий экран или выполнить другие действия
-    //     setAuthSucsess(result.success);
-    //   } else {
-    //     setErrorText(result.error);
-    //     setAuthSucsess(result.success);
-    //   }
-    // }
+    GetToken();
+    if (success) {
+      const result = await GetToken(loginInputValue, passwordInputValue);
+      console.log(result)
+      if (result.success) {
+        // Аутентификация прошла успешно, можно перейти на следующий экран или выполнить другие действия
+        setAuthSucsess(result.success);
+      } else {
+        setErrorText(result.error);
+        setAuthSucsess(result.success);
+      }
+    }
   };
 
   useEffect(() => {

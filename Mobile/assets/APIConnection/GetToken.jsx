@@ -1,8 +1,13 @@
-import * as SecureStore from "expo-secure-store";
+import * as SecureStore from 'expo-secure-store';
 
 export default function GetToken(login, password) {
+
+  let keyName = ''
+  let keyValue = ''
+  
+
   // Данные для API адресов
-  let url = "http://localhost:8080/api/v1/auth/signin";
+  let url = "http://192.168.0.159:8080/api/v1/auth/signin";
   let options = {
     method: "POST",
     headers: {
@@ -15,26 +20,43 @@ export default function GetToken(login, password) {
     }),
   };
 
+  async function saveToken(key, value) {
+    try 
+    {
+      await SecureStore.setItemAsync(key, value);
+      return { success: true };
+    } 
+    catch (error) 
+    {
+      return { success: false, error: error.message };
+    }
+  }
+
   return fetch(url, options)
     .then(response => {
-      console.log(response);
       if (!response.ok) {
         throw new Error("Failed to fetch token");
       }
       return response.json();
     })
     .then(responseData => {
-      const token = responseData.Value;
-
-      // Сохранение токена в SecureStore
-      return SecureStore.setItemAsync("token", token)
-        .then(() => {
-          console.log(token);
-          return { success: true }; // Возвращаем успешный результат
-        });
+      keyName = 'Token';
+      keyValue = "Bearer " + responseData.token;
+      console.log("Токен из getToken" + keyValue)
+      return saveToken(keyName, keyValue);
+    })
+    .then(saveResult => {
+      if (saveResult.success) 
+      {
+        console.log('Token saved successfully');
+      } 
+      else 
+      {
+        console.error('Error saving token:', saveResult.error);
+      }
+      return saveResult;
     })
     .catch(error => {
-      console.error("Error fetching token:", error);
       return { success: false, error: error.message }; // Возвращаем ошибку
     });
 }
