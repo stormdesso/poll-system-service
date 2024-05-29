@@ -19,6 +19,8 @@ import ru.pstu.poll_system_service.web.dto.poll.PollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
+import java.util.List;
+
 import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserFromContext;
 import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserIdFromContext;
 
@@ -30,29 +32,14 @@ public class PollServiceImpl implements PollService {
     private final UserAnswerRepository userAnswerRepository;
     private final GeneralService generalService;
 
-//    public Page<PollDto> getFilteredPolls(String sortingField, Long limit, Long page) {
-//
-//        String sortDirection = FilterUtil.getSortDirection(sortingField);   //  todo: переделать на класс PollFilter
-//        sortingField = FilterUtil.formatSortingField(sortingField);
-//
-//        Pageable pageable = PageRequest.of( page.intValue(), limit.intValue(), getSort(sortingField, sortDirection) );
-//
-//        org.springframework.data.domain.Page<Poll> pollEntitiesPage = pollRepository.findAll((Specification<Poll>) null,
-//                pageable);
-//
-//
-//        return new Page<>(PollMapper.INSTANCE.toPollDtos(pollEntitiesPage.getContent()),
-//                pollEntitiesPage.getTotalElements(), pollEntitiesPage.stream().count());
-//    }
-
     @Override
     public Page<PollDto> getFilteredPollsForUser(PollFilter pollFilter){
-        Long addressId = getCurrentUserFromContext().getAddressId();
+        Long ownershipId = getCurrentUserFromContext().getOwnershipId();
 
         Pageable pageable = PageRequest.of( pollFilter.getPage().intValue(), pollFilter.getLimit().intValue(),
                 getSort(pollFilter.getSortableField(), pollFilter.getDirection()) );
 
-        var ids = pollRepository.getAvailablePollsIdsForUser(addressId, getCurrentUserIdFromContext());
+        var ids = pollRepository.getAvailablePollsIdsForUser(ownershipId, getCurrentUserIdFromContext());
         org.springframework.data.domain.Page<Poll> pollEntitiesPage = pollRepository.findAllByIdIn(ids, pageable);
 
         var pollDtoPage =  new Page<>(PollMapper.INSTANCE.toPollDtos(pollEntitiesPage.getContent()),
@@ -85,7 +72,7 @@ public class PollServiceImpl implements PollService {
     private Poll getPoll(Long pollId){
         var poll = pollRepository.findPollByIdEquals(pollId).orElseThrow(()
                 -> new IllegalArgumentException("Опрос не существует или не доступен!"));
-        generalService.hasAccessToPoll(pollId);
+        generalService.hasAccessToPolls(List.of(pollId));
         return poll;
     }
 

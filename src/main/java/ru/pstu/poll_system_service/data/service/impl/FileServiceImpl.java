@@ -31,7 +31,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<FileInfoDto> getFilesInfosByPollId(Long pollId) {
-        generalService.hasAccessToPoll(pollId);
+        generalService.hasAccessToPolls(List.of(pollId));
         return FileMapper.INSTANCE.toFileInfoDtos(fileDbRepository.findByPollId(pollId));
     }
 
@@ -48,7 +48,7 @@ public class FileServiceImpl implements FileService {
     @Override
     @Transactional
     public List<FileInfoDto> save(List<MultipartFile> files, Long pollId) {
-        generalService.hasAccessToPoll(pollId);
+        generalService.hasAccessToPolls(List.of(pollId));
         List<FileEntity> savedFiles = new ArrayList<>();
 
         files.forEach(file -> {

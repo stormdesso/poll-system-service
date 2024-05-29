@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
-import ru.pstu.poll_system_service.business.aspect.HasRole;
 import ru.pstu.poll_system_service.data.service.MessageService;
 import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.entity.Page;
@@ -17,7 +16,6 @@ import ru.pstu.poll_system_service.web.filter.PollFilter;
 
 import java.util.List;
 
-import static ru.pstu.poll_system_service.data.model.user.RoleConstants.ADMIN;
 import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.*;
 import static ru.pstu.poll_system_service.web.security.constant.SystemObjectConstants.POLL;
 
@@ -42,21 +40,6 @@ public class PollController{
             @Parameter(description = "Номер страницы с результатом") @RequestParam(required = false) Long page
     ){
         return pollService.getFilteredPollsForUser(new PollFilter(sort, limit, page));
-    }
-
-    @Operation(description = "Получить отфильтрованный список опросов")
-    @HasPermission(resource = POLL, action = READ)
-    @HasRole(role = ADMIN)
-    @ResponseBody
-    @GetMapping("/filtered_list")
-    public Page<PollDto> getFilteredPollsForAdmin(
-            @Parameter(description = "Название поля по которому будет осуществляться сортировка(asc - default, desc -fieldName)")
-            @RequestParam(required = false) String sort,
-            @Parameter(description = "Количество результатов на странице")
-            @RequestParam(required = false) Long limit,
-            @Parameter(description = "Номер страницы с результатом") @RequestParam(required = false) Long page
-    ){
-        return pollService.getFilteredPollsForAdmin(new PollFilter(sort, limit, page));
     }
 
     @Operation(description = "Получить список сообщений в чате опроса")

@@ -371,3 +371,43 @@ comment on column file.size is 'Размер файла';
 
 comment on table apartment is '0 - значение для администраторов, если они не имеют квартиры в доме';
 
+create table ownership
+(
+    id bigint generated always as identity
+        constraint ownership_pk
+            primary key
+);
+
+comment on table ownership is 'владения (для каждого пользователя свой ownership)';
+
+create table address_ownership
+(
+    address_id   bigint not null
+        constraint address_ownership_address_id_fk
+            references address
+            on update cascade on delete cascade,
+    ownership_id bigint not null
+        constraint address_ownership_ownership_id_fk
+            references ownership
+            on update cascade on delete cascade
+);
+
+
+alter table "user"
+    add ownership_id bigint;
+
+comment on column "user".ownership_id is 'fk для владений';
+
+alter table "user"
+    add constraint user_ownership_id_fk
+        foreign key (ownership_id) references ownership
+            on update cascade on delete cascade;
+
+alter table address_ownership
+    add constraint address_ownership_uniq
+        unique (ownership_id, address_id);
+
+alter table unavailable_poll_for_user
+    add constraint unavailable_poll_for_user_uniq
+        unique (poll_id, user_id);
+
