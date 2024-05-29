@@ -42,15 +42,10 @@ export default function GetToken(login, password) {
     .then(responseData => {
       keyName = 'Token';
       keyValue = "Bearer " + responseData.token;
-      console.log("Токен из getToken" + keyValue)
       return saveToken(keyName, keyValue);
     })
     .then(saveResult => {
-      if (saveResult.success) 
-      {
-        console.log('Token saved successfully');
-      } 
-      else 
+      if (!saveResult.success) 
       {
         console.error('Error saving token:', saveResult.error);
       }

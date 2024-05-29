@@ -7,7 +7,6 @@ import {convertDate} from "../../scripts/convertDate"
 
 
 export const ShortPollCard = ({ item }) => {
-
     const onPress = () => {
         console.log(item.name)
     }

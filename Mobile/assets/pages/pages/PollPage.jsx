@@ -5,6 +5,7 @@ import {
   View,
   Text,
   SafeAreaView,
+  ScrollView
 } from "react-native";
 
 import GetPollList from "../../APIConnection/GetPollList"
@@ -14,28 +15,32 @@ import {ShortPollCard} from "../../elements/specialElements/ShortPollCard"
 import {PollPageStyle} from "../style/PollPageStyle"
 
 export const PollPage = () => {
+  //Данные
   const [data, setData] = useState([]);
-  const [page, setPage] = useState(1);
+  //Страница
+  const [page, setPage] = useState(0);
+  //Состояние загрузки
   const [loading, setLoading] = useState(false);
+  //Сколько данных можем загрузить
   const [totalPages, setTotalPages] = useState(null);
 
   //Срабатывает при запуске страницы для получения данных
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page]);
 
   //Получение данных из апи
   const fetchData = () => {
     if (loading) return;
-
     setLoading(true);
 
     // Вызываем функцию GetPollList с номером страницы
     GetPollList(page)
       .then(responseJson => {
-        setData(prevData => [...prevData, ...responseJson]);
-        // Общее количество траниц
-        setTotalPages(responseJson.totalPages);
+        setData(prevData => [...prevData, ...responseJson.items]);
+        console.log(responseJson.items)
+        // Общее количество контента
+        setTotalPages(responseJson.totalCount);
         setLoading(false);
       })
       .catch(error => {
@@ -44,35 +49,28 @@ export const PollPage = () => {
       });
   };
 
-  //Индикатор загрузки данных
-  const renderFooter = () => {
-    return loading ? (
-      <View style={{ paddingVertical: 20, width: "100%" }}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    ) : null;
-  };
-
   //Увеличение номера станицы для динамической пагинации
   const handleLoadMore = () => {
-    if (page < totalPages) {
+    if (data.length < totalPages) {
       setPage(page + 1);
-      fetchData();
     }
+  };
+
+  const renderFooter = () => {
+    return loading ? <ActivityIndicator size="large" color="#0000ff" /> : null;
   };
 
   return (
     <View style={PollPageStyle.container}>
-      <FlatList 
-        contentContainerStyle={PollPageStyle.pollList}
+      <FlatList
         data={data}
-        renderItem={({ item }) => <ShortPollCard item={item}/>}
         keyExtractor={(item, index) => index.toString()}
+        contentContainerStyle={PollPageStyle.pollList}
+        renderItem={({ item }) => <ShortPollCard item={item} />}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
       />
     </View>
-    
   );
 };

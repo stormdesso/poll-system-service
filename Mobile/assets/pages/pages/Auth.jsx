@@ -23,6 +23,8 @@ export const Auth = ({ navigation }) => {
   const [getErrorText, setErrorText] = useState("");
   const [getAuthSucsess, setAuthSucsess] = useState(false);
 
+
+  //Валидация данных и получение токена
   const validationData = async () => {
     const [statusError, textError, success] = validationDataInAuth(
       loginInputValue,
@@ -38,7 +40,6 @@ export const Auth = ({ navigation }) => {
     GetToken();
     if (success) {
       const result = await GetToken(loginInputValue, passwordInputValue);
-      console.log(result)
       if (result.success) {
         // Аутентификация прошла успешно, можно перейти на следующий экран или выполнить другие действия
         setAuthSucsess(result.success);
