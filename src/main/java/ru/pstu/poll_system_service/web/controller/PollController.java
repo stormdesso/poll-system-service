@@ -14,6 +14,7 @@ import ru.pstu.poll_system_service.web.dto.poll.PollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
+import java.time.ZoneId;
 import java.util.List;
 
 import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.*;
@@ -37,9 +38,8 @@ public class PollController{
             @RequestParam(required = false) String sort,
             @Parameter(description = "Количество результатов на странице")
             @RequestParam(required = false) Long limit,
-            @Parameter(description = "Номер страницы с результатом") @RequestParam(required = false) Long page
-    ){
-        return pollService.getFilteredPollsForUser(new PollFilter(sort, limit, page));
+            @Parameter(description = "Номер страницы с результатом") @RequestParam(required = false) Long page){
+        return pollService.getFilteredPolls(new PollFilter(sort, limit, page));
     }
 
     @Operation(description = "Получить список сообщений в чате опроса")
@@ -48,9 +48,10 @@ public class PollController{
     @GetMapping("/messages")
     public List<MessageDto> getMessages(
             @Parameter(description = "Идентификатор опроса")
-            @RequestParam(required = true) Long pollId
-    ){
-        return messageService.getMessages(pollId);
+            @RequestParam(required = true) Long pollId,
+            @Parameter(description = "Часовой пояс получающего")
+            @RequestParam(required = true) String timeZone){
+        return messageService.getMessages(pollId, ZoneId.of(timeZone));
     }
 
     @Operation(description = "Отправить сообщение в чате опроса")
@@ -61,9 +62,8 @@ public class PollController{
             @Parameter(description = "Идентификатор опроса")
             @RequestParam(required = true) Long pollId,
             @Parameter(description = "Сообщение")
-            @RequestBody(required = true) MessageDto messageDto
-    ){
-        //todo: mock
+            @RequestBody(required = true) MessageDto messageDto){
+        messageService.sendMessage(pollId, messageDto);
     }
 
     @Operation(description = "Проголосовать в опросе")
@@ -72,8 +72,7 @@ public class PollController{
     @PostMapping("/vote")
     public void vote(
             @Parameter(description = "Идентификатор опроса") @RequestParam(required = true) Long pollId,
-            @Parameter(description = "Вариант опроса") @RequestBody(required = true) PollValueDto pollValueDto
-    ){
+            @Parameter(description = "Вариант опроса") @RequestBody(required = true) PollValueDto pollValueDto){
         pollService.vote(pollId, pollValueDto);
     }
 }

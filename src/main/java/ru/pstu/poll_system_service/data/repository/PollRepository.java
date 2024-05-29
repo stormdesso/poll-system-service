@@ -24,7 +24,7 @@ public interface PollRepository extends JpaRepository<Poll, Long>, JpaSpecificat
             "                where ownership_id = :ownership_id) and p.status = 'active' and id not in (" +
             "select poll_id from unavailable_poll_for_user " +
             "where user_id = :userId and poll_id = p.id)", nativeQuery = true)
-    List<Long> getAvailablePollsIdsForUser(@Param("ownership_id") Long ownership_id, @Param("userId") Long userId);
+    List<Long> findAvailablePollsIdsForUser(@Param("ownership_id") Long ownership_id, @Param("userId") Long userId);
 
     @Query(value = "(SELECT COUNT(aa.user_id) FROM apartment_address AS aa " +
             "WHERE aa.address_id = (SELECT p.adress_id FROM poll AS p WHERE p.id = :pollId) " +
@@ -47,6 +47,12 @@ public interface PollRepository extends JpaRepository<Poll, Long>, JpaSpecificat
             "                     where u_p_u.user_id = :userId\n" +
             "            )", nativeQuery = true)
     boolean pollsIsAvailableForUser(@Param("pollIds") List<Long> pollIds, @Param("userId") Long userId);
+
+    @Query(value = "select count(*) > 0 from poll as p " +
+            "join poll_value as pv on p.id = pv.poll_id " +
+                "join users_answer as u_a on pv.id = u_a.poll_value_id " +
+                    "where p.id = :pollId and u_a.user_id = :userId", nativeQuery = true)
+    boolean userIsVoted(@Param("pollId") Long pollId, @Param("userId") Long userId);
 
     Optional<Poll> findPollByIdEquals(Long id);
 }

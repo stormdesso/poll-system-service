@@ -411,3 +411,6 @@ alter table unavailable_poll_for_user
     add constraint unavailable_poll_for_user_uniq
         unique (poll_id, user_id);
 
+alter table message
+    alter column date_sent_message type timestamp with time zone using date_sent_message::timestamp with time zone;
+

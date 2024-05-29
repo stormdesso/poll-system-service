@@ -48,12 +48,6 @@ public class Poll{
     @Column(name = "cyclical", nullable = false)
     private Boolean cyclical;
 
-//    @Formula("(SELECT COUNT(aa.user_id) FROM apartment_address AS aa " +
-//            "WHERE aa.address_id = (SELECT p.adress_id FROM poll AS p WHERE p.id = id) " +
-//            "AND NOT EXISTS (SELECT 1 FROM unavailable_poll_for_user AS upfu " +
-//            "WHERE upfu.poll_id = id AND upfu.user_id = aa.user_id))")
-//    private Long maxNumberVoted = null;
-
     @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, targetEntity = PollValue.class, fetch = FetchType.EAGER)
     private List<PollValue> pollValues;
 
