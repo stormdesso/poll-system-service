@@ -1,12 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
 
-export default function GetPollList() {
+export default function GetPollList(currentPage) {
     //Данные для API адресов
 
     return new Promise((resolve, reject) => {
         SecureStore.getItemAsync('Token')
             .then(token => {
-                let url = "http://192.168.0.159:8080/api/v1/poll/filtered_list";
+                let url = `http://192.168.0.159:8080/api/v1/poll/filtered_list?sort=name&limit=6&page=${currentPage}`;
 
                 let options = {
                     method: "GET",
@@ -25,7 +25,7 @@ export default function GetPollList() {
                         return response.json();
                     })
                     .then((data) => {
-                        resolve(data.items);
+                        resolve(data);
                     })
                     .catch((error) => {
                         console.error("Error fetching poll list:", error);

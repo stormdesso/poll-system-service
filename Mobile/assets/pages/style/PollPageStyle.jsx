@@ -9,7 +9,8 @@ const textColor = "#9E9E9E";
 export const PollPageStyle = StyleSheet.create({
   //Стиль для всей страницы
   container: {
-    width: "100%"
+    width: "100%",
+    flex: 1
   },
   
   pollList: {

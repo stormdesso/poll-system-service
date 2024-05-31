@@ -8,9 +8,9 @@ import validationDataInRegistration from "../../scripts/validationDataInRegistra
 
 import Input from "../../elements/simpleElements/Input";
 import InputPassword from "../../elements/simpleElements/InputPassword";
-import InputBlockWithDropDownList from "../../elements/simpleElements/InputBlockWithDropDownList";
+import InputAddressWithDropDownList from "../../elements/simpleElements/InputAddressWithDropDownList";
 import InputWithCalendar from "../../elements/simpleElements/InputWithCalendar";
-import Button from "../../elements/simpleElements/Button";
+import ButtonWithText from "../../elements/simpleElements/ButtonWithText";
 
 export const Registration = ({ navigation }) => {
   //Изменение текста в полях
@@ -79,7 +79,7 @@ export const Registration = ({ navigation }) => {
             keyboardType="default"
           />
 
-          <InputBlockWithDropDownList
+          <InputAddressWithDropDownList
             label="Адрес проживания"
             value={inputValues.address}
             error={getErrorStatus.address}
@@ -133,9 +133,9 @@ export const Registration = ({ navigation }) => {
         </View>
 
         <View style={AuthAndRegistrationStyle.buttonBlock}>
-          <Button label="Зарегистрироваться" onPress={() => validationData()} />
+          <ButtonWithText label="Зарегистрироваться" onPress={() => validationData()} />
 
-          <Button label="Назад" onPress={() => navigation.navigate("Auth")} />
+          <ButtonWithText label="Назад" onPress={() => navigation.navigate("Auth")} />
           <Text>{getErrorText}</Text>
         </View>
       </ScrollView>

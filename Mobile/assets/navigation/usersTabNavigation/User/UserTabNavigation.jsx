@@ -10,9 +10,9 @@ export const UserTabNavigation = () => {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name={"Опросы"} component={PollPage} />
-      <Tab.Screen name={"Мои опросы"} component={MyPollPage} />
-      <Tab.Screen name={"Создать опрос"} component={CreatePollPage} />
+      <Tab.Screen name={"Опросы"} component={PollPage} options={{ headerShown: false }}/>
+      <Tab.Screen name={"Мои опросы"} component={MyPollPage} options={{ headerShown: false }}/>
+      <Tab.Screen name={"Создать опрос"} component={CreatePollPage} options={{ headerShown: false }}/>
     </Tab.Navigator>
   );
 };

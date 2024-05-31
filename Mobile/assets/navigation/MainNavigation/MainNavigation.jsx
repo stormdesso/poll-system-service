@@ -1,6 +1,7 @@
 import { Auth } from "../../pages/pages/Auth";
 import { UserPage } from "../../pages/pages/UserPage";
 import { Registration } from "../../pages/pages/Registration";
+import {PollInfo} from "../../pages/pages/PollInfo"
 
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -22,6 +23,12 @@ export default function MainNavigation() {
         <Stack.Screen
             name="Registration"
             component={Registration}
+            options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+            name = "PollInfo"
+            component={PollInfo}
             options={{ headerShown: false }}
         />
   </Stack.Navigator>

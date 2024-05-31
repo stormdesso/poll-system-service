@@ -1,27 +1,23 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { SpecialElementsStyle } from "../SpecialElementsStyle";
+import { ShortPollCardStyle } from "../ShortPollCardStyle";
 
 import {convertStatus} from "../../scripts/convertStatus"
 import {convertDate} from "../../scripts/convertDate"
 
 
-export const ShortPollCard = ({ item }) => {
-
-    const onPress = () => {
-        console.log(item.name)
-    }
+export const ShortPollCard = ({ item, onClick }) => {
 
   return (
-    <TouchableOpacity onPress={onPress} style={SpecialElementsStyle.ShortPollCard}>
+    <TouchableOpacity onPress={() => onClick(item)} style={ShortPollCardStyle.ShortPollCard}>
         <View>
             <View>
-                <Text style={SpecialElementsStyle.Text}>{item.name}</Text>
-                <Text style={SpecialElementsStyle.Text}>Статус: {convertStatus(item.status)}</Text>
+                <Text style={ShortPollCardStyle.Text}>{item.name}</Text>
+                <Text style={ShortPollCardStyle.Text}>Статус: {convertStatus(item.status)}</Text>
             </View>
             <View>
-                <Text style={SpecialElementsStyle.Text}>Сроки проведения: {convertDate(item.startDate)} - {convertDate(item.endDate)}</Text>
-                <Text style={SpecialElementsStyle.Text}>Проголосовало: {item.numberVotes}/{item.maxNumberVoted}</Text>
+                <Text style={ShortPollCardStyle.Text}>Сроки проведения: {convertDate(item.startDate)} - {convertDate(item.endDate)}</Text>
+                <Text style={ShortPollCardStyle.Text}>Проголосовало: {item.numberVotes}/{item.maxNumberVoted}</Text>
             </View>
         </View>
     </TouchableOpacity>

@@ -3,7 +3,7 @@ import { Pressable, Text } from "react-native";
 
 import { SimpleElementsStyle } from "../SimpleElementsStyle";
 
-export default function Button({ label, onPress }) {
+export default function ButtonWithText({ label, onPress }) {
   return (
     <Pressable style={SimpleElementsStyle.buttonElement} onPress={onPress}>
       <Text style={SimpleElementsStyle.buttonText}>{label}</Text>

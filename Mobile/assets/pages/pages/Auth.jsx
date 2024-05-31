@@ -7,7 +7,7 @@ import GetToken from "../../APIConnection/GetToken";
 
 import Input from "../../elements/simpleElements/Input";
 import InputPassword from "../../elements/simpleElements/InputPassword";
-import Button from "../../elements/simpleElements/Button";
+import ButtonWithText from "../../elements/simpleElements/ButtonWithText";
 
 export const Auth = ({ navigation }) => {
   //Поле для хранения введенного логина
@@ -23,6 +23,8 @@ export const Auth = ({ navigation }) => {
   const [getErrorText, setErrorText] = useState("");
   const [getAuthSucsess, setAuthSucsess] = useState(false);
 
+
+  //Валидация данных и получение токена
   const validationData = async () => {
     const [statusError, textError, success] = validationDataInAuth(
       loginInputValue,
@@ -38,7 +40,6 @@ export const Auth = ({ navigation }) => {
     GetToken();
     if (success) {
       const result = await GetToken(loginInputValue, passwordInputValue);
-      console.log(result)
       if (result.success) {
         // Аутентификация прошла успешно, можно перейти на следующий экран или выполнить другие действия
         setAuthSucsess(result.success);
@@ -79,13 +80,13 @@ export const Auth = ({ navigation }) => {
       </View>
 
       <View style={AuthAndRegistrationStyle.buttonBlock}>
-        <Button
+        <ButtonWithText
           label="Войти"
           onPress={() => {
             validationData();
           }}
         />
-        <Button
+        <ButtonWithText
           label="Зарегистрироваться"
           onPress={() => navigation.navigate("Registration")}
         />
