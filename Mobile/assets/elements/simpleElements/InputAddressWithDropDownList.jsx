@@ -4,7 +4,7 @@ import { TextInput, View, Text, TouchableOpacity } from "react-native";
 import { SimpleElementsStyle } from "../SimpleElementsStyle";
 import AddressApiToRegistration from "../../APIConnection/addressApiToRegistration";
 
-export default function InputWithDropDownList({
+export default function InputAddressWithDropDownList({
   label,
   value,
   error,

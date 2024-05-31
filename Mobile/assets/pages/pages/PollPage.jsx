@@ -9,12 +9,13 @@ import {
 } from "react-native";
 
 import GetPollList from "../../APIConnection/GetPollList"
+import {Headder} from "../../elements/specialElements/Headder"
 
 import {ShortPollCard} from "../../elements/specialElements/ShortPollCard"
 
 import {PollPageStyle} from "../style/PollPageStyle"
 
-export const PollPage = () => {
+export const PollPage = (navigation) => {
   //Данные
   const [data, setData] = useState([]);
   //Страница
@@ -60,17 +61,26 @@ export const PollPage = () => {
     return loading ? <ActivityIndicator size="large" color="#0000ff" /> : null;
   };
 
+  const goToPollInfo = (item) => {
+    navigation.navigate("PollInfo", item)
+  }
+
   return (
     <View style={PollPageStyle.container}>
-      <FlatList
-        data={data}
-        keyExtractor={(item, index) => index.toString()}
-        contentContainerStyle={PollPageStyle.pollList}
-        renderItem={({ item }) => <ShortPollCard item={item} />}
-        onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
-      />
+      <View>
+        <Headder />
+      </View>
+      <View>
+        <FlatList
+          data={data}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={PollPageStyle.pollList}
+          renderItem={({ item }) => <ShortPollCard item={item} onClick={goToPollInfo}/>}
+          onEndReached={handleLoadMore}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={renderFooter}
+        />
+      </View>
     </View>
   );
 };

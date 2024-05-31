@@ -7,7 +7,7 @@ import GetToken from "../../APIConnection/GetToken";
 
 import Input from "../../elements/simpleElements/Input";
 import InputPassword from "../../elements/simpleElements/InputPassword";
-import Button from "../../elements/simpleElements/Button";
+import ButtonWithText from "../../elements/simpleElements/ButtonWithText";
 
 export const Auth = ({ navigation }) => {
   //Поле для хранения введенного логина
@@ -80,13 +80,13 @@ export const Auth = ({ navigation }) => {
       </View>
 
       <View style={AuthAndRegistrationStyle.buttonBlock}>
-        <Button
+        <ButtonWithText
           label="Войти"
           onPress={() => {
             validationData();
           }}
         />
-        <Button
+        <ButtonWithText
           label="Зарегистрироваться"
           onPress={() => navigation.navigate("Registration")}
         />
