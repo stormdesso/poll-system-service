@@ -1,6 +1,7 @@
 package ru.pstu.poll_system_service.web.dto.poll;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,10 +20,12 @@ public class PollDto extends BasePollDto{
     private Long id;
 
     @Schema(description = "Описание")
+    @Size(max = 1, message = "Описание слишком короткое")
+    @Size(max = 1000, message = "Описание слишком длинное")
     private String description;
 
     @Schema(description = "Признак проголосовал ли пользователь, который запрашивал опрос")
-    private boolean userIsVoted; //todo: как прикручу Security, промаппить поле
+    private boolean userIsVoted;
 
     @Schema(description = "Варианты ответов")
     private List<PollValueDto> pollValues;

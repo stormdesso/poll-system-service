@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.data.model;
+package ru.pstu.poll_system_service.data.model.user;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -37,6 +37,9 @@ public class User{
 
     @Column(name = "is_blocked")
     boolean isBlocked;
+
+    @Column(name = "ownership_id")
+    Long ownershipId;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Role.class)
     List<Role> role;

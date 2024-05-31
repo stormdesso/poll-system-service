@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.data.service;
+package ru.pstu.poll_system_service.data.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import ru.pstu.poll_system_service.data.repository.UserRepository;
+import ru.pstu.poll_system_service.data.service.UserService;
 import ru.pstu.poll_system_service.web.security.model.SecurityUser;
 
 import java.util.Collections;

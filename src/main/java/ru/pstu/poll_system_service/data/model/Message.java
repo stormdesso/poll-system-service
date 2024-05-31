@@ -1,13 +1,19 @@
 package ru.pstu.poll_system_service.data.model;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
-import jakarta.persistence.*;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "message", schema = "public")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class Message{
 
@@ -23,8 +29,8 @@ public class Message{
     @Column(name = "poll_id")
     private Long pollId;
 
-    @Column(name = "date_sent_message", nullable = false, columnDefinition = "DATE DEFAULT CURRENT_DATE")
-    private Date dateSentMessage;
+    @Column(name = "date_sent_message", nullable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    private ZonedDateTime dateSentMessage;
 
     @Column(name = "message", nullable = false, length = 500)
     private String message;

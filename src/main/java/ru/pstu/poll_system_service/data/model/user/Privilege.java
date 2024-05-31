@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.data.model;
+package ru.pstu.poll_system_service.data.model.user;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
