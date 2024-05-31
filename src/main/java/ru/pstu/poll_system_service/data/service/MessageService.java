@@ -6,6 +6,6 @@ import java.time.ZoneId;
 import java.util.List;
 
 public interface MessageService{
-    List<MessageDto> getMessages(Long pollId, ZoneId timeZone);
-    void sendMessage(Long pollId, MessageDto messageDto);
+    List<MessageDto> getAllByPollId(Long pollId, ZoneId timeZone);
+    void save(Long pollId, MessageDto messageDto);
 }

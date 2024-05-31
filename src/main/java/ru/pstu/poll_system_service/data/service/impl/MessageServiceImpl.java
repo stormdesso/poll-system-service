@@ -23,19 +23,19 @@ public class MessageServiceImpl implements MessageService{
     private final MessageRepository messageRepository;
     private final GeneralService generalService;
 
-    public List<MessageDto> getMessages(Long pollId, ZoneId timeZone){
+    public List<MessageDto> getAllByPollId(Long pollId, ZoneId timeZone){
         generalService.hasAccessToPolls(List.of(pollId));
         List<Message> messages = messageRepository.findByPollId(pollId).stream()
                 .sorted(Comparator.comparing(Message::getDateSentMessage))
                 .collect(Collectors.toList());
 
-        List<MessageDto> v =  MessageMapper.INSTANCE.toMessageDtos(messages);
-        v.forEach(m -> m.setDateSentMessage(m.getDateSentMessage().withZoneSameInstant(timeZone)));
-        return v;
+        List<MessageDto> messageDtos =  MessageMapper.INSTANCE.toMessageDtos(messages);
+        messageDtos.forEach(m -> m.setDateSentMessage(m.getDateSentMessage().withZoneSameInstant(timeZone)));
+        return messageDtos;
     }
 
     @Override
-    public void sendMessage(Long pollId, MessageDto messageDto) {
+    public void save(Long pollId, MessageDto messageDto) {
         generalService.hasAccessToPolls(List.of(pollId));
         messageRepository.save(Message.builder()
                         .userId(getCurrentUserIdFromContext())
