@@ -1,51 +1,5 @@
---
--- PostgreSQL database dump
---
-
--- Dumped from database version 15.3
--- Dumped by pg_dump version 15.3
-
--- Started on 2024-05-31 23:06:27
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
--- TOC entry 3503 (class 1262 OID 86426)
--- Name: polls_system_db; Type: DATABASE; Schema: -; Owner: admin
---
-
-CREATE DATABASE polls_system_db WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'Russian_Russia.1251';
 
 
-ALTER DATABASE polls_system_db OWNER TO admin;
-
-\connect polls_system_db
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
--- TOC entry 3493 (class 0 OID 102810)
--- Dependencies: 239
--- Data for Name: action; Type: TABLE DATA; Schema: public; Owner: postgres
---
 
 INSERT INTO public.action (name) VALUES ('read');
 INSERT INTO public.action (name) VALUES ('write');
@@ -279,7 +233,6 @@ INSERT INTO public.user_role (role_id, user_id) VALUES (2, 2);
 INSERT INTO public.user_role (role_id, user_id) VALUES (3, 3);
 INSERT INTO public.user_role (role_id, user_id) VALUES (2, 7);
 
-
 --
 -- TOC entry 3482 (class 0 OID 86525)
 -- Dependencies: 228
@@ -386,4 +339,5 @@ SELECT pg_catalog.setval('public.users_answer_id_seq', 39, true);
 --
 -- PostgreSQL database dump complete
 --
+
 

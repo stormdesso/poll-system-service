@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  pg_db:
+    image: postgres:15.3
+    container_name: polls_system_db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: polls_system_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432" # делает лишь перенаправление, БД всегда будет на 5432
+  flyway:
+    image: flyway/flyway:9.8.1
+    container_name: flyway_migrations
+    environment:
+      FLYWAY_URL: jdbc:postgresql://pg_db:5432/polls_system_db
+      FLYWAY_USER: admin
+      FLYWAY_PASSWORD: admin
+      FLYWAY_BASELINE_ON_MIGRATE: "false"
+    depends_on:
+      - pg_db
+    command: -schemas=public -connectRetries=2 migrate
+    volumes:
+      - ./migrations/sql:/flyway/sql
+
+volumes:
+  postgres_data:
+    driver: local

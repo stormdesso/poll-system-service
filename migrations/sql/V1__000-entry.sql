@@ -1,50 +1,5 @@
---
--- PostgreSQL database dump
---
+CREATE ROLE postgres WITH LOGIN;
 
--- Dumped from database version 15.3
--- Dumped by pg_dump version 15.3
-
--- Started on 2024-05-31 23:04:53
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
--- TOC entry 3481 (class 1262 OID 86426)
--- Name: polls_system_db; Type: DATABASE; Schema: -; Owner: admin
---
-
-CREATE DATABASE polls_system_db WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'Russian_Russia.1251';
-
-
-ALTER DATABASE polls_system_db OWNER TO admin;
-
-\connect polls_system_db
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
---
--- TOC entry 866 (class 1247 OID 86432)
--- Name: address_object; Type: TYPE; Schema: public; Owner: postgres
---
 
 CREATE TYPE public.address_object AS (
                                          city character varying(50),
@@ -118,12 +73,7 @@ CREATE TYPE public.status_enum AS ENUM (
 
 ALTER TYPE public.status_enum OWNER TO postgres;
 
-SET default_tablespace = '';
 
-SET default_table_access_method = heap;
-
---
--- TOC entry 239 (class 1259 OID 102810)
 -- Name: action; Type: TABLE; Schema: public; Owner: postgres
 --
 
