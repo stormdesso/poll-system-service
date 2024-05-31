@@ -33,7 +33,7 @@ export const HeadderStyle = StyleSheet.create({
   SortedButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: "auto"
+    margin: "auto"
   },
 
   Dropdown: {
