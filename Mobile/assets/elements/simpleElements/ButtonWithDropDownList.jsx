@@ -3,9 +3,7 @@ import { Image, View, Text, TouchableOpacity } from "react-native";
 
 import {HeadderStyle} from "../HeadderStyle"
 
-import {SearchProp} from "../../Data/SearchProp"
-
-export const ButtonWithDropDownList = ({data, icon}) => {
+export const ButtonWithDropDownList = ({data, icon, onClick}) => {
     const [getIsShowDropDown, setIsShowDropDown] = useState(false)
 
     const renderDropDownItems = () => {
@@ -14,7 +12,7 @@ export const ButtonWithDropDownList = ({data, icon}) => {
             key={index}
             onPress={() => {
                 setIsShowDropDown(false);
-                item === "От А до Я"? SearchProp.sortedType = "asc" : SearchProp.sortedType = "desc"
+                item === 'От А до Я'? onClick('name') : onClick('-name')
             }}
           >
             <Text style={{ padding: 10 }}>{item}</Text>

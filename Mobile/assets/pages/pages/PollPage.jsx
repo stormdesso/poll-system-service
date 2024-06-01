@@ -9,13 +9,15 @@ import {
 } from "react-native";
 
 import GetPollList from "../../APIConnection/GetPollList"
-import {Headder} from "../../elements/specialElements/Headder"
 
+import { SearchProp } from '../../Data/SearchProp';
+
+import {Headder} from "../../elements/specialElements/Headder"
 import {ShortPollCard} from "../../elements/specialElements/ShortPollCard"
 
 import {PollPageStyle} from "../style/PollPageStyle"
 
-export const PollPage = (navigation) => {
+export const PollPage = ({navigation}) => {
   //Данные
   const [data, setData] = useState([]);
   //Страница
@@ -29,6 +31,14 @@ export const PollPage = (navigation) => {
   useEffect(() => {
     fetchData();
   }, [page]);
+
+  useEffect(() => {
+    const update = () => {
+      setData([]);
+      fetchData();
+    }
+    SearchProp.subscribe(update)
+  }, []);
 
   //Получение данных из апи
   const fetchData = () => {
@@ -70,7 +80,7 @@ export const PollPage = (navigation) => {
       <View>
         <Headder />
       </View>
-      <View>
+      <View style={PollPageStyle.container}>
         <FlatList
           data={data}
           keyExtractor={(item, index) => index.toString()}
