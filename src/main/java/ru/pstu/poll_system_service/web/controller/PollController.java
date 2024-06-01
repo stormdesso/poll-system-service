@@ -6,18 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
-import ru.pstu.poll_system_service.data.service.MessageService;
 import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.entity.Page;
-import ru.pstu.poll_system_service.web.dto.MessageDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
-import java.time.ZoneId;
-import java.util.List;
-
-import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.*;
+import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.READ;
+import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.WRITE;
 import static ru.pstu.poll_system_service.web.security.constant.SystemObjectConstants.POLL;
 
 @RequestMapping("/api/v1/poll")
@@ -26,8 +22,6 @@ import static ru.pstu.poll_system_service.web.security.constant.SystemObjectCons
 public class PollController{
 
     private final PollService pollService;
-    private final MessageService messageService;
-
 
     @Operation(description = "Получить отфильтрованный список опросов")
     @HasPermission(resource = POLL, action = READ)
@@ -40,30 +34,6 @@ public class PollController{
             @RequestParam(required = false) Long limit,
             @Parameter(description = "Номер страницы с результатом") @RequestParam(required = false) Long page){
         return pollService.getFilteredPolls(new PollFilter(sort, limit, page));
-    }
-
-    @Operation(description = "Получить список сообщений в чате опроса")
-    @HasPermission(resource = POLL, action = READ)
-    @ResponseBody
-    @GetMapping("/messages")
-    public List<MessageDto> getMessages(
-            @Parameter(description = "Идентификатор опроса")
-            @RequestParam(required = true) Long pollId,
-            @Parameter(description = "Часовой пояс получающего")
-            @RequestParam(required = true) String timeZone){
-        return messageService.getMessages(pollId, ZoneId.of(timeZone));
-    }
-
-    @Operation(description = "Отправить сообщение в чате опроса")
-    @HasPermission(resource = POLL, action = CREATE)
-    @ResponseBody
-    @PostMapping("/send_message")
-    public void sendMessage(
-            @Parameter(description = "Идентификатор опроса")
-            @RequestParam(required = true) Long pollId,
-            @Parameter(description = "Сообщение")
-            @RequestBody(required = true) MessageDto messageDto){
-        messageService.sendMessage(pollId, messageDto);
     }
 
     @Operation(description = "Проголосовать в опросе")

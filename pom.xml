@@ -29,12 +29,13 @@
     <springdoc-openapi-ui.version>2.5.0</springdoc-openapi-ui.version>
     <mapstruct.version>1.5.5.Final</mapstruct.version>
     <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
-
+<!--    <spring-websocket.version>5.2.25.RELEASE</spring-websocket.version>-->
     <commons-io.version>2.11.0</commons-io.version>
+
+    <jackson.version>2.17.1</jackson.version>
   </properties>
 
   <dependencies>
-
     <!--web-->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -45,7 +46,38 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-thymeleaf</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+
+<!--    <dependency>-->
+<!--      <groupId>org.springframework</groupId>-->
+<!--      <artifactId>spring-websocket</artifactId>-->
+<!--      <version>${spring-websocket.version}</version>-->
+<!--    </dependency>-->
+
+<!--    <dependency>-->
+<!--      <groupId>org.springframework</groupId>-->
+<!--      <artifactId>spring-messaging</artifactId>-->
+<!--      <version>${spring-websocket.version}</version>-->
+<!--    </dependency>-->
     <!--/-web-->
+
+    <!--json converter-->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <!--/json converter-->
 
   <!--security-->
     <dependency>
