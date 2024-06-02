@@ -49,7 +49,6 @@ export const PollPage = ({navigation}) => {
     GetPollList(page)
       .then(responseJson => {
         setData(prevData => [...prevData, ...responseJson.items]);
-        console.log(responseJson.items)
         // Общее количество контента
         setTotalPages(responseJson.totalCount);
         setLoading(false);
@@ -67,10 +66,12 @@ export const PollPage = ({navigation}) => {
     }
   };
 
+  //Анимация загрузки данных
   const renderFooter = () => {
     return loading ? <ActivityIndicator size="large" color="#0000ff" /> : null;
   };
 
+  //Перейти на страницу с информацией по опросу
   const goToPollInfo = (item) => {
     navigation.navigate("PollInfo", item)
   }

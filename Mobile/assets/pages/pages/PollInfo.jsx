@@ -2,20 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
-const InfoRoute = () => (
-    <View style={styles.scene}>
-      <Text>InfoRoute</Text>
-    </View>
-  );
+import {InformationAboutThePoll} from "./InformationAboutThePoll"
+import {ChatAboutThePoll} from "./ChatAboutThePoll"
   
-  const ChatRoute = () => (
-    <View style={styles.scene}>
-      <Text>Chat Section</Text>
-    </View>
-  );
 
 export const PollInfo = ({ route }) => {
-    const { item } = route.params;
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'info', title: 'Информация' },
@@ -23,8 +14,8 @@ export const PollInfo = ({ route }) => {
   ]);
 
   const renderScene = SceneMap({
-    info: InfoRoute,
-    chat: ChatRoute,
+    info: () => <InformationAboutThePoll item = {route.params}/>,
+    chat: ChatAboutThePoll,
   });
 
   return (
@@ -37,11 +28,3 @@ export const PollInfo = ({ route }) => {
     />
   );
 }
-
-const styles = StyleSheet.create({
-    scene: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-});

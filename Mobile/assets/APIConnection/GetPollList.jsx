@@ -5,17 +5,27 @@ import { SearchProp } from '../Data/SearchProp';
 export default function GetPollList(currentPage) {
     //Данные для API адресов
     return new Promise((resolve, reject) => {
+        
         SecureStore.getItemAsync('Token')
             .then(token => {
-                let url = `http://192.168.0.159:8080/api/v1/poll/filtered_list?sort=${SearchProp.sortedType}&limit=6&page=${currentPage}`;
+                let requestBody = [];
+                if (SearchProp.searchText !== "") {
+                    requestBody = [{
+                        "key": "name",
+                        "value": SearchProp.searchText
+                    }];
+                }
 
+                let url = `http://192.168.0.159:8080/api/v1/poll/filtered_list?sort=${SearchProp.sortedType}&limit=6&page=${currentPage}`;
                 let options = {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         Connection: "keep-alive",
+                        "Content-Type": "application/json",
                         accept: "*/*",
                         authorization: token,
-                    }
+                    },
+                    body: JSON.stringify(requestBody),
                 };
 
                 fetch(url, options)
