@@ -1,7 +1,7 @@
 package ru.pstu.poll_system_service.data.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import ru.pstu.poll_system_service.data.enums.StatusEnum;
 
 import java.util.Date;
@@ -10,6 +10,9 @@ import java.util.List;
 @Entity
 @Table(name = "poll", schema = "public")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Poll{
 
     @Id
