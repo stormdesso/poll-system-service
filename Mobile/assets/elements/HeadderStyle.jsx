@@ -17,7 +17,8 @@ export const HeadderStyle = StyleSheet.create({
     paddingRight: 30,
     paddingTop: 5,
     paddingBottom: 5,
-    flexDirection: "row"
+    flexDirection: "row",
+    zIndex: 1000
   },
 
   Search: {
@@ -42,7 +43,7 @@ export const HeadderStyle = StyleSheet.create({
     top: 40,
     marginLeft: "10%",
     right: 0,
-    zIndex: 2,
+    zIndex: 1000,
     backgroundColor: "#FFF",
     borderColor: "gray",
     borderWidth: 1,

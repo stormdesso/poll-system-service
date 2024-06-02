@@ -10,7 +10,8 @@ export const PollPageStyle = StyleSheet.create({
   //Стиль для всей страницы
   container: {
     width: "100%",
-    flex: 1
+    flex: 1,
+    zIndex: 1
   },
   
   pollList: {

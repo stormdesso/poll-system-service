@@ -1,5 +1,5 @@
 import React from "react";
-import { PollPage } from "../../../pages/pages/PollPage";
+import {PollPageStackNavigation} from "./PollPageStackNavigation"
 import { CreatePollPage } from "../../../pages/pages/CreatePollPage";
 import { MyPollPage } from "../../../pages/pages/MyPollPage";
 
@@ -10,7 +10,7 @@ export const UserTabNavigation = () => {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name={"Опросы"} component={PollPage} options={{ headerShown: false }}/>
+      <Tab.Screen name={"Опросы"} component={PollPageStackNavigation} options={{ headerShown: false }}/>
       <Tab.Screen name={"Мои опросы"} component={MyPollPage} options={{ headerShown: false }}/>
       <Tab.Screen name={"Создать опрос"} component={CreatePollPage} options={{ headerShown: false }}/>
     </Tab.Navigator>
