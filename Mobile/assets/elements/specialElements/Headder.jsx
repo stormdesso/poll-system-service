@@ -19,7 +19,7 @@ export const Headder = () => {
         <View style={HeadderStyle.Headder}>
             <SearchInput />
             <ButtonWithDropDownList 
-                data = {SortedType.sortedTypes} 
+                data = {SortedType} 
                 icon={sorted}
                 onClick={handleSortedTypeChange}
             />

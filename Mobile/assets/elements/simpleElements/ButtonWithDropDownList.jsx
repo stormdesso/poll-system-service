@@ -5,14 +5,13 @@ import {HeadderStyle} from "../HeadderStyle"
 
 export const ButtonWithDropDownList = ({data, icon, onClick}) => {
     const [getIsShowDropDown, setIsShowDropDown] = useState(false)
-
     const renderDropDownItems = () => {
-        return data.map((item, index) => (
+        return Object.keys(data).map((item, index) => (
           <TouchableOpacity
             key={index}
             onPress={() => {
                 setIsShowDropDown(false);
-                item === 'От А до Я'? onClick('name') : onClick('-name')
+                onClick(data[item])
             }}
           >
             <Text style={{ padding: 10 }}>{item}</Text>
