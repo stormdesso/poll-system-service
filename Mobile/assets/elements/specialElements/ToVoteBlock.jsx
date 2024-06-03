@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 
-export const ToVoteBlock = ({pollValues, maxAnswers}) => {
+import ToVote from "../../APIConnection/ToVote"
+
+export const ToVoteBlock = ({pollValues, maxAnswers, pollId}) => {
     const [selectedOptions, setSelectedOptions] = useState([]);
-    
+    pollId
     //Определяет логику отметки выбранных элементов
     const handleSelection = (id) => {
         if (maxAnswers === 1) {
@@ -21,6 +23,7 @@ export const ToVoteBlock = ({pollValues, maxAnswers}) => {
 
     const handleVote = () => {
         console.log('Selected option IDs:', selectedOptions);
+        ToVote(selectedOptions, pollValues, pollId)
         // Здесь можно добавить логику отправки данных на сервер или другого дальнейшего использования
     };
 

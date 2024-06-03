@@ -14,7 +14,11 @@ export const InformationAboutThePoll = ({item}) => {
             </View>
             <View style={InformationAboutThePollStyle.InfoContainer}>
                 <Text style={InformationAboutThePollStyle.InfoTextNameBlock}>Проголосовать</Text>
-                <ToVoteBlock pollValues = {item.pollValues} maxAnswers = {2} />
+                <ToVoteBlock 
+                    pollValues = {item.pollValues} 
+                    maxAnswers = {item.maxNumberAnswersByUser} 
+                    pollId={item.id}
+                />
             </View>
         </View>
     )
