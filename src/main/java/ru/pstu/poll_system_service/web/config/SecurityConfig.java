@@ -14,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.pstu.poll_system_service.business.aspect.SecurityPermissionEvaluator;
 import ru.pstu.poll_system_service.data.service.UserService;
 import ru.pstu.poll_system_service.web.security.jwt.JwtAuthenticationFilter;
@@ -36,13 +35,27 @@ public class SecurityConfig{
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> request
                         .requestMatchers(GET, getSwaggerPatterns()).permitAll()
                         .requestMatchers(POST, AUTH_URL).permitAll()
-                        .anyRequest().authenticated())
-                .sessionManagement( manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                        .anyRequest().permitAll())//authenticated())
+                .sessionManagement( manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                //.authenticationProvider(authenticationProvider())
+                //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+
+    //для теста чатика
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> request
+//                        .requestMatchers(GET, getSwaggerPatterns()).permitAll()
+//                        .requestMatchers(POST, AUTH_URL).permitAll()
+//                        .anyRequest().permitAll())//authenticated())
+//                .sessionManagement( manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        //.authenticationProvider(authenticationProvider())
+//        //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+//
+//        return http.build();
+//    }
 
     @Bean
     public SecurityPermissionEvaluator securityPermissionEvaluator() {

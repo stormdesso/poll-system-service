@@ -9,28 +9,21 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
     public static final String PREFIX = "/api/v1/poll/chat";
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker( PREFIX);//конфигурирует простой брокер сообщений
-        // в памяти с одним адресом
-        registry.setApplicationDestinationPrefixes(PREFIX);//префикс для метода API
-        registry.setUserDestinationPrefix(PREFIX);//префикс который добавляется при отправке сообщения в очередь
+        registry.enableSimpleBroker("/topic");
+        registry.setApplicationDestinationPrefixes("/app");
     }
 
     /**
      * Метод регистрирует конечную точку, которая будет использоваться клиентами для подключения
-     * к STOMP-серверу. Здесь также включается резервный SockJS, который будет использоваться,
-     * если WebSocket будет недоступен.
+     * к STOMP-серверу.
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
-                .setAllowedOrigins("*")
-                .withSockJS();
-
+        registry.addEndpoint("/gs-guide-websocket");
     }
 }
 

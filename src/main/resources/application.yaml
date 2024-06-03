@@ -3,6 +3,8 @@ server:
   port: 8080
 
 spring:
+#  thymeleaf:
+#    check-template-location: false #выкл. темплейты для web-страниц(40X, 50X и т.п.)
   application:
     name: "@project.name@"
     description: "@project.description@"
@@ -34,7 +36,9 @@ spring:
 
 logging:
   level:
-    ru.pstu.poll_system_service: debug
+    org.springframework.security: error
+    ru.pstu.poll_system_service: error
+
 
 token:
   signing:
