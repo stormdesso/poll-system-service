@@ -73,7 +73,6 @@ public class PollServiceImpl implements PollService {
         return pollDtoPage;
     }
 
-
     @NotNull
     private  Poll getPoll(Long pollId){
         var poll = pollRepository.findPollByIdEquals(pollId).orElseThrow(()
