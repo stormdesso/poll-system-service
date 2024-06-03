@@ -10,18 +10,26 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.pstu.poll_system_service.data.mapper.PollMapper;
 import ru.pstu.poll_system_service.data.model.Poll;
+import ru.pstu.poll_system_service.data.model.PollValue;
 import ru.pstu.poll_system_service.data.model.UserAnswer;
 import ru.pstu.poll_system_service.data.repository.PollRepository;
 import ru.pstu.poll_system_service.data.repository.UserAnswerRepository;
+import ru.pstu.poll_system_service.data.repository.UserRepository;
 import ru.pstu.poll_system_service.data.service.GeneralService;
 import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.entity.Page;
+import ru.pstu.poll_system_service.web.dto.poll.CreatePollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static ru.pstu.poll_system_service.data.enums.StatusEnum.planned;
 import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserFromContext;
 import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserIdFromContext;
 
@@ -32,6 +40,7 @@ public class PollServiceImpl implements PollService {
 
     private final PollRepository pollRepository;
     private final UserAnswerRepository userAnswerRepository;
+    private final UserRepository userRepository;
     private final GeneralService generalService;
 
     @Override
@@ -42,7 +51,15 @@ public class PollServiceImpl implements PollService {
                 getSort(pollFilter.getSortableField(), pollFilter.getDirection()) );
 
         var ids = pollRepository.findAvailablePollsIdsForUser(ownershipId, getCurrentUserIdFromContext());
-        org.springframework.data.domain.Page<Poll> pollEntitiesPage = pollRepository.findAllByIdIn(ids, pageable);
+
+        org.springframework.data.domain.Page<Poll> pollEntitiesPage;
+        if (pollFilter.isSpecificationIsEmpty()){
+            pollEntitiesPage = pollRepository.findAllByIdIn(ids,pageable);
+        }else {
+            pollEntitiesPage = pollRepository.findAll(
+                    pollFilter.getSpecification().and(pollFilter.idIn(ids)),
+                    pageable);
+        }
 
         var pollDtoPage =  new Page<>(PollMapper.INSTANCE.toPollDtos(pollEntitiesPage.getContent()),
                 pollEntitiesPage.getTotalElements(), pollEntitiesPage.stream().count());
@@ -74,7 +91,7 @@ public class PollServiceImpl implements PollService {
 
     @Override
     @Transactional
-    public void vote(Long pollId,PollValueDto pollValueDto){
+    public void vote(Long pollId,List<PollValueDto> pollValueDtoList){
         // todo: проверить имеющуюся систему голосования
         Long userId =  getCurrentUserIdFromContext();
         var poll = getPoll(pollId);
@@ -85,11 +102,12 @@ public class PollServiceImpl implements PollService {
             throw new IllegalArgumentException("Пользователь уже голосовал в опросе!");
         }
 
-        //проверяем существует ли такой вариант ответа у опроса
-        poll.getPollValues().stream()
-                .filter( pollValue -> pollValueDto.getId().equals(pollValue.getId()) )
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Вариант ответа не существует!"));
+        var pollValuesIds = new java.util.ArrayList<>(poll.getPollValues().stream().map(PollValue::getId).toList());
+        var pollValueDtosIds = new java.util.ArrayList<>(pollValueDtoList.stream().map(PollValueDto::getId).toList());
+
+        if(! pollValuesIds.containsAll(pollValueDtosIds) ){
+            throw new IllegalArgumentException("Указаны неверные варианты ответа!");
+        }
 
         var votes = userAnswerRepository.getNumberOfVotesByUser(userId, pollId);
         if (poll.getMaxNumberAnswersByUser() <= votes){
@@ -100,17 +118,62 @@ public class PollServiceImpl implements PollService {
             );
         }
 
-        if (userAnswerRepository.existsByUserIdEqualsAndPollValueIdEquals(userId, pollValueDto.getId())){
-            throw new IllegalArgumentException("Нельзя проголосовать за один вариант ответа более 1 раза!");
-        }
+        //todo: переделать проверку
+//        if (userAnswerRepository.existsByUserIdEqualsAndPollValueIdEquals(userId, pollValueDtoList.stream().map(PollValueDto::getId))){
+//            throw new IllegalArgumentException("Нельзя проголосовать за один вариант ответа более 1 раза!");
+//        }
 
         log.debug("Все проверки пройдены");
 
-        userAnswerRepository.save(
-                UserAnswer.builder()
-                        .userId(userId)
-                        .pollValueId(pollValueDto.getId())
+        var list = pollValueDtoList.stream().map(pollValueDto -> UserAnswer.builder()
+                .userId(userId)
+                .pollValueId(pollValueDto.getId())
+                .build()).collect(Collectors.toCollection(ArrayList::new));
+
+        userAnswerRepository.saveAll(list);
+    }
+
+    @Override
+    public Long save(CreatePollDto createPollDto) {
+        //todo: протестить метод
+
+        var user = getCurrentUserFromContext();
+
+        var addressesIds = userRepository.findAddressesIdByOwnershipId(user.getOwnershipId());
+
+        if(!addressesIds.contains(createPollDto.getAddressId())){
+            throw new IllegalArgumentException("Невозможно создать опрос по выбранному адресу!");
+        }
+
+        if(!(createPollDto.getPollValues().size() < 2)){
+            throw new IllegalArgumentException("Минимальное число вариантов ответа: 2!");
+        }
+
+        if(createPollDto.getStartDate().before(createPollDto.getEndDate())){
+            throw new IllegalArgumentException("Неверно указаны даты начала и завершения опроса!");
+        }
+
+        long duration = ChronoUnit.DAYS.between(
+                (Temporal) createPollDto.getStartDate(), (Temporal) createPollDto.getEndDate());
+
+        var pollValues = PollMapper.INSTANCE.toPollValues(createPollDto.getPollValues());
+
+        Poll poll = pollRepository.save(
+                Poll.builder()
+                        .creatorUserId(user.getId())
+                        .addressId(createPollDto.getAddressId())
+                        .name(createPollDto.getName())
+                        .startDate(createPollDto.getStartDate())
+                        .endDate(createPollDto.getEndDate())
+                        .duration((int) duration)
+                        .status(planned)
+                        .description(createPollDto.getDescription())
+                        .cyclical(createPollDto.getCyclical())
+                        .maxNumberAnswersByUser(createPollDto.getMaxNumberAnswersByUser())
+                        .pollValues(pollValues)
                         .build()
         );
+
+        return poll.getId();
     }
 }

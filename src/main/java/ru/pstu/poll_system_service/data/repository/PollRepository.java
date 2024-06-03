@@ -21,7 +21,7 @@ public interface PollRepository extends JpaRepository<Poll, Long>, JpaSpecificat
      */
     @Query(value = "select p.id from poll as p" +
             " where p.adress_id in (select address_id from address_ownership\n" +
-            "                where ownership_id = :ownership_id) and p.status = 'active' and id not in (" +
+            "                where ownership_id = :ownership_id) and p.status != 'planned' and id not in (" +
             "select poll_id from unavailable_poll_for_user " +
             "where user_id = :userId and poll_id = p.id)", nativeQuery = true)
     List<Long> findAvailablePollsIdsForUser(@Param("ownership_id") Long ownership_id, @Param("userId") Long userId);
@@ -32,11 +32,12 @@ public interface PollRepository extends JpaRepository<Poll, Long>, JpaSpecificat
             "WHERE upfu.poll_id = :pollId AND upfu.user_id = aa.user_id))", nativeQuery = true)
     Long getMaxNumberVoted(@Param("pollId") Long pollId);
 
+//    Page<Poll> findAll(Specification<Poll> specification, Pageable pageable);
     Page<Poll> findAllByIdIn(Collection<Long> id, Pageable pageable);
 
     /**
      * Проверяет опросы:
-     * - является ли он active
+     * - является ли он active (если опрос неактивный, то его нельзя редачить никому)
      * - не скрыт ли он от пользователя
      * - доступен ли он по адресу пользователя
      */

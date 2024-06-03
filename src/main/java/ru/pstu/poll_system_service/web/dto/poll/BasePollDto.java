@@ -9,13 +9,14 @@ import java.util.Date;
 public abstract class BasePollDto{
 
     @Schema(description = "Создатель опроса")
-    private String creatorUserId; // anonymous
+    private Long creatorUserId;
 
     @Schema(description = "Название опроса")
     private String name;
 
     @Schema(description = "Дата начала проведения")
     private Date startDate;
+
     @Schema(description = "Дата окончания")
     private Date endDate;
 
@@ -28,4 +29,6 @@ public abstract class BasePollDto{
     @Schema(description = "Максимально возможное число проголосовавших в опросе")
     private Long maxNumberVoted;
 
+    @Schema(description = "Максимально возможное число голосов в опросе")
+    private Long maxNumberAnswersByUser;
 }

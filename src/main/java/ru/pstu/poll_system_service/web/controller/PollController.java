@@ -7,13 +7,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
 import ru.pstu.poll_system_service.data.service.PollService;
+import ru.pstu.poll_system_service.web.common.PairParameter;
 import ru.pstu.poll_system_service.web.common.entity.Page;
+import ru.pstu.poll_system_service.web.dto.poll.CreatePollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
-import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.READ;
-import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.WRITE;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.*;
 import static ru.pstu.poll_system_service.web.security.constant.SystemObjectConstants.POLL;
 
 @RequestMapping("/api/v1/poll")
@@ -26,14 +31,21 @@ public class PollController{
     @Operation(description = "Получить отфильтрованный список опросов")
     @HasPermission(resource = POLL, action = READ)
     @ResponseBody
-    @GetMapping("/filtered_list")
+    @PostMapping(value = "/filtered_list", consumes = APPLICATION_JSON_VALUE)
     public Page<PollDto> getFilteredPolls(
             @Parameter(description = "Название поля по которому будет осуществляться сортировка(asc - default, desc -fieldName)")
             @RequestParam(required = false) String sort,
             @Parameter(description = "Количество результатов на странице")
             @RequestParam(required = false) Long limit,
-            @Parameter(description = "Номер страницы с результатом") @RequestParam(required = false) Long page){
-        return pollService.getFilteredPolls(new PollFilter(sort, limit, page));
+            @Parameter(description = "Номер страницы с результатом")
+            @RequestParam(required = false) Long page,
+            @Parameter(description = "Параметры фильтрации")
+            @RequestBody(required = false) List<PairParameter> filteredFieldsByValue){
+
+        var parameters = filteredFieldsByValue.stream().collect(Collectors.toMap(
+                PairParameter::getKey, PairParameter::getValue, (a, b) -> b));
+
+        return pollService.getFilteredPolls(new PollFilter(sort, limit, page, parameters));
     }
 
     @Operation(description = "Проголосовать в опросе")
@@ -42,7 +54,15 @@ public class PollController{
     @PostMapping("/vote")
     public void vote(
             @Parameter(description = "Идентификатор опроса") @RequestParam(required = true) Long pollId,
-            @Parameter(description = "Вариант опроса") @RequestBody(required = true) PollValueDto pollValueDto){
+            @Parameter(description = "Вариант опроса") @RequestBody(required = true) List<PollValueDto> pollValueDto){
         pollService.vote(pollId, pollValueDto);
+    }
+
+    @Operation(description = "Создать опрос")
+    @HasPermission(resource = POLL, action = CREATE)
+    @ResponseBody
+    @PutMapping("/create")
+    public void create(@Parameter(description = "Опрос") @RequestParam(required = true) CreatePollDto createPollDto) {
+        pollService.save(createPollDto);
     }
 }
