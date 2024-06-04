@@ -9,7 +9,7 @@ import ru.pstu.poll_system_service.data.service.GeneralService;
 
 import java.util.List;
 
-import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserIdFromContext;
+import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserFromContext;
 
 @Service
 @Slf4j
@@ -21,7 +21,8 @@ public class GeneralServiceImpl implements GeneralService{
     @Override
     public void hasAccessToPolls(List<Long> ids){
         log.debug("Проверка доступа к опросам с id: {}", ids.toString());
-        if(!pollRepository.pollsIsAvailableForUser(ids, getCurrentUserIdFromContext())){
+        var user = getCurrentUserFromContext();
+        if(!pollRepository.pollsIsAvailableForUser(ids, user.getId(), user.getOwnershipId())){
             log.debug("Нет доступа к опросу!");
             throw new AccessDeniedException("Нет доступа к опросу!");
         }

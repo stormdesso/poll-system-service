@@ -6,6 +6,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
+import ru.pstu.poll_system_service.data.model.user.Role;
 import ru.pstu.poll_system_service.data.repository.UserRepository;
 import ru.pstu.poll_system_service.web.security.jwt.JwtService;
 import ru.pstu.poll_system_service.web.security.model.SecurityUser;
@@ -35,6 +36,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
 
         return JwtAuthenticationResponse.builder()
                 .token(jwt)
+                .role(user.getRole().stream().map(Role::getRoleName).toList())
                 .build();
     }
 }

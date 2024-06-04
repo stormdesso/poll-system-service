@@ -26,13 +26,13 @@ public interface PollRepository extends JpaRepository<Poll, Long>, JpaSpecificat
             "where user_id = :userId and poll_id = p.id)", nativeQuery = true)
     List<Long> findAvailablePollsIdsForUser(@Param("ownership_id") Long ownership_id, @Param("userId") Long userId);
 
-    @Query(value = "(SELECT COUNT(aa.user_id) FROM apartment_address AS aa " +
-            "WHERE aa.address_id = (SELECT p.adress_id FROM poll AS p WHERE p.id = :pollId) " +
-            "AND NOT EXISTS (SELECT 1 FROM unavailable_poll_for_user AS upfu " +
-            "WHERE upfu.poll_id = :pollId AND upfu.user_id = aa.user_id))", nativeQuery = true)
+    @Query(value = "select count(*) from address_ownership as ad_own " +
+                    "left join poll as p on p.adress_id = ad_own.address_id " +
+                        "inner join \"user\" as u on u.ownership_id = ad_own.ownership_id " +
+                            "where p.id = :pollId and u.id not in (select 1 from unavailable_poll_for_user AS upfu " +
+                                            "where upfu.poll_id = :pollId and upfu.user_id = u.id)", nativeQuery = true)
     Long getMaxNumberVoted(@Param("pollId") Long pollId);
 
-//    Page<Poll> findAll(Specification<Poll> specification, Pageable pageable);
     Page<Poll> findAllByIdIn(Collection<Long> id, Pageable pageable);
 
     /**
@@ -41,13 +41,14 @@ public interface PollRepository extends JpaRepository<Poll, Long>, JpaSpecificat
      * - не скрыт ли он от пользователя
      * - доступен ли он по адресу пользователя
      */
-    @Query(value = "select COUNT(*) > 0 from apartment_address AS a_p\n" +
-            "    left join poll AS p on a_p.address_id = p.adress_id\n" +
-            "        where p.status = 'active' and a_p.user_id = :userId and (p.id in :pollIds) and a_p.user_id not in (\n" +
-            "            select u_p_u.user_id from unavailable_poll_for_user as u_p_u\n" +
-            "                     where u_p_u.user_id = :userId\n" +
-            "            )", nativeQuery = true)
-    boolean pollsIsAvailableForUser(@Param("pollIds") List<Long> pollIds, @Param("userId") Long userId);
+    @Query(value = "select COUNT(*) > 0 from poll as p " +
+            "    where p.adress_id in (select address_id from address_ownership " +
+            "        where ownership_id = :ownershipId) and p.status != 'planned'and p.id in :pollIds and id not in ( " +
+            "            select poll_id from unavailable_poll_for_user " +
+            "                where user_id = :userId and poll_id = p.id)", nativeQuery = true)
+    boolean pollsIsAvailableForUser(@Param("pollIds") List<Long> pollIds,
+                                    @Param("userId") Long userId,
+                                    @Param("ownershipId") Long ownershipId);
 
     @Query(value = "select count(*) > 0 from poll as p " +
             "join poll_value as pv on p.id = pv.poll_id " +
