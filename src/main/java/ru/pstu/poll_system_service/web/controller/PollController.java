@@ -69,7 +69,7 @@ public class PollController{
     @Operation(description = "Редактировать опрос(неактивный)")
     @HasPermission(resource = POLL, action = WRITE)
     @ResponseBody
-    @PutMapping("/update")
+    @PostMapping("/update")
     public Long update(@Parameter(description = "Опрос") @RequestBody(required = true) PollDto pollDto) {
         return pollService.update(pollDto);
     }

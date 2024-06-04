@@ -38,6 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 .token(jwt)
                 .role(user.getRole().stream().map(Role::getRoleName).toList())
                 .FIO(user.getFullName())
+                .id(user.getId())
                 .build();
     }
 }

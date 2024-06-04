@@ -15,4 +15,5 @@ public class JwtAuthenticationResponse {
     private String token;
     private List<String> role;
     private String FIO;
+    private Long id;
 }
