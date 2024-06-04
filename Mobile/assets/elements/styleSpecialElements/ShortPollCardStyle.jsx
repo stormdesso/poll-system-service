@@ -20,6 +20,19 @@ export const ShortPollCardStyle = StyleSheet.create({
   Text: {
     color: TextColor,
     paddingBottom: 3
+  },
+
+  FileList: {
+    flexDirection: "row"
+  },
+
+  FileImageBlock: {
+    marginRight: 5
+  },
+
+  FileImage: {
+    width: 15,
+    height: 15,
   }
 
 });

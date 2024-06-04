@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { SafeAreaView, View, Text, ScrollView } from "react-native";
 
-import { AuthAndRegistrationStyle } from "../style/AuthAndRegistrationStyle";
+import { AuthAndRegistrationStyle } from "../../style/AuthAndRegistrationStyle";
 
-import phoneNumberMask from "../../scripts/phoneNumberMask";
-import validationDataInRegistration from "../../scripts/validationDataInRegistration";
+import phoneNumberMask from "../../../scripts/phoneNumberMask";
+import validationDataInRegistration from "../../../scripts/validationDataInRegistration";
 
-import Input from "../../elements/simpleElements/Input";
-import InputPassword from "../../elements/simpleElements/InputPassword";
-import InputAddressWithDropDownList from "../../elements/simpleElements/InputAddressWithDropDownList";
-import InputWithCalendar from "../../elements/simpleElements/InputWithCalendar";
-import ButtonWithText from "../../elements/simpleElements/ButtonWithText";
+import Input from "../../../elements/simpleElements/Input";
+import InputPassword from "../../../elements/simpleElements/InputPassword";
+import InputAddressWithDropDownList from "../../../elements/simpleElements/InputAddressWithDropDownList";
+import InputWithCalendar from "../../../elements/simpleElements/InputWithCalendar";
+import ButtonWithText from "../../../elements/simpleElements/ButtonWithText";
 
 export const Registration = ({ navigation }) => {
   //Изменение текста в полях

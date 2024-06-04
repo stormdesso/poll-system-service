@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput } from "react-native";
-import {HeadderStyle} from "../HeadderStyle"
+import {HeadderStyle} from "../styleSpecialElements/HeadderStyle"
 
 import {SearchProp} from "../../Data/SearchProp"
 

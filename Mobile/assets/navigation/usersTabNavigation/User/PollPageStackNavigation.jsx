@@ -1,8 +1,8 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { PollPage } from "../../../pages/pages/PollPage";
-import {PollInfo} from "../../../pages/pages/PollInfo"
+import { PollPage } from "../../../pages/pages/ApplicationSections/PollPage/PollPage";
+import {PollInfo} from "../../../pages/pages/ApplicationSections/PollPage/PollInfo"
 
 const Stack = createStackNavigator();
 

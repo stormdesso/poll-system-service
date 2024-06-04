@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
@@ -13,10 +13,10 @@ export const PollInfo = ({ route }) => {
     { key: 'chat', title: 'Чат' },
   ]);
 
-  const renderScene = SceneMap({
-    info: () => <InformationAboutThePoll item = {route.params}/>,
-    chat: ChatAboutThePoll,
-  });
+  const renderScene = useCallback(SceneMap({
+    info: () => <InformationAboutThePoll item={route.params} />,
+    chat: () => <ChatAboutThePoll />,
+  }), [route.params]);
 
   return (
     <TabView

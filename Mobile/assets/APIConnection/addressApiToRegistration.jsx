@@ -8,9 +8,9 @@ export default function AddressApiToRegistration(address) {
     method: "POST",
     mode: "cors",
     headers: {
-      "content-type": "application/json",
-      accept: "application/json",
-      authorization: "Token " + token,
+      "Content-type": "application/json",
+      "Accept": "application/json",
+      "Authorization": "Token " + token,
     },
     body: JSON.stringify({ query: address, count: 10 }),
   };

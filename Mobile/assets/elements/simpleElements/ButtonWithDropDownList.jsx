@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Image, View, Text, TouchableOpacity } from "react-native";
 
-import {HeadderStyle} from "../HeadderStyle"
+import {HeadderStyle} from "../styleSpecialElements/HeadderStyle"
 
 export const ButtonWithDropDownList = ({data, icon, onClick}) => {
     const [getIsShowDropDown, setIsShowDropDown] = useState(false)

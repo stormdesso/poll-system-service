@@ -7,7 +7,7 @@ import {ButtonWithDropDownList} from "../simpleElements/ButtonWithDropDownList"
 import {SortedType} from "../../Data/SortedType"
 import {SearchProp} from "../../Data/SearchProp"
 import sorted from "../../Img/Icon/sorted.png"
-import {HeadderStyle} from "../HeadderStyle"
+import {HeadderStyle} from "../styleSpecialElements/HeadderStyle"
 
 export const Headder = () => {
     

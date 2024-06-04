@@ -1,7 +1,5 @@
 import * as SecureStore from 'expo-secure-store';
 
-import { SearchProp } from '../Data/SearchProp';
-
 export default function ToVote(selectValue, pollValues, pollId) {
     let requestBody = [];
 
@@ -25,7 +23,7 @@ export default function ToVote(selectValue, pollValues, pollId) {
                         "Connection": "keep-alive",
                         "Content-Type": "application/json",
                         "Accept": "*/*",
-                        "authorization": token
+                        "Authorization": token
                     },
                     body: JSON.stringify(requestBody),
                 };

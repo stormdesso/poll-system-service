@@ -20,10 +20,10 @@ export default function GetPollList(currentPage) {
                 let options = {
                     method: "POST",
                     headers: {
-                        Connection: "keep-alive",
+                        "Connection": "keep-alive",
                         "Content-Type": "application/json",
-                        accept: "*/*",
-                        authorization: token,
+                        "Accept": "*/*",
+                        "Authorization": token,
                     },
                     body: JSON.stringify(requestBody),
                 };

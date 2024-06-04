@@ -1,28 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, TextInput, Button, FlatList } from 'react-native';
 
-import {ChatAboutThePollStyle} from "../style/ChatAboutThePollStyle"
-
-const chatMessages = [
-  {
-    id: 1,
-    user: "Иванов Иван Иванович",
-    date: "2024-06-02T14:48:00.000Z",
-    message: "Привет! Как дела?"
-  },
-  {
-    id: 2,
-    user: "Петров Петр Петрович",
-    date: "2024-06-02T14:50:00.000Z",
-    message: "Привет! Все хорошо, спасибо. Как ты?"
-  },
-  {
-    id: 3,
-    user: "Иванов Иван Иванович",
-    date: "2024-06-02T14:55:00.000Z",
-    message: "Тоже все отлично. Чем занимаешься?"
-  }
-];
+import {ChatAboutThePollStyle} from "../../../style/ChatAboutThePollStyle"
 
 export const ChatAboutThePoll = () => {
   const [message, setMessage] = useState('');
@@ -33,7 +12,7 @@ export const ChatAboutThePoll = () => {
   //"ws://echo.websocket.org"
   //"ws://192.168.0.159:8080"
   useEffect(() => {
-    websocket.current = new WebSocket('ws://192.168.0.159:8080');
+    websocket.current = new WebSocket('http://192.168.0.159:8080/ws');
 
     // Обработчик событий при открытии соединения
     websocket.current.onopen = () => {

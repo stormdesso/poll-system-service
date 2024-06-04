@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, Text } from "react-native";
 
-import { SimpleElementsStyle } from "../SimpleElementsStyle";
+import { SimpleElementsStyle } from "../styleSimleElements/SimpleElementsStyle";
 
 export default function ButtonWithText({ label, onPress }) {
   return (

@@ -8,14 +8,14 @@ import {
   ScrollView
 } from "react-native";
 
-import GetPollList from "../../APIConnection/GetPollList"
+import GetPollList from "../../../../APIConnection/GetPollList"
 
-import { SearchProp } from '../../Data/SearchProp';
+import { SearchProp } from '../../../../Data/SearchProp';
 
-import {Headder} from "../../elements/specialElements/Headder"
-import {ShortPollCard} from "../../elements/specialElements/ShortPollCard"
+import {Headder} from "../../../../elements/specialElements/Headder"
+import {ShortPollCard} from "../../../../elements/specialElements/ShortPollCard"
 
-import {PollPageStyle} from "../style/PollPageStyle"
+import {PollPageStyle} from "../../../style/PollPageStyle"
 
 export const PollPage = ({navigation}) => {
   //Данные
