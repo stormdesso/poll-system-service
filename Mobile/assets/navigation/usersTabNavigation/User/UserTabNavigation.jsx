@@ -1,7 +1,7 @@
 import React from "react";
 import {PollPageStackNavigation} from "./PollPageStackNavigation"
-import { CreatePollPage } from "../../../pages/pages/CreatePollPage";
-import { MyPollPage } from "../../../pages/pages/MyPollPage";
+import { CreatePollPage } from "../../../pages/pages/ApplicationSections/CreatePoll/CreatePollPage";
+import { MyPollPage } from "../../../pages/pages/ApplicationSections/MyPoll/MyPollPage";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 

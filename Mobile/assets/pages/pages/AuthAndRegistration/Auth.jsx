@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text } from "react-native";
-import { AuthAndRegistrationStyle } from "../style/AuthAndRegistrationStyle";
+import { AuthAndRegistrationStyle } from "../../style/AuthAndRegistrationStyle";
 
-import validationDataInAuth from "../../scripts/validationDataInAuth";
-import GetToken from "../../APIConnection/GetToken";
+import validationDataInAuth from "../../../scripts/validationDataInAuth";
+import GetToken from "../../../APIConnection/GetToken";
 
-import Input from "../../elements/simpleElements/Input";
-import InputPassword from "../../elements/simpleElements/InputPassword";
-import ButtonWithText from "../../elements/simpleElements/ButtonWithText";
+import Input from "../../../elements/simpleElements/Input";
+import InputPassword from "../../../elements/simpleElements/InputPassword";
+import ButtonWithText from "../../../elements/simpleElements/ButtonWithText";
 
 export const Auth = ({ navigation }) => {
   //Поле для хранения введенного логина

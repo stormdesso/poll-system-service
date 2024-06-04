@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextInput, View, Text, Modal } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
-import { SimpleElementsStyle } from "../SimpleElementsStyle";
+import { SimpleElementsStyle } from "../styleSimleElements/SimpleElementsStyle";
 
 export default function InputWithCalendar({
   label,

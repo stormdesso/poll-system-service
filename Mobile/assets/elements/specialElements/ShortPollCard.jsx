@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
-import { ShortPollCardStyle } from "../ShortPollCardStyle";
+import { ShortPollCardStyle } from "../styleSpecialElements/ShortPollCardStyle";
 
 import {convertStatus} from "../../scripts/convertStatus"
 import {convertDate} from "../../scripts/convertDate"

@@ -1,9 +1,11 @@
-import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React, { useCallback } from 'react';
+import { StyleSheet, Dimensions } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 import {InformationAboutThePoll} from "./InformationAboutThePoll"
 import {ChatAboutThePoll} from "./ChatAboutThePoll"
+
+import {PollInfoStyle} from "../../../style/PollInfoStyle"
   
 
 export const PollInfo = ({ route }) => {
@@ -13,10 +15,21 @@ export const PollInfo = ({ route }) => {
     { key: 'chat', title: 'Чат' },
   ]);
 
-  const renderScene = SceneMap({
-    info: () => <InformationAboutThePoll item = {route.params}/>,
-    chat: ChatAboutThePoll,
-  });
+  const renderScene = useCallback(SceneMap({
+    info: () => <InformationAboutThePoll item={route.params} />,
+    chat: () => <ChatAboutThePoll />,
+  }), [route.params]);
+
+  const renderTabBar = props => (
+    <TabBar
+      {...props}
+      indicatorStyle={PollInfoStyle.indicator}
+      style={PollInfoStyle.tabBar}
+      labelStyle={PollInfoStyle.label}
+      activeColor="#fff"
+      inactiveColor="#999"
+    />
+  );
 
   return (
     <TabView
@@ -24,7 +37,7 @@ export const PollInfo = ({ route }) => {
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={{ width: Dimensions.get('window').width }}
-      renderTabBar={props => <TabBar {...props} />}
+      renderTabBar={renderTabBar}
     />
   );
 }

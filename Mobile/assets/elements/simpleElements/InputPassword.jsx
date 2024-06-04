@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextInput, View, Pressable, Text, Image } from "react-native";
 
-import { SimpleElementsStyle } from "../SimpleElementsStyle";
+import { SimpleElementsStyle } from "../styleSimleElements/SimpleElementsStyle";
 
 import openEyeImage from "../../Img/Icon/open-eye.png";
 import closeEyeImage from "../../Img/Icon/close-eye.png";

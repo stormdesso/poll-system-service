@@ -1,7 +1,7 @@
-import { Auth } from "../../pages/pages/Auth";
-import { UserPage } from "../../pages/pages/UserPage";
-import { Registration } from "../../pages/pages/Registration";
-import {PollInfo} from "../../pages/pages/PollInfo"
+import { Auth } from "../../pages/pages/AuthAndRegistration/Auth";
+import { UserPage } from "../../pages/pages/UsersPage/UserPage/UserPage";
+import { Registration } from "../../pages/pages/AuthAndRegistration/Registration";
+import {PollInfo} from "../../pages/pages/ApplicationSections/PollPage/PollInfo"
 
 import { createStackNavigator } from "@react-navigation/stack";
 

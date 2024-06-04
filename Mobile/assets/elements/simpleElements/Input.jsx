@@ -1,7 +1,7 @@
 import React from "react";
 import { TextInput, View, Text } from "react-native";
 
-import { SimpleElementsStyle } from "../SimpleElementsStyle";
+import { SimpleElementsStyle } from "../styleSimleElements/SimpleElementsStyle";
 
 export default function Input({
   label,

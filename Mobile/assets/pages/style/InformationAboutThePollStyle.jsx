@@ -25,7 +25,8 @@ export const InformationAboutThePollStyle = StyleSheet.create({
 
   InfoTextNameBlock: {
     paddingBottom: 5,
-    fontSize: 16
+    fontSize: 18,
+    fontWeight: "500"
   },
 
   InfoTextDescription: {

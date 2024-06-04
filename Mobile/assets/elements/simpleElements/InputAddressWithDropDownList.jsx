@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextInput, View, Text, TouchableOpacity } from "react-native";
 
-import { SimpleElementsStyle } from "../SimpleElementsStyle";
+import { SimpleElementsStyle } from "../styleSimleElements/SimpleElementsStyle";
 import AddressApiToRegistration from "../../APIConnection/addressApiToRegistration";
 
 export default function InputAddressWithDropDownList({
