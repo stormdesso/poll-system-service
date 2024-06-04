@@ -28,7 +28,7 @@ export const SimpleElementsStyle = StyleSheet.create({
   authTextInputElement: {
     borderColor: inputBlockBorderColor,
     borderWidth: 2,
-    borderRadius: 2,
+    borderRadius: 7,
     paddingHorizontal: 8,
     height: 50,
     marginBottom: 15,

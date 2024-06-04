@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
 
+import {ToVoleBlockStyle} from "../styleSpecialElements/ToVoleBlockStyle"
+
 import ToVote from "../../APIConnection/ToVote"
 
-export const ToVoteBlock = ({pollValues, maxAnswers, pollId}) => {
+export const ToVoteBlock = ({pollValues, maxAnswers, pollId, isVotedState}) => {
     const [selectedOptions, setSelectedOptions] = useState([]);
     //Определяет логику отметки выбранных элементов
     const handleSelection = (id) => {
@@ -23,6 +25,7 @@ export const ToVoteBlock = ({pollValues, maxAnswers, pollId}) => {
     const handleVote = () => {
         console.log('Selected option IDs:', selectedOptions);
         ToVote(selectedOptions, pollValues, pollId)
+        isVotedState(true)
     };
 
     
@@ -30,10 +33,10 @@ export const ToVoteBlock = ({pollValues, maxAnswers, pollId}) => {
         const isSelected = selectedOptions.includes(item.id);
         return(
             <TouchableOpacity
-                style={[styles.option, isSelected && styles.selectedOption]}
+                style={[ToVoleBlockStyle.option, isSelected && ToVoleBlockStyle.selectedOption]}
                 onPress={() => handleSelection(item.id)}
             >
-                <Text style={styles.optionText}>{item.value}</Text>
+                <Text style={ToVoleBlockStyle.optionText}>{item.value}</Text>
             </TouchableOpacity>
         )
         
@@ -50,23 +53,3 @@ export const ToVoteBlock = ({pollValues, maxAnswers, pollId}) => {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 16,
-    },
-    option: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-    },
-    selectedOption: {
-        backgroundColor: '#d3d3d3', // Цвет заднего фона для выбранного элемента
-    },
-    optionText: {
-        marginLeft: 8,
-    },
-});

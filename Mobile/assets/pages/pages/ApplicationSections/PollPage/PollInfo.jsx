@@ -1,9 +1,11 @@
 import React, { useCallback } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 
 import {InformationAboutThePoll} from "./InformationAboutThePoll"
 import {ChatAboutThePoll} from "./ChatAboutThePoll"
+
+import {PollInfoStyle} from "../../../style/PollInfoStyle"
   
 
 export const PollInfo = ({ route }) => {
@@ -18,13 +20,24 @@ export const PollInfo = ({ route }) => {
     chat: () => <ChatAboutThePoll />,
   }), [route.params]);
 
+  const renderTabBar = props => (
+    <TabBar
+      {...props}
+      indicatorStyle={PollInfoStyle.indicator}
+      style={PollInfoStyle.tabBar}
+      labelStyle={PollInfoStyle.label}
+      activeColor="#fff"
+      inactiveColor="#999"
+    />
+  );
+
   return (
     <TabView
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}
       initialLayout={{ width: Dimensions.get('window').width }}
-      renderTabBar={props => <TabBar {...props} />}
+      renderTabBar={renderTabBar}
     />
   );
 }
