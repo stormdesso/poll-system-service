@@ -1,8 +1,10 @@
 package ru.pstu.poll_system_service.data.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import ru.pstu.poll_system_service.data.enums.StatusEnum;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -22,10 +24,10 @@ public class Poll{
 
     @Column(name = "creator_user_id", nullable = false)
     private Long creatorUserId;
-//
-//    @Column(name = "poll_shedule_id", nullable = false)
-//    private Long pollScheduleId;
-//
+
+    @Column(name = "poll_shedule_id", nullable = true)
+    private Long pollScheduleId;
+
     @Column(name = "adress_id", nullable = false)
     private Long addressId;
 
@@ -41,9 +43,10 @@ public class Poll{
     @Column(name = "duration", nullable = false)
     private Integer duration;
 
-    @Enumerated(EnumType.STRING)
+//    @Enumerated(EnumType.STRING)
+//    @Convert(converter = StatusEnumConverter.class)
     @Column(name = "status", nullable = false)
-    private StatusEnum status;
+    private String status;
 
     @Column(name = "description", nullable = false, length = 1000)
     private String description;

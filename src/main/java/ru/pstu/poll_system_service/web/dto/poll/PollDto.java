@@ -29,4 +29,7 @@ public class PollDto extends BasePollDto{
 
     @Schema(description = "Варианты ответов")
     private List<PollValueDto> pollValues;
+
+    @Schema(description = "Циклический опрос")
+    private boolean cyclical;
 }

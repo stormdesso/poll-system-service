@@ -14,4 +14,5 @@ public interface PollService{
     void vote(Long pollId,  List<PollValueDto> pollValueDto);
 
     Long save(CreatePollDto createPollDto);
+    Long update(PollDto pollDto);
 }
