@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, TextInput, Button, FlatList } from 'react-native';
+import { Client } from '@stomp/stompjs';
 
 import {ChatAboutThePollStyle} from "../../../style/ChatAboutThePollStyle"
 
@@ -9,10 +10,11 @@ export const ChatAboutThePoll = () => {
   const [ws, setWs] = useState(null);
   const websocket = useRef(null);
 
-  //"ws://echo.websocket.org"
-  //"ws://192.168.0.159:8080"
   useEffect(() => {
-    websocket.current = new WebSocket('http://192.168.0.159:8080/ws');
+    //"ws://echo.websocket.org"
+    //"ws://192.168.0.159:8080"
+    //ws://192.168.0.159:8080/gs-guide-websocket
+    websocket.current = new WebSocket('ws://192.168.0.159:8080/gs-guide-websocket');
 
     // Обработчик событий при открытии соединения
     websocket.current.onopen = () => {
@@ -34,14 +36,16 @@ export const ChatAboutThePoll = () => {
     setWs(websocket);
 
     return () => {
-      websocket.current.onclose();
+      websocket.current.close();
     }
   }, [])
 
   const sendMessage = () => {
-    if (ws && message) {
-      ws.current.send(message);
+    if (websocket.current && websocket.current.readyState === WebSocket.OPEN && message) {
+      websocket.current.send(message);
       setMessage('');
+    } else {
+      console.log('WebSocket is not open or message is empty');
     }
   };
 
@@ -59,10 +63,10 @@ export const ChatAboutThePoll = () => {
         />
       </View>
       <View style={ChatAboutThePollStyle.SendMessageBlock}>
-        <TextInput 
-            placeholder="Отправить сообщение"
-            value={message}
-            onChangeText={setMessage}
+        <TextInput
+          placeholder="Отправить сообщение"
+          value={message}
+          onChangeText={setMessage}
         />
         <Button title="Send" onPress={sendMessage} />
       </View>
