@@ -33,6 +33,30 @@ public class UserAccountController {
         return userService.getAuthenticatedUserInfo();
     }
 
+    @Operation(description = "Редактировать информацию о своём аккаунте")
+    @PostMapping("/edit/me")
+    public void editAccountInfo(UserDto userDto) {
+
+    }
+
+    @Operation(description = "Редактировать информацию об аккаунтах пользователей")
+    @PostMapping("/edit/users")
+    public void editAccountsInfos(List<UserDto> userDtos) {
+
+    }
+
+    @Operation(description = "Удалить свой аккаунт")
+    @DeleteMapping("/delete/me")
+    public void deleteAccountInfo() {
+
+    }
+
+    @Operation(description = "Удалить аккаунты пользователей")
+    @DeleteMapping("/delete/users")
+    public void deleteAccountsInfos(List<Long> usersIds) {
+
+    }
+
     /*
     * Метод для редактирования своих данных (только валидация полей по типу:
     *  ФИО - буквы
@@ -45,11 +69,16 @@ public class UserAccountController {
     * */
 
     /*
+    * //todo: запросы на переезд в отдельное апи вынести! RelocationController
+    * */
+
+    /*
      * Метод для редактирования данных пользователей
      * 0)Проверить доступ к данным пользователей по их адресам
      * (адреса редактирующего, должны включать в себя все пришедшие адреса)
      * 1)Валидация
      * 2)НЕЛЬЗЯ РЕДАКТИРОВАТЬ АДМИНОВ И РУТОВ
      * */
+
 
 }

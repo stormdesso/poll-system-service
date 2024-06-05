@@ -87,4 +87,24 @@ public class UserServiceImpl implements UserService{
     public UserDto getAuthenticatedUserInfo() {
         return findUsers(List.of(getCurrentUserIdFromContext())).getFirst();
     }
+
+    @Override
+    public void editAuthenticatedUserInfo(UserDto userDto) {
+
+    }
+
+    @Override
+    public void editUsersInfos(List<UserDto> userDtos) {
+
+    }
+
+    @Override
+    public void deleteAuthenticatedAccount() {
+
+    }
+
+    @Override
+    public void deleteAccountsInfos(List<Long> usersIds) {
+
+    }
 }

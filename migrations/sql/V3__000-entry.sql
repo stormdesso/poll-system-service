@@ -52,3 +52,8 @@ UPDATE public.role_privilege SET privilege_id = 8, role_id = 2 WHERE ctid = '(0,
 UPDATE public.role_privilege SET privilege_id = 9, role_id = 2 WHERE ctid = '(0,11)';
 UPDATE public.role_privilege SET privilege_id = 1, role_id = 1 WHERE ctid = '(0,1)';
 
+alter table address
+    add constraint city_street_house_uniq
+        unique (city, street, house_number);
+
+

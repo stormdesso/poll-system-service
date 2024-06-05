@@ -7,7 +7,17 @@ import java.util.List;
 
 public interface UserService{
     UserDetailsService userDetailsService();
+
+
     List<UserDto> findAllAvailableUsers();
 
     UserDto getAuthenticatedUserInfo();
+
+
+    void editAuthenticatedUserInfo(UserDto userDto);
+    void editUsersInfos(List<UserDto> userDtos);
+
+
+    void deleteAuthenticatedAccount();
+    void deleteAccountsInfos(List<Long> usersIds);
 }
