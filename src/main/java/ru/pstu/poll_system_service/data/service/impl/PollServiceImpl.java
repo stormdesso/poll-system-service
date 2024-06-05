@@ -32,8 +32,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.pstu.poll_system_service.data.enums.RoleName.admin;
-import static ru.pstu.poll_system_service.data.enums.RoleName.root;
+import static ru.pstu.poll_system_service.data.enums.RoleEnum.admin;
+import static ru.pstu.poll_system_service.data.enums.RoleEnum.root;
 import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserFromContext;
 import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserIdFromContext;
 

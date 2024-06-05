@@ -17,6 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     /**
      Поиск адресов пользователя по ownership id
     */
-    @Query(value = "select * from address_ownership where ownership_id = :ownershipId", nativeQuery = true)
+    @Query(value = "select * from ownership_address where ownership_id = :ownershipId", nativeQuery = true)
     List<Long> findAddressesIdByOwnershipId(@Param("ownershipId") Long ownershipId);
 }
