@@ -62,7 +62,15 @@ public class PollController{
     @HasPermission(resource = POLL, action = CREATE)
     @ResponseBody
     @PutMapping("/create")
-    public void create(@Parameter(description = "Опрос") @RequestParam(required = true) CreatePollDto createPollDto) {
-        pollService.save(createPollDto);
+    public Long create(@Parameter(description = "Опрос") @RequestBody(required = true) CreatePollDto createPollDto) {
+        return pollService.save(createPollDto);
+    }
+
+    @Operation(description = "Редактировать опрос(неактивный)")
+    @HasPermission(resource = POLL, action = WRITE)
+    @ResponseBody
+    @PostMapping("/update")
+    public Long update(@Parameter(description = "Опрос") @RequestBody(required = true) PollDto pollDto) {
+        return pollService.update(pollDto);
     }
 }

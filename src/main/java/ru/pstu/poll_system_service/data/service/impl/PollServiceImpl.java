@@ -8,10 +8,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.pstu.poll_system_service.data.enums.StatusEnum;
 import ru.pstu.poll_system_service.data.mapper.PollMapper;
 import ru.pstu.poll_system_service.data.model.Poll;
 import ru.pstu.poll_system_service.data.model.PollValue;
 import ru.pstu.poll_system_service.data.model.UserAnswer;
+import ru.pstu.poll_system_service.data.model.user.Role;
 import ru.pstu.poll_system_service.data.repository.PollRepository;
 import ru.pstu.poll_system_service.data.repository.UserAnswerRepository;
 import ru.pstu.poll_system_service.data.repository.UserRepository;
@@ -24,12 +26,14 @@ import ru.pstu.poll_system_service.web.dto.poll.PollValueDto;
 import ru.pstu.poll_system_service.web.filter.PollFilter;
 
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.pstu.poll_system_service.data.enums.StatusEnum.planned;
+import static ru.pstu.poll_system_service.data.enums.RoleEnum.admin;
+import static ru.pstu.poll_system_service.data.enums.RoleEnum.root;
 import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserFromContext;
 import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentUserIdFromContext;
 
@@ -117,10 +121,9 @@ public class PollServiceImpl implements PollService {
             );
         }
 
-        //todo: переделать проверку
-//        if (userAnswerRepository.existsByUserIdEqualsAndPollValueIdEquals(userId, pollValueDtoList.stream().map(PollValueDto::getId))){
-//            throw new IllegalArgumentException("Нельзя проголосовать за один вариант ответа более 1 раза!");
-//        }
+        if(pollValueDtosIds.stream().distinct().count() != pollValueDtoList.size()){
+            throw new IllegalArgumentException("Нельзя проголосовать за один вариант ответа более 1 раза!");
+        }
 
         log.debug("Все проверки пройдены");
 
@@ -133,46 +136,121 @@ public class PollServiceImpl implements PollService {
     }
 
     @Override
+    @Transactional
     public Long save(CreatePollDto createPollDto) {
-        //todo: протестить метод
-
         var user = getCurrentUserFromContext();
 
-        var addressesIds = userRepository.findAddressesIdByOwnershipId(user.getOwnershipId());
+        List<PollValueDto> tempValueDtoList = createPollDto.getPollValues().stream().map(str ->
+                        PollValueDto.builder()
+                                .value(str)
+                                .build())
+                .toList();
 
-        if(!addressesIds.contains(createPollDto.getAddressId())){
-            throw new IllegalArgumentException("Невозможно создать опрос по выбранному адресу!");
-        }
+        validatePoll(createPollDto.getAddressId(), tempValueDtoList,
+                createPollDto.getStartDate(), createPollDto.getEndDate());
 
-        if(!(createPollDto.getPollValues().size() < 2)){
-            throw new IllegalArgumentException("Минимальное число вариантов ответа: 2!");
-        }
+        long duration = getDuration(createPollDto.getStartDate(), createPollDto.getEndDate());
 
-        if(createPollDto.getStartDate().before(createPollDto.getEndDate())){
-            throw new IllegalArgumentException("Неверно указаны даты начала и завершения опроса!");
-        }
-
-        long duration = ChronoUnit.DAYS.between(
-                (Temporal) createPollDto.getStartDate(), (Temporal) createPollDto.getEndDate());
-
-        var pollValues = PollMapper.INSTANCE.toPollValues(createPollDto.getPollValues());
-
-        Poll poll = pollRepository.save(
-                Poll.builder()
+        Poll poll = Poll.builder()
+                        .pollScheduleId(null) //todo: указать, когда сделаю cron
                         .creatorUserId(user.getId())
                         .addressId(createPollDto.getAddressId())
                         .name(createPollDto.getName())
                         .startDate(createPollDto.getStartDate())
                         .endDate(createPollDto.getEndDate())
                         .duration((int) duration)
-                        .status(planned)
+                        .status(StatusEnum.proposed.name())
                         .description(createPollDto.getDescription())
                         .cyclical(createPollDto.getCyclical())
                         .maxNumberAnswersByUser(createPollDto.getMaxNumberAnswersByUser())
-                        .pollValues(pollValues)
-                        .build()
-        );
+                        .pollValues(null) //инициализируется ниже
+                        .build();
 
-        return poll.getId();
+        List<PollValue> valuesDtoList = createPollDto.getPollValues().stream().map(str ->
+                PollValue.builder()
+                        .poll(poll)
+                        .value(str)
+                        .votes(0L)
+                        .build())
+                .toList();
+
+        poll.setPollValues(valuesDtoList);
+
+        return pollRepository.save(poll).getId();
+    }
+
+    private long getDuration(Date startDate, Date endDate) {
+        return ChronoUnit.DAYS.between(
+                startDate.toInstant(),
+                endDate.toInstant());
+    }
+
+    private void validatePoll(Long addressIdFromPoll, List<PollValueDto> pollValues, Date startDate, Date endDate) {
+        var addressesIds = userRepository.findAddressesIdByOwnershipId(getCurrentUserFromContext().getOwnershipId());
+
+        if(!addressesIds.contains(addressIdFromPoll)){
+            throw new IllegalArgumentException("Нет доступа к адресу!");
+        }
+
+        if((pollValues.size() < 2)){
+            throw new IllegalArgumentException("Минимальное число вариантов ответа: 2!");
+        }
+
+        if(startDate.after(endDate)){
+            throw new IllegalArgumentException("Неверно указаны даты начала и завершения опроса!");
+        }
+    }
+
+    @Override
+    @Transactional
+    public Long update(PollDto pollDto) {
+        var user = getCurrentUserFromContext();
+
+        Poll originalEntity = pollRepository.findById(pollDto.getId()).orElseThrow(()
+                -> new IllegalArgumentException("Указан неверный идентификатор опроса!"));
+
+        if (! StatusEnum.valueOf(StatusEnum.class,pollDto.getStatus()).equals(StatusEnum.proposed) ||
+                StatusEnum.valueOf(StatusEnum.class,pollDto.getStatus()).equals(StatusEnum.returned)){
+            throw new IllegalArgumentException("Невозможно редактировать опрос!");
+        }
+
+        if (originalEntity.getCreatorUserId().equals(getCurrentUserIdFromContext()) ||
+                new HashSet<>(getCurrentUserFromContext().getRole().stream().map(Role::getRoleName).toList())
+                        .containsAll(List.of(admin.name(), root.name()))){
+            throw new IllegalArgumentException("Нет прав на редактирование опроса!");
+        }
+
+        validatePoll(originalEntity.getAddressId(), pollDto.getPollValues(),
+                pollDto.getStartDate(), pollDto.getEndDate());
+
+        long duration = getDuration(pollDto.getStartDate(), pollDto.getEndDate());
+
+        Poll poll = Poll.builder()
+                .id(pollDto.getId())
+                .pollScheduleId(pollDto.getPollScheduleId()) //todo: указать, когда сделаю cron
+                .creatorUserId(user.getId())
+                .addressId(originalEntity.getAddressId())
+                .name(pollDto.getName())
+                .startDate(pollDto.getStartDate())
+                .endDate(pollDto.getEndDate())
+                .duration((int) duration)
+                .status(pollDto.getStatus())
+                .description(pollDto.getDescription())
+                .cyclical(pollDto.isCyclical())
+                .maxNumberAnswersByUser(pollDto.getMaxNumberAnswersByUser())
+                .pollValues(null) //инициализируется ниже
+                .build();
+
+        List<PollValue> valuesDtoList = pollDto.getPollValues().stream().map(valueDto ->
+                        PollValue.builder()
+                                .poll(poll)
+                                .value(valueDto.getValue())
+                                .votes(0L)
+                                .build())
+                .toList();
+
+        poll.setPollValues(valuesDtoList);
+
+        return pollRepository.save(poll).getId();
     }
 }

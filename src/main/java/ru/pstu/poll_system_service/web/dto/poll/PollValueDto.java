@@ -2,6 +2,7 @@ package ru.pstu.poll_system_service.web.dto.poll;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * */
 @Data
 @Schema(description = "Вариант ответа опроса")
+@Builder
 public class PollValueDto{
 
     @Schema(description = "Идентификатор варианта ответа")

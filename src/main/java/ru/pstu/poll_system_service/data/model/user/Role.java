@@ -10,6 +10,7 @@ import java.util.List;
 @Table(name = "role", schema = "public")
 public class Role{
     @Id
+    @Column(name = "id")
     Long id;
 
     @Column(name = "role_name")

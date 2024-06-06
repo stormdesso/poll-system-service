@@ -5,11 +5,12 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Setter
 @Getter
-public class CreatePollDto extends BasePollDto {
+public class CreatePollDto {
 
     @Schema(description = "Идентификатор адреса")
     private Long addressId;
@@ -22,5 +23,17 @@ public class CreatePollDto extends BasePollDto {
     private String description;
 
     @Schema(description = "Варианты ответов")
-    private List<PollValueDto> pollValues;
+    private List<String> pollValues;
+
+    @Schema(description = "Название опроса")
+    private String name;
+
+    @Schema(description = "Дата начала проведения")
+    private Date startDate;
+
+    @Schema(description = "Дата окончания")
+    private Date endDate;
+
+    @Schema(description = "Максимально возможное число голосов в опросе от одного пользователя")
+    private Long maxNumberAnswersByUser;
 }
