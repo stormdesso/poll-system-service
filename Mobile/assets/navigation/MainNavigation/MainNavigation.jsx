@@ -1,5 +1,6 @@
 import { Auth } from "../../pages/pages/AuthAndRegistration/Auth";
 import { UserPage } from "../../pages/pages/UsersPage/UserPage/UserPage";
+import {ChatAboutThePoll} from "../../pages/pages/ApplicationSections/PollPage/ChatAboutThePoll"
 import { Registration } from "../../pages/pages/AuthAndRegistration/Registration";
 import {PollInfo} from "../../pages/pages/ApplicationSections/PollPage/PollInfo"
 
@@ -18,6 +19,7 @@ export default function MainNavigation() {
         <Stack.Screen
             name="UserPage"
             component={UserPage}
+            //component={ChatAboutThePoll}
             options={{ headerShown: false }}
         />
         <Stack.Screen

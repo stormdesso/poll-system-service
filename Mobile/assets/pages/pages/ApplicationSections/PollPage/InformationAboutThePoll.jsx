@@ -15,10 +15,12 @@ export const InformationAboutThePoll = ({item}) => {
 
     const [isVotedInPoll, setIsVotedInPoll] = useState()
 
+    //Проверяет проголосовал ли пользователь в данном опросе
     useEffect(() => {
         setIsVotedInPoll(item.userIsVoted)
     }, [])
 
+    //Отправляется в метод голосования для обновления состояния
     const setCurrentPollIsVoted = (state) => {
         setIsVotedInPoll(state)
     }
