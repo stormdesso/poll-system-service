@@ -1,12 +1,19 @@
-package ru.pstu.poll_system_service.data.model.user;
+package ru.pstu.poll_system_service.data.model.user.address;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import ru.pstu.poll_system_service.data.model.user.Role;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "user")
 @Table(name = "user", schema = "public")
 public class UserWithAddress {
@@ -15,8 +22,9 @@ public class UserWithAddress {
     @Column(name = "id")
     Long id;
 
-    @Column(name = "address_id")
-    Long addressId;
+    //не используется
+//    @Column(name = "address_id")
+//    Long addressId;
 
     @Column(name = "full_name")
     String fullName;

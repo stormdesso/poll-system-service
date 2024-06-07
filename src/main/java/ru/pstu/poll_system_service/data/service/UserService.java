@@ -14,7 +14,7 @@ public interface UserService{
     UserDto getAuthenticatedUserInfo();
 
 
-    void editAuthenticatedUserInfo(UserDto userDto);
+    void editAuthenticatedUserInfo(UserDto userDto, String password);
     void editUsersInfos(List<UserDto> userDtos);
 
 

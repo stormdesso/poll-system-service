@@ -2,9 +2,9 @@ package ru.pstu.poll_system_service.data.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import ru.pstu.poll_system_service.data.model.user.Ownership;
 import ru.pstu.poll_system_service.data.model.user.Role;
-import ru.pstu.poll_system_service.data.model.user.UserWithAddress;
+import ru.pstu.poll_system_service.data.model.user.address.Ownership;
+import ru.pstu.poll_system_service.data.model.user.address.UserWithAddress;
 import ru.pstu.poll_system_service.web.dto.user.AddressInfo;
 import ru.pstu.poll_system_service.web.dto.user.UserDto;
 
@@ -34,14 +34,20 @@ public interface UserMapper {
     }
 
     default List<AddressInfo> map(Ownership ownership) {
-        return ownership.getAddress().stream().map(address ->
+
+        return ownership.getOwnershipAddresses().stream().map(ownershipAddress ->
             AddressInfo.builder()
-                    .id(address.getId())
-                    .city(address.getCity())
-                    .street(address.getStreet())
-                    .houseNumber(address.getHouseNumber())
+                    .id(ownershipAddress.getAddress().getId())
+                    .city(ownershipAddress.getAddress().getCity())
+                    .street(ownershipAddress.getAddress().getStreet())
+                    .houseNumber(ownershipAddress.getAddress().getHouseNumber())
+                    .apartmentNumber(ownershipAddress.getOwnershipAddressKey().getApartmentNumber())
                     .build()
         ).toList();
     }
 
+
+    default List<Role> map(List<String> rolesNames, List<Role> allRoles) {
+        return allRoles.stream().filter(role -> rolesNames.contains(role.getRoleName())).toList();
+    }
 }
