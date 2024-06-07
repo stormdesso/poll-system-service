@@ -69,6 +69,7 @@ export const Registration = ({ navigation }) => {
             error={getErrorStatus.name}
             onChangeText={(text) => handleChangeText(text, "name")}
             keyboardType="default"
+            editable = {true}
           />
 
           <InputWithCalendar
@@ -95,6 +96,7 @@ export const Registration = ({ navigation }) => {
             error={getErrorStatus.login}
             onChangeText={(text) => handleChangeText(text, "login")}
             keyboardType="default"
+            editable = {true}
           />
 
           <InputPassword
@@ -121,6 +123,7 @@ export const Registration = ({ navigation }) => {
               handleChangeText(phoneNumberMask(text), "phoneNumber")
             }
             keyboardType="numeric"
+            editable = {true}
           />
 
           <Input
@@ -129,6 +132,7 @@ export const Registration = ({ navigation }) => {
             error={getErrorStatus.email}
             onChangeText={(text) => handleChangeText(text, "email")}
             keyboardType="default"
+            editable = {true}
           />
         </View>
 

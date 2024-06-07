@@ -68,6 +68,7 @@ export const Auth = ({ navigation }) => {
           error={getErrorStatus.login}
           onChangeText={(text) => setLoginInputValue(text)}
           keyboardType="default"
+          editable = {true}
         />
 
         <InputPassword

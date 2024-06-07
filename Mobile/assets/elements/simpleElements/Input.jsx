@@ -9,7 +9,9 @@ export default function Input({
   error,
   onChangeText,
   keyboardType,
+  editable
 }) {
+
   return (
     <View style={SimpleElementsStyle.authTextElementBox}>
       <Text style={SimpleElementsStyle.labelInputText}>{label}</Text>
@@ -17,11 +19,12 @@ export default function Input({
         placeholder={label}
         keyboardType={keyboardType}
         style={[
-          SimpleElementsStyle.authTextInputElement,
+          editable === true ? SimpleElementsStyle.authTextInputElement : SimpleElementsStyle.authTextInputElementDisabled,
           error === true ? SimpleElementsStyle.errorTextInput : null,
         ]}
         onChangeText={onChangeText}
         value={value}
+        editable={editable}
       />
     </View>
   );

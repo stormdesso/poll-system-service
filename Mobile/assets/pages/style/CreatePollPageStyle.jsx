@@ -1,12 +1,25 @@
 import { StyleSheet } from "react-native";
 
-const buttonColor = "#5C6BC0";
+const buttonColor = "#304FFE";
 const buttonTextColor = "#fff";
 const inputBlockBackgroundColor = "#E8EAF6";
 const inputBlockBorderColor = "#9FA9DA";
 const textColor = "#9E9E9E";
 
-export const SimpleElementsStyle = StyleSheet.create({
+export const CreatePollPageStyle = StyleSheet.create({
+  //Стиль для всей страницы
+  container: {
+    flex: 1,
+    backgroundColor: "whitesmoke",
+    padding: 16,
+    justifyContent: "center",
+  },
+
+  scrollView: {
+    justifyContent: "center",
+    flex: 1,
+  },
+
   //Стиль блока с текстовыми полями
   inputBlock: {
     alignItems: "center",
@@ -28,26 +41,13 @@ export const SimpleElementsStyle = StyleSheet.create({
   authTextInputElement: {
     borderColor: inputBlockBorderColor,
     borderWidth: 2,
-    borderRadius: 7,
+    borderRadius: 2,
     paddingHorizontal: 8,
     height: 50,
     marginBottom: 15,
     paddingLeft: 10,
     zIndex: 1,
     backgroundColor: inputBlockBackgroundColor,
-    color: textColor,
-  },
-
-  authTextInputElementDisabled: {
-    borderColor: textColor,
-    borderWidth: 2,
-    borderRadius: 7,
-    paddingHorizontal: 8,
-    height: 50,
-    marginBottom: 15,
-    paddingLeft: 10,
-    zIndex: 1,
-    backgroundColor: textColor,
     color: textColor,
   },
 
@@ -63,44 +63,6 @@ export const SimpleElementsStyle = StyleSheet.create({
     borderColor: "gray",
     borderWidth: 1,
     width: "80%",
-  },
-
-  //Стиль для выпадающего списка цикличности
-  CyclicalDropdown: {
-    position: "absolute",
-    left: 0,
-    top: 400,
-    marginLeft: "10%",
-    right: 0,
-    zIndex: 5,
-    backgroundColor: "#FFF",
-    borderColor: "gray",
-    borderWidth: 1,
-    width: "80%",
-  },
-
-  CyclicalDropdownBox: {
-    width: "80%",
-    zIndex: 5,
-  },
-
-  //Стиль для выпадающего списка типа цикличности
-  CyclicalTypeDropdown: {
-    position: "absolute",
-    left: 0,
-    top: 485,
-    marginLeft: "10%",
-    right: 0,
-    zIndex: 3,
-    backgroundColor: "#FFF",
-    borderColor: "gray",
-    borderWidth: 1,
-    width: "80%",
-  },
-
-  CyclicalTypeDropdownBox: {
-    width: "80%",
-    zIndex: 4,
   },
 
   //Стиль для наименования поля
