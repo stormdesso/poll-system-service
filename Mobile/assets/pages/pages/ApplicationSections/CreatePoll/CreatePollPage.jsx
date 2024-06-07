@@ -24,8 +24,8 @@ export const CreatePollPage = () => {
     endDate: "",
     cyclical: "",
     cyclicalType: "",
-    cyclicalDayPeriod: 0,
-    maxNumberAnswersByUser: 0,
+    cyclicalDayPeriod: "",
+    maxNumberAnswersByUser: "",
     newPollValue: [""]
   });
 

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text } from "react-native";
+import * as SecureStore from 'expo-secure-store';
 import { AuthAndRegistrationStyle } from "../../style/AuthAndRegistrationStyle";
 
 import validationDataInAuth from "../../../scripts/validationDataInAuth";
 import GetToken from "../../../APIConnection/GetToken";
+import UsersRoleNavigation from "../../../Data/UsersRoleNavigation"
 
 import Input from "../../../elements/simpleElements/Input";
 import InputPassword from "../../../elements/simpleElements/InputPassword";
@@ -37,7 +39,6 @@ export const Auth = ({ navigation }) => {
       }));
     });
     setErrorText(textError);
-    GetToken();
     if (success) {
       const result = await GetToken(loginInputValue, passwordInputValue);
       if (result.success) {
@@ -54,7 +55,19 @@ export const Auth = ({ navigation }) => {
     // Проверяем, был ли сделан ввод данных и была ли выполнена валидация
     if (getAuthSucsess === true) {
       setAuthSucsess(false)
-      navigation.navigate("UserPage");
+      SecureStore.getItemAsync('Role')
+      .then(role => {
+        if(role.length > 0)
+        {
+          let roles = JSON.parse(role)
+          navigation.navigate("RoleSelectionScreen", {roles})
+        }
+        else  
+        {
+          navigation.navigate(UsersRoleNavigation[role[0]]);
+        }
+      })
+      
     }
   }, [getAuthSucsess]);
 

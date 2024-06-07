@@ -1,11 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 
-export default function GetToken(login, password) {
-
-  let keyName = ''
-  let keyValue = ''
-  
-
+export default async function GetToken(login, password) {
   // Данные для API адресов
   let url = "http://192.168.0.159:8080/api/v1/auth/signin";
   let options = {
@@ -15,43 +10,54 @@ export default function GetToken(login, password) {
       "Accept": "*/*",
     },
     body: JSON.stringify({
-      "login": login,
-      "password": password,
+      login: login,
+      password: password,
     }),
   };
 
   async function saveToken(key, value) {
-    try 
-    {
+    try {
       await SecureStore.setItemAsync(key, value);
       return { success: true };
-    } 
-    catch (error) 
-    {
+    } catch (error) {
       return { success: false, error: error.message };
     }
   }
 
-  return fetch(url, options)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Failed to fetch token");
-      }
-      return response.json();
-    })
-    .then(responseData => {
-      keyName = 'Token';
-      keyValue = "Bearer " + responseData.token;
-      return saveToken(keyName, keyValue);
-    })
-    .then(saveResult => {
-      if (!saveResult.success) 
-      {
-        console.error('Error saving token:', saveResult.error);
-      }
-      return saveResult;
-    })
-    .catch(error => {
-      return { success: false, error: error.message }; // Возвращаем ошибку
-    });
+  try {
+    const response = await fetch(url, options);
+    if (!response.ok) {
+      throw new Error("Failed to fetch token");
+    }
+
+    const responseData = await response.json();
+    console.log(responseData);
+
+    const keyValue = "Bearer " + responseData.token;
+    const tokenSaveResult = await saveToken('Token', keyValue);
+    if (!tokenSaveResult.success) {
+      throw new Error(`Error saving Token: ${tokenSaveResult.error}`);
+    }
+
+    const nameSaveResult = await saveToken('Name', responseData.fio);
+    if (!nameSaveResult.success) {
+      throw new Error(`Error saving Name: ${nameSaveResult.error}`);
+    }
+
+    const idSaveResult = await saveToken('Id', String(responseData.id));
+    if (!idSaveResult.success) {
+      throw new Error(`Error saving Id: ${idSaveResult.error}`);
+    }
+
+    const jsonValue = JSON.stringify(responseData.role);
+    const roleSaveResult = await saveToken('Role', jsonValue);
+    if (!roleSaveResult.success) {
+      throw new Error(`Error saving Role: ${roleSaveResult.error}`);
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error(error.message);
+    return { success: false, error: error.message };
+  }
 }
