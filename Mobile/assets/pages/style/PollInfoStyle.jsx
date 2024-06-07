@@ -10,10 +10,25 @@ export const PollInfoStyle = StyleSheet.create({
     tabBar: {
         backgroundColor: backGroundColor, // Цвет фона навигации
       },
+
       indicator: {
         backgroundColor: '#fff', // Цвет индикатора активной вкладки
       },
+
       label: {
         fontWeight: 'bold',
+      },
+
+      ShortPollCard: {
+        backgroundColor: "#5C6BC0",
+        width: "100%",
+        paddingLeft: 15,
+        paddingTop: 5,
+        paddingBottom: 5
+      },
+    
+      Text: {
+        color: textColor,
+        paddingBottom: 3
       },
 });
