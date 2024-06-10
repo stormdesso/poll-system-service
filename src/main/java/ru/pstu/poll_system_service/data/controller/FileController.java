@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.web.controller;
+package ru.pstu.poll_system_service.data.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -57,7 +57,7 @@ public class FileController {
     @ResponseBody
     @PostMapping(value = "/upload", consumes = MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<List<FileInfoDto>> upload(
-            @RequestParam("files") MultipartFile[] files,
+            @RequestBody MultipartFile[] files,
             @RequestParam(required = true) Long pollId) {
         try {
             var savedFilesInfos = fileService.save(List.of(files), pollId);

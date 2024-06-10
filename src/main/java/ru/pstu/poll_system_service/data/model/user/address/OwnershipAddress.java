@@ -7,13 +7,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Полный адрес:
+ *      Объект Адрес: город, улица, дом + номер квартиры
+ * */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "ownership_address")
 @Table(name = "ownership_address", schema = "public")
-public class OwnershipAddress { //по сути таблица представляет собой полный адрес: Объект Адрес: город, улица, дом + номер квартиры
+public class OwnershipAddress {
 
     @MapsId("ownershipId")
     @ManyToOne(fetch = FetchType.LAZY)

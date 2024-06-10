@@ -13,9 +13,6 @@ public class User{
 
     @Id
     Long id;
-//не используется
-//    @Column(name = "address_id")
-//    Long addressId;
 
     @Column(name = "full_name")
     String fullName;

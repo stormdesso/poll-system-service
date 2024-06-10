@@ -1,6 +1,8 @@
-package ru.pstu.poll_system_service.web.controller;
+package ru.pstu.poll_system_service.data.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
@@ -22,8 +24,12 @@ public class UserAccountController {
     @Operation(description = "Получить информацию о доступных аккаунтах")
     @HasPermission(resource = USER_ADMINISTRATION, action = READ)
     @GetMapping("/all")
-    public List<UserDto> findAccountsInfos() {
-        return userService.findAllAvailableUsers();
+    public List<UserDto> findAccountsInfos(
+            @Parameter(description = "Номер страницы")
+            @RequestParam(required = true) @Min(0) int page,
+            @Parameter(description = "Размер страницы")
+            @RequestParam(required = true) @Min(1) int size) {
+        return userService.findAllAvailableUsers(page, size);
     }
 
     @Operation(description = "Получить информацию о своём аккаунте")

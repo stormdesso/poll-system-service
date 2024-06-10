@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.data.repository;
+package ru.pstu.poll_system_service.data.repository.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,5 +21,4 @@ public interface UserAnswerRepository extends JpaRepository<UserAnswer, Long>{
                 "(SELECT p_v.id FROM PollValue AS p_v WHERE p_v.poll.id = :pollId) ")
     Long getNumberOfVotesByUser(@Param("userId") Long userId, @Param("pollId") Long pollId);
 
-    boolean existsByUserIdEqualsAndPollValueIdEquals(Long userId, Long pollValueId);
 }

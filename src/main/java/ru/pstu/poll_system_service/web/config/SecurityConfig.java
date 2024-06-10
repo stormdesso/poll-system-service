@@ -19,8 +19,7 @@ import ru.pstu.poll_system_service.business.aspect.SecurityPermissionEvaluator;
 import ru.pstu.poll_system_service.data.service.UserService;
 import ru.pstu.poll_system_service.web.security.jwt.JwtAuthenticationFilter;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 
 @Configuration
 @EnableWebSecurity
@@ -36,6 +35,7 @@ public class SecurityConfig{
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> request
                         .requestMatchers(GET, getSwaggerPatterns()).permitAll()
                         .requestMatchers(POST, AUTH_URL).permitAll()
+                        .requestMatchers(PUT, AUTH_URL).permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement( manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

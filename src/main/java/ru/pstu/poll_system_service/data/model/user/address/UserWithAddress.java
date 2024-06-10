@@ -19,12 +19,9 @@ import java.util.List;
 public class UserWithAddress {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     Long id;
-
-    //не используется
-//    @Column(name = "address_id")
-//    Long addressId;
 
     @Column(name = "full_name")
     String fullName;
@@ -51,5 +48,6 @@ public class UserWithAddress {
     List<Role> role;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Ownership.class)
+    @JoinColumn(name = "ownership_id", referencedColumnName = "id")
     Ownership ownership;
 }

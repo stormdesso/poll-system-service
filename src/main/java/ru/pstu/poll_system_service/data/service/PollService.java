@@ -11,7 +11,9 @@ import java.util.List;
 public interface PollService{
     Page<PollDto> getFilteredPolls(PollFilter pollFilter);
 
-    void vote(Long pollId,  List<PollValueDto> pollValueDto);
+    Page<PollDto> getFilteredSuggestedPolls(PollFilter pollFilter);
+
+    void vote(Long pollId, List<PollValueDto> pollValueDto);
 
     Long save(CreatePollDto createPollDto);
     Long update(PollDto pollDto);

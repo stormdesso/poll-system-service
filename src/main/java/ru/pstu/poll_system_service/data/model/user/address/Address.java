@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.pstu.poll_system_service.web.dto.user.AddressInfo;
+
+import java.util.Objects;
 
 @Data
 @Builder
@@ -26,4 +29,11 @@ public class Address {
 
     @Column(name = "house_number")
     private String houseNumber;
+
+    public boolean equalsToDto(AddressInfo address) {
+        if (address == null ) return false;
+        return Objects.equals(city, address.getCity())
+                && Objects.equals(street, address.getStreet())
+                && Objects.equals(houseNumber, address.getHouseNumber());
+    }
 }

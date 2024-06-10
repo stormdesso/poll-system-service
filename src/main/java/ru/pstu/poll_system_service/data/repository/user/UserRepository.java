@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.data.repository;
+package ru.pstu.poll_system_service.data.repository.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -19,14 +19,5 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     */
     @Query(value = "select address_id from ownership_address where ownership_id = :ownershipId", nativeQuery = true)
     List<Long> findAddressesIdByOwnershipId(@Param("ownershipId") Long ownershipId);
-
-    @Query(value = "insert into relocation_request (user_id, city, street, house_number, apartment_number) " +
-            "values (:userId, :city, :street, :houseNumber, :apartmentNumber);", nativeQuery = true)
-    void saveNewAddresses(@Param("userId") Long userId,
-                          @Param("city") String city,
-                          @Param("street") String street,
-                          @Param("houseNumber") String houseNumber,
-                          @Param("apartmentNumber") Long apartmentNumber
-    );
 
 }

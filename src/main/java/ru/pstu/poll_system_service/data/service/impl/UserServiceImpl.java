@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,14 +13,21 @@ import org.springframework.stereotype.Service;
 import ru.pstu.poll_system_service.data.enums.RoleEnum;
 import ru.pstu.poll_system_service.data.mapper.UserMapper;
 import ru.pstu.poll_system_service.data.model.user.Role;
+import ru.pstu.poll_system_service.data.model.user.address.Address;
+import ru.pstu.poll_system_service.data.model.user.address.Ownership;
+import ru.pstu.poll_system_service.data.model.user.address.OwnershipAddress;
 import ru.pstu.poll_system_service.data.model.user.address.UserWithAddress;
-import ru.pstu.poll_system_service.data.repository.RoleRepository;
-import ru.pstu.poll_system_service.data.repository.UserRepository;
-import ru.pstu.poll_system_service.data.repository.UserWithAddressRepository;
+import ru.pstu.poll_system_service.data.repository.OwnershipRepository;
+import ru.pstu.poll_system_service.data.repository.address.AddressRepository;
+import ru.pstu.poll_system_service.data.repository.address.OwnershipAddressRepository;
+import ru.pstu.poll_system_service.data.repository.user.RoleRepository;
+import ru.pstu.poll_system_service.data.repository.user.UserRepository;
+import ru.pstu.poll_system_service.data.repository.user.UserWithAddressRepository;
 import ru.pstu.poll_system_service.data.service.UserService;
 import ru.pstu.poll_system_service.web.dto.user.UserDto;
 import ru.pstu.poll_system_service.web.security.model.SecurityUser;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +48,14 @@ public class UserServiceImpl implements UserService{
     private final RoleRepository roleRepository;
 
     private final UserWithAddressRepository userWithAddressRepository;
+
+    private final AddressRepository addressRepository;
+
+    private final OwnershipAddressRepository ownershipAddressRepository;
+
+    private final OwnershipRepository ownershipRepository;
+
+
 
     private List<RoleEnum> getCurrentRoles(){
        List<String> roles =  getCurrentUserFromContext().getRole().stream().map(Role::getRoleName).toList();
@@ -106,9 +122,10 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserDto> findAllAvailableUsers() {
+    public List<UserDto> findAllAvailableUsers(int page, int size) {
         var users =  userWithAddressRepository.findAllAvailableUsersByOwnershipId(
-                getCurrentUserFromContext().getOwnershipId());
+                getCurrentUserFromContext().getOwnershipId(), PageRequest.of(page, size));
+
         excludeUnavailableUsersByRole(users);
         return UserMapper.INSTANCE.convertToUserDtos(users);
     }
@@ -185,5 +202,48 @@ public class UserServiceImpl implements UserService{
         excludeUnavailableUsersByRole(users);
 
         userRepository.deleteAllById(users.stream().map(UserWithAddress::getId).toList());
+    }
+
+    @Override
+    @Transactional
+    public void save(@NotNull UserDto userDto, @NotNull String password) {
+
+        validate(userDto);
+
+        var addressInfos = userDto.getAddressInfos();
+
+        List<Address> addresses = new ArrayList<>();
+
+        addressInfos.forEach(addressInfo -> {
+            var addressLocal = addressRepository.findByCityAndStreetAndHouseNumberEquals(
+                    addressInfo.getCity(), addressInfo.getStreet(), addressInfo.getHouseNumber()).orElseThrow(() ->
+                    new IllegalArgumentException("Указанный адрес не существует"));
+            addresses.add(addressLocal);
+        });
+
+        var allRoles = roleRepository.findAll();
+
+        var user = UserWithAddress.builder()
+                .login(userDto.getLogin())
+                .email(userDto.getEmail())
+                .password(password)
+                .fullName(userDto.getFullName())
+                .birthdate(userDto.getBirthdate())
+                .phoneNumber(userDto.getPhoneNumber())
+                .isBlocked(true)
+                .ownership(new Ownership())
+                .role(UserMapper.INSTANCE.map(userDto.getRoles(), allRoles))
+                .build();
+
+        var userId = userWithAddressRepository.save(user).getId();
+        ownershipRepository.save(user.getOwnership().toBuilder()
+                        .userId(userId)
+                .build());
+
+        List<OwnershipAddress> ownershipAddresses = UserMapper.INSTANCE.mapToList(addressInfos, addresses, user.getOwnership());
+
+
+        ownershipAddressRepository.saveAll(ownershipAddresses);
+
     }
 }

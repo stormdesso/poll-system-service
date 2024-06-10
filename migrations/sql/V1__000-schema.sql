@@ -5,31 +5,7 @@
 -- Dumped from database version 15.3
 -- Dumped by pg_dump version 15.3
 
--- Started on 2024-06-06 18:08:15
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
-DROP DATABASE polls_system_db;
---
--- TOC entry 3484 (class 1262 OID 86426)
--- Name: polls_system_db; Type: DATABASE; Schema: -; Owner: admin
---
-
-CREATE DATABASE polls_system_db WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'Russian_Russia.1251';
-
-
-ALTER DATABASE polls_system_db OWNER TO admin;
-
-\connect polls_system_db
+-- Started on 2024-06-10 18:48:09
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -43,7 +19,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 867 (class 1247 OID 86432)
+-- TOC entry 866 (class 1247 OID 86432)
 -- Name: address_object; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -57,7 +33,7 @@ CREATE TYPE public.address_object AS (
 ALTER TYPE public.address_object OWNER TO postgres;
 
 --
--- TOC entry 870 (class 1247 OID 86434)
+-- TOC entry 869 (class 1247 OID 86434)
 -- Name: poll_type_enum; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -72,7 +48,7 @@ CREATE TYPE public.poll_type_enum AS ENUM (
 ALTER TYPE public.poll_type_enum OWNER TO postgres;
 
 --
--- TOC entry 873 (class 1247 OID 86444)
+-- TOC entry 872 (class 1247 OID 86444)
 -- Name: privilege_enum; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -90,7 +66,20 @@ CREATE TYPE public.privilege_enum AS ENUM (
 ALTER TYPE public.privilege_enum OWNER TO postgres;
 
 --
--- TOC entry 876 (class 1247 OID 86454)
+-- TOC entry 935 (class 1247 OID 160197)
+-- Name: relocation_action; Type: TYPE; Schema: public; Owner: postgres
+--
+
+CREATE TYPE public.relocation_action AS ENUM (
+    'ADD',
+    'DELETE'
+    );
+
+
+ALTER TYPE public.relocation_action OWNER TO postgres;
+
+--
+-- TOC entry 875 (class 1247 OID 86454)
 -- Name: role_enum; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -104,7 +93,7 @@ CREATE TYPE public.role_enum AS ENUM (
 ALTER TYPE public.role_enum OWNER TO postgres;
 
 --
--- TOC entry 879 (class 1247 OID 86462)
+-- TOC entry 878 (class 1247 OID 86462)
 -- Name: status_enum; Type: TYPE; Schema: public; Owner: postgres
 --
 
@@ -124,7 +113,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 239 (class 1259 OID 102810)
+-- TOC entry 237 (class 1259 OID 102810)
 -- Name: action; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -136,8 +125,8 @@ CREATE TABLE public.action (
 ALTER TABLE public.action OWNER TO postgres;
 
 --
--- TOC entry 3485 (class 0 OID 0)
--- Dependencies: 239
+-- TOC entry 3482 (class 0 OID 0)
+-- Dependencies: 237
 -- Name: TABLE action; Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -175,41 +164,6 @@ ALTER TABLE public.address ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 235 (class 1259 OID 86550)
--- Name: apartment; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.apartment (
-    number bigint NOT NULL
-);
-
-
-ALTER TABLE public.apartment OWNER TO postgres;
-
---
--- TOC entry 3486 (class 0 OID 0)
--- Dependencies: 235
--- Name: TABLE apartment; Type: COMMENT; Schema: public; Owner: postgres
---
-
-COMMENT ON TABLE public.apartment IS '0 - значение для администраторов, если они не имеют квартиры в доме';
-
-
---
--- TOC entry 236 (class 1259 OID 86556)
--- Name: apartment_address; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.apartment_address (
-                                          apartment_id bigint NOT NULL,
-                                          address_id bigint NOT NULL,
-                                          user_id bigint NOT NULL
-);
-
-
-ALTER TABLE public.apartment_address OWNER TO postgres;
-
---
 -- TOC entry 220 (class 1259 OID 86494)
 -- Name: file; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -227,7 +181,7 @@ CREATE TABLE public.file (
 ALTER TABLE public.file OWNER TO postgres;
 
 --
--- TOC entry 3487 (class 0 OID 0)
+-- TOC entry 3483 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: COLUMN file.data; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -236,7 +190,7 @@ COMMENT ON COLUMN public.file.data IS 'колонка для хранения ф
 
 
 --
--- TOC entry 3488 (class 0 OID 0)
+-- TOC entry 3484 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: COLUMN file.size; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -266,7 +220,7 @@ ALTER TABLE public.file ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 CREATE TABLE public.message (
                                 id bigint NOT NULL,
-                                user_id bigint DEFAULT 0 NOT NULL,
+                                user_id bigint DEFAULT 11 NOT NULL,
                                 poll_id bigint NOT NULL,
                                 date_sent_message timestamp with time zone DEFAULT CURRENT_DATE NOT NULL,
                                 message character varying(500) NOT NULL
@@ -276,7 +230,7 @@ CREATE TABLE public.message (
 ALTER TABLE public.message OWNER TO postgres;
 
 --
--- TOC entry 3489 (class 0 OID 0)
+-- TOC entry 3485 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: TABLE message; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -300,20 +254,21 @@ ALTER TABLE public.message ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 242 (class 1259 OID 143771)
+-- TOC entry 240 (class 1259 OID 143771)
 -- Name: ownership; Type: TABLE; Schema: public; Owner: admin
 --
 
 CREATE TABLE public.ownership (
-    id bigint NOT NULL
+                                  id bigint NOT NULL,
+                                  user_id bigint DEFAULT 7
 );
 
 
 ALTER TABLE public.ownership OWNER TO admin;
 
 --
--- TOC entry 3490 (class 0 OID 0)
--- Dependencies: 242
+-- TOC entry 3486 (class 0 OID 0)
+-- Dependencies: 240
 -- Name: TABLE ownership; Type: COMMENT; Schema: public; Owner: admin
 --
 
@@ -321,20 +276,30 @@ COMMENT ON TABLE public.ownership IS 'владения (для каждого п
 
 
 --
--- TOC entry 243 (class 1259 OID 143776)
+-- TOC entry 241 (class 1259 OID 143776)
 -- Name: ownership_address; Type: TABLE; Schema: public; Owner: admin
 --
 
 CREATE TABLE public.ownership_address (
                                           address_id bigint NOT NULL,
-                                          ownership_id bigint NOT NULL
+                                          ownership_id bigint NOT NULL,
+                                          apartment_number bigint NOT NULL
 );
 
 
 ALTER TABLE public.ownership_address OWNER TO admin;
 
 --
--- TOC entry 241 (class 1259 OID 143770)
+-- TOC entry 3487 (class 0 OID 0)
+-- Dependencies: 241
+-- Name: COLUMN ownership_address.apartment_number; Type: COMMENT; Schema: public; Owner: admin
+--
+
+COMMENT ON COLUMN public.ownership_address.apartment_number IS 'номер квартиры';
+
+
+--
+-- TOC entry 239 (class 1259 OID 143770)
 -- Name: ownership_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
 --
 
@@ -355,7 +320,7 @@ ALTER TABLE public.ownership ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 CREATE TABLE public.poll (
                              id bigint NOT NULL,
-                             creator_user_id bigint DEFAULT 0 NOT NULL,
+                             creator_user_id bigint DEFAULT 11 NOT NULL,
                              poll_shedule_id bigint,
                              adress_id bigint NOT NULL,
                              name character varying(100) NOT NULL,
@@ -370,6 +335,15 @@ CREATE TABLE public.poll (
 
 
 ALTER TABLE public.poll OWNER TO postgres;
+
+--
+-- TOC entry 3488 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: COLUMN poll.creator_user_id; Type: COMMENT; Schema: public; Owner: postgres
+--
+
+COMMENT ON COLUMN public.poll.creator_user_id IS 'Указать id удалённого пользователя';
+
 
 --
 -- TOC entry 215 (class 1259 OID 86473)
@@ -401,7 +375,7 @@ CREATE TABLE public."poll_sсhedule" (
 ALTER TABLE public."poll_sсhedule" OWNER TO postgres;
 
 --
--- TOC entry 3491 (class 0 OID 0)
+-- TOC entry 3489 (class 0 OID 0)
 -- Dependencies: 234
 -- Name: TABLE "poll_sсhedule"; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -410,7 +384,7 @@ COMMENT ON TABLE public."poll_sсhedule" IS 'count_days - через сколь�
 
 
 --
--- TOC entry 244 (class 1259 OID 160166)
+-- TOC entry 242 (class 1259 OID 160166)
 -- Name: poll_sсhedule_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
@@ -483,6 +457,23 @@ ALTER TABLE public.privilege ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
+-- TOC entry 243 (class 1259 OID 160169)
+-- Name: relocation_request; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.relocation_request (
+                                           user_id bigint NOT NULL,
+                                           city character varying(50) NOT NULL,
+                                           street character varying(50) NOT NULL,
+                                           house_number character varying(50) NOT NULL,
+                                           apartment_number character varying(50) NOT NULL,
+                                           action public.relocation_action NOT NULL
+);
+
+
+ALTER TABLE public.relocation_request OWNER TO admin;
+
+--
 -- TOC entry 230 (class 1259 OID 86531)
 -- Name: role; Type: TABLE; Schema: public; Owner: postgres
 --
@@ -496,7 +487,7 @@ CREATE TABLE public.role (
 ALTER TABLE public.role OWNER TO postgres;
 
 --
--- TOC entry 3492 (class 0 OID 0)
+-- TOC entry 3490 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: TABLE role; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -533,7 +524,7 @@ CREATE TABLE public.role_privilege (
 ALTER TABLE public.role_privilege OWNER TO postgres;
 
 --
--- TOC entry 240 (class 1259 OID 102815)
+-- TOC entry 238 (class 1259 OID 102815)
 -- Name: system_object; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -545,8 +536,8 @@ CREATE TABLE public.system_object (
 ALTER TABLE public.system_object OWNER TO postgres;
 
 --
--- TOC entry 3493 (class 0 OID 0)
--- Dependencies: 240
+-- TOC entry 3491 (class 0 OID 0)
+-- Dependencies: 238
 -- Name: TABLE system_object; Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -554,7 +545,7 @@ COMMENT ON TABLE public.system_object IS 'Объекты системы, к ко
 
 
 --
--- TOC entry 238 (class 1259 OID 86565)
+-- TOC entry 236 (class 1259 OID 86565)
 -- Name: unavailable_poll_for_user; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -567,8 +558,8 @@ CREATE TABLE public.unavailable_poll_for_user (
 ALTER TABLE public.unavailable_poll_for_user OWNER TO postgres;
 
 --
--- TOC entry 3494 (class 0 OID 0)
--- Dependencies: 238
+-- TOC entry 3492 (class 0 OID 0)
+-- Dependencies: 236
 -- Name: TABLE unavailable_poll_for_user; Type: COMMENT; Schema: public; Owner: postgres
 --
 
@@ -582,7 +573,6 @@ COMMENT ON TABLE public.unavailable_poll_for_user IS 'Ограничение д�
 
 CREATE TABLE public."user" (
                                id bigint NOT NULL,
-                               address_id bigint NOT NULL,
                                full_name character varying(200) NOT NULL,
                                birth_date date NOT NULL,
                                login character varying(50) NOT NULL,
@@ -597,7 +587,7 @@ CREATE TABLE public."user" (
 ALTER TABLE public."user" OWNER TO postgres;
 
 --
--- TOC entry 3495 (class 0 OID 0)
+-- TOC entry 3493 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: TABLE "user"; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -608,7 +598,7 @@ COMMENT ON TABLE public."user" IS 'id = 0 - для удалённого поль
 
 
 --
--- TOC entry 3496 (class 0 OID 0)
+-- TOC entry 3494 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: COLUMN "user".ownership_id; Type: COMMENT; Schema: public; Owner: postgres
 --
@@ -632,7 +622,7 @@ ALTER TABLE public."user" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
 
 
 --
--- TOC entry 237 (class 1259 OID 86560)
+-- TOC entry 235 (class 1259 OID 86560)
 -- Name: user_role; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -674,7 +664,7 @@ ALTER TABLE public.users_answer ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY
 
 
 --
--- TOC entry 3307 (class 2606 OID 102814)
+-- TOC entry 3305 (class 2606 OID 102814)
 -- Name: action action_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -683,12 +673,12 @@ ALTER TABLE ONLY public.action
 
 
 --
--- TOC entry 3313 (class 2606 OID 143795)
--- Name: ownership_address address_ownership_uniq; Type: CONSTRAINT; Schema: public; Owner: admin
+-- TOC entry 3311 (class 2606 OID 160185)
+-- Name: ownership_address address_ownership_apartment_number_uniq; Type: CONSTRAINT; Schema: public; Owner: admin
 --
 
 ALTER TABLE ONLY public.ownership_address
-    ADD CONSTRAINT address_ownership_uniq UNIQUE (ownership_id, address_id);
+    ADD CONSTRAINT address_ownership_apartment_number_uniq UNIQUE (ownership_id, address_id, apartment_number);
 
 
 --
@@ -698,15 +688,6 @@ ALTER TABLE ONLY public.ownership_address
 
 ALTER TABLE ONLY public.address
     ADD CONSTRAINT address_pkey PRIMARY KEY (id);
-
-
---
--- TOC entry 3303 (class 2606 OID 86554)
--- Name: apartment apartment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.apartment
-    ADD CONSTRAINT apartment_pkey PRIMARY KEY (number);
 
 
 --
@@ -737,7 +718,7 @@ ALTER TABLE ONLY public.message
 
 
 --
--- TOC entry 3311 (class 2606 OID 143775)
+-- TOC entry 3309 (class 2606 OID 143775)
 -- Name: ownership ownership_pk; Type: CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -800,7 +781,7 @@ ALTER TABLE ONLY public.role
 
 
 --
--- TOC entry 3309 (class 2606 OID 102819)
+-- TOC entry 3307 (class 2606 OID 102819)
 -- Name: system_object system_object_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -809,7 +790,7 @@ ALTER TABLE ONLY public.system_object
 
 
 --
--- TOC entry 3305 (class 2606 OID 143797)
+-- TOC entry 3303 (class 2606 OID 143797)
 -- Name: unavailable_poll_for_user unavailable_poll_for_user_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -836,7 +817,15 @@ ALTER TABLE ONLY public.users_answer
 
 
 --
--- TOC entry 3335 (class 2606 OID 143779)
+-- TOC entry 3312 (class 1259 OID 160201)
+-- Name: relocation_request_uniq; Type: INDEX; Schema: public; Owner: admin
+--
+
+CREATE UNIQUE INDEX relocation_request_uniq ON public.relocation_request USING btree (user_id, city, street, house_number, apartment_number);
+
+
+--
+-- TOC entry 3332 (class 2606 OID 143779)
 -- Name: ownership_address address_ownership_address_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -845,7 +834,7 @@ ALTER TABLE ONLY public.ownership_address
 
 
 --
--- TOC entry 3336 (class 2606 OID 143784)
+-- TOC entry 3333 (class 2606 OID 143784)
 -- Name: ownership_address address_ownership_ownership_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -854,34 +843,7 @@ ALTER TABLE ONLY public.ownership_address
 
 
 --
--- TOC entry 3328 (class 2606 OID 86628)
--- Name: apartment_address apartment_address_address_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.apartment_address
-    ADD CONSTRAINT apartment_address_address_id_fkey FOREIGN KEY (address_id) REFERENCES public.address(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
-
-
---
--- TOC entry 3329 (class 2606 OID 86623)
--- Name: apartment_address apartment_address_apartment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.apartment_address
-    ADD CONSTRAINT apartment_address_apartment_id_fkey FOREIGN KEY (number) REFERENCES public.apartment(number) ON UPDATE CASCADE NOT VALID;
-
-
---
--- TOC entry 3330 (class 2606 OID 86633)
--- Name: apartment_address apartment_address_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.apartment_address
-    ADD CONSTRAINT apartment_address_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id) ON UPDATE CASCADE NOT VALID;
-
-
---
--- TOC entry 3319 (class 2606 OID 86593)
+-- TOC entry 3318 (class 2606 OID 86593)
 -- Name: file file_poll_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -890,7 +852,7 @@ ALTER TABLE ONLY public.file
 
 
 --
--- TOC entry 3317 (class 2606 OID 86583)
+-- TOC entry 3316 (class 2606 OID 86583)
 -- Name: message message_poll_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -899,7 +861,7 @@ ALTER TABLE ONLY public.message
 
 
 --
--- TOC entry 3318 (class 2606 OID 86588)
+-- TOC entry 3317 (class 2606 OID 86588)
 -- Name: message message_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -908,7 +870,16 @@ ALTER TABLE ONLY public.message
 
 
 --
--- TOC entry 3314 (class 2606 OID 86568)
+-- TOC entry 3331 (class 2606 OID 160203)
+-- Name: ownership ownership_fk; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.ownership
+    ADD CONSTRAINT ownership_fk FOREIGN KEY (user_id) REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 3313 (class 2606 OID 86568)
 -- Name: poll poll_adress_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -917,7 +888,7 @@ ALTER TABLE ONLY public.poll
 
 
 --
--- TOC entry 3315 (class 2606 OID 86578)
+-- TOC entry 3314 (class 2606 OID 86578)
 -- Name: poll poll_creator_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -926,7 +897,7 @@ ALTER TABLE ONLY public.poll
 
 
 --
--- TOC entry 3316 (class 2606 OID 86573)
+-- TOC entry 3315 (class 2606 OID 86573)
 -- Name: poll poll_poll_shedule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -935,7 +906,7 @@ ALTER TABLE ONLY public.poll
 
 
 --
--- TOC entry 3320 (class 2606 OID 86598)
+-- TOC entry 3319 (class 2606 OID 86598)
 -- Name: poll_value poll_value_poll_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -944,7 +915,7 @@ ALTER TABLE ONLY public.poll_value
 
 
 --
--- TOC entry 3324 (class 2606 OID 102827)
+-- TOC entry 3323 (class 2606 OID 102827)
 -- Name: privilege privilege_action_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -953,7 +924,7 @@ ALTER TABLE ONLY public.privilege
 
 
 --
--- TOC entry 3326 (class 2606 OID 86613)
+-- TOC entry 3325 (class 2606 OID 86613)
 -- Name: role_privilege privilege_role_privilege_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -962,7 +933,7 @@ ALTER TABLE ONLY public.role_privilege
 
 
 --
--- TOC entry 3327 (class 2606 OID 86618)
+-- TOC entry 3326 (class 2606 OID 86618)
 -- Name: role_privilege privilege_role_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -971,7 +942,7 @@ ALTER TABLE ONLY public.role_privilege
 
 
 --
--- TOC entry 3325 (class 2606 OID 102822)
+-- TOC entry 3324 (class 2606 OID 102822)
 -- Name: privilege privilege_system_object_name_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -980,7 +951,16 @@ ALTER TABLE ONLY public.privilege
 
 
 --
--- TOC entry 3331 (class 2606 OID 111002)
+-- TOC entry 3334 (class 2606 OID 160172)
+-- Name: relocation_request relocation_request_fk; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.relocation_request
+    ADD CONSTRAINT relocation_request_fk FOREIGN KEY (user_id) REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- TOC entry 3327 (class 2606 OID 111002)
 -- Name: user_role role_user_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -989,7 +969,7 @@ ALTER TABLE ONLY public.user_role
 
 
 --
--- TOC entry 3332 (class 2606 OID 86643)
+-- TOC entry 3328 (class 2606 OID 86643)
 -- Name: user_role role_user_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -998,7 +978,7 @@ ALTER TABLE ONLY public.user_role
 
 
 --
--- TOC entry 3333 (class 2606 OID 86648)
+-- TOC entry 3329 (class 2606 OID 86648)
 -- Name: unavailable_poll_for_user unavailable_poll_for_user_poll_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1007,7 +987,7 @@ ALTER TABLE ONLY public.unavailable_poll_for_user
 
 
 --
--- TOC entry 3334 (class 2606 OID 86653)
+-- TOC entry 3330 (class 2606 OID 86653)
 -- Name: unavailable_poll_for_user unavailable_poll_for_user_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1016,7 +996,7 @@ ALTER TABLE ONLY public.unavailable_poll_for_user
 
 
 --
--- TOC entry 3321 (class 2606 OID 143789)
+-- TOC entry 3320 (class 2606 OID 143789)
 -- Name: user user_ownership_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1025,7 +1005,7 @@ ALTER TABLE ONLY public."user"
 
 
 --
--- TOC entry 3322 (class 2606 OID 86608)
+-- TOC entry 3321 (class 2606 OID 86608)
 -- Name: users_answer users_answer_poll_value_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1034,7 +1014,7 @@ ALTER TABLE ONLY public.users_answer
 
 
 --
--- TOC entry 3323 (class 2606 OID 86603)
+-- TOC entry 3322 (class 2606 OID 86603)
 -- Name: users_answer users_answer_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1042,7 +1022,7 @@ ALTER TABLE ONLY public.users_answer
     ADD CONSTRAINT users_answer_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
 
 
--- Completed on 2024-06-06 18:08:16
+-- Completed on 2024-06-10 18:48:10
 
 --
 -- PostgreSQL database dump complete

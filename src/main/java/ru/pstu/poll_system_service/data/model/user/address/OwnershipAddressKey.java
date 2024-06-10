@@ -2,11 +2,17 @@ package ru.pstu.poll_system_service.data.model.user.address;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Embeddable
 public class OwnershipAddressKey implements Serializable {
 
