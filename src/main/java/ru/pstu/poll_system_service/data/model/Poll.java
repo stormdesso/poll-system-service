@@ -5,14 +5,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.pstu.poll_system_service.business.model.PollSchedule;
 
 import java.util.Date;
 import java.util.List;
 
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.EAGER;
+
 @Entity
 @Table(name = "poll", schema = "public")
 @Data
-@Builder
+@Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 public class Poll{
@@ -25,8 +29,8 @@ public class Poll{
     @Column(name = "creator_user_id", nullable = false)
     private Long creatorUserId;
 
-    @Column(name = "poll_shedule_id", nullable = true)
-    private Long pollScheduleId;
+//    @Column(name = "poll_shedule_id", nullable = true)
+//    private Long pollScheduleId;
 
     @Column(name = "adress_id", nullable = false)
     private Long addressId;
@@ -54,11 +58,16 @@ public class Poll{
     @Column(name = "cyclical", nullable = false)
     private Boolean cyclical;
 
-    @OneToMany(mappedBy = "poll", cascade = CascadeType.ALL, targetEntity = PollValue.class, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "poll", cascade = ALL, targetEntity = PollValue.class, fetch = FetchType.EAGER)
     private List<PollValue> pollValues;
 
     @Column(name = "max_number_answers_by_user")
     private Long maxNumberAnswersByUser;
+
+//    @MapsId("pollScheduleId") //говорим, что id в этой сущности такой же как и у нашего pollScheduleId
+    @OneToOne(fetch = EAGER, cascade = ALL, targetEntity = PollSchedule.class)
+    @JoinColumn(name = "poll_shedule_id", referencedColumnName = "id")
+    PollSchedule schedule;
 
     /**
     Возвращает число проголосовавших в опросе

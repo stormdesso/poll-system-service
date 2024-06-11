@@ -11,9 +11,6 @@ public abstract class BasePollDto{
     @Schema(description = "Создатель опроса")
     private Long creatorUserId;
 
-    @Schema(description = "Идентификатор раписания")
-    private Long pollScheduleId;
-
     @Schema(description = "Название опроса")
     private String name;
 

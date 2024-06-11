@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
+import ru.pstu.poll_system_service.business.service.ScheduledTaskService;
 import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.PairParameter;
 import ru.pstu.poll_system_service.web.common.entity.Page;
@@ -27,6 +28,7 @@ import static ru.pstu.poll_system_service.web.security.constant.SystemObjectCons
 public class PollController{
 
     private final PollService pollService;
+    private final ScheduledTaskService scheduledTaskService;
 
     @Operation(description = "Получить отфильтрованный список опросов")
     @HasPermission(resource = POLL, action = READ)
@@ -83,7 +85,9 @@ public class PollController{
     @ResponseBody
     @PutMapping("/create")
     public Long create(@Parameter(description = "Опрос") @RequestBody(required = true) CreatePollDto createPollDto) {
-        return pollService.save(createPollDto);
+        var poll =   pollService.save(createPollDto);
+        scheduledTaskService.createTaskFromTemplate(poll);
+        return poll.getId();
     }
 
     @Operation(description = "Редактировать опрос(неактивный)")
@@ -91,6 +95,8 @@ public class PollController{
     @ResponseBody
     @PostMapping("/update")
     public Long update(@Parameter(description = "Опрос") @RequestBody(required = true) PollDto pollDto) {
-        return pollService.update(pollDto);
+        var poll = pollService.update(pollDto);
+        scheduledTaskService.rescheduleTaskFromTemplate(poll);
+        return poll.getId();
     }
 }

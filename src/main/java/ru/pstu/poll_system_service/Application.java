@@ -4,8 +4,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 import ru.pstu.poll_system_service.config.ApplicationConfig;
-import ru.pstu.poll_system_service.web.config.SecurityConfig;
-import ru.pstu.poll_system_service.web.config.SwaggerConfig;
 
 @SpringBootApplication
 @Import(ApplicationConfig.class)

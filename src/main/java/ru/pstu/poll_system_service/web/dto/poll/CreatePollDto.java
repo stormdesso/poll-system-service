@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import ru.pstu.poll_system_service.business.model.ScheduleType;
 
 import java.util.Date;
 import java.util.List;
@@ -36,4 +37,7 @@ public class CreatePollDto {
 
     @Schema(description = "Максимально возможное число голосов в опросе от одного пользователя")
     private Long maxNumberAnswersByUser;
+
+    @Schema(description = "Тип расписания")
+    private ScheduleType scheduleType;
 }

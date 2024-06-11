@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ru.pstu.poll_system_service.business.model.PollSchedule;
 import ru.pstu.poll_system_service.data.model.Poll;
 
 import java.util.Collection;
@@ -15,6 +16,19 @@ import java.util.Optional;
 
 @Repository
 public interface PollRepository extends JpaRepository<Poll, Long>, JpaSpecificationExecutor<Poll> {
+
+    @Query(value = "SELECT * FROM poll WHERE (date_part('day', CAST(current_date AS timestamp) - end_date)) >= 365",
+            nativeQuery = true)
+    List<Long> findAllClosed();
+
+    @Query(value = "select s from PollSchedule as s")
+    List<PollSchedule> findAllSchedule();
+
+    /**
+     * Получить список опросов, у которых есть расписание  и они active или planned
+     * */
+    @Query(value = "select p from Poll as p where p.schedule.type != 'NO_SCHEDULE' and p.status in ('active', 'planned')")
+    List<Poll> findAllActiveAndPlannedPollWithSchedule();
 
     /**
      * Возвращает список доступных опросов

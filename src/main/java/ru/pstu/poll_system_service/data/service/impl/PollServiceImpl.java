@@ -8,6 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.pstu.poll_system_service.business.model.PollSchedule;
+import ru.pstu.poll_system_service.business.model.ScheduleType;
 import ru.pstu.poll_system_service.data.enums.StatusEnum;
 import ru.pstu.poll_system_service.data.mapper.PollMapper;
 import ru.pstu.poll_system_service.data.model.Poll;
@@ -88,6 +90,11 @@ public class PollServiceImpl implements PollService {
         pollDtoPage.getItems().forEach(pd ->{
                     pd.setMaxNumberVoted(pollRepository.getMaxNumberVoted(pd.getId()));
                     pd.setUserIsVoted(pollRepository.userIsVoted(pd.getId(), getCurrentUserIdFromContext()));
+                    var type = pollEntitiesPage.stream()
+                            .filter(pollDto -> pollDto.getId().equals(pd.getId()))
+                            .toList().getFirst().getSchedule().getType();
+
+                    pd.setType(type);
                 }
         );
 
@@ -154,7 +161,7 @@ public class PollServiceImpl implements PollService {
 
     @Override
     @Transactional
-    public Long save(CreatePollDto createPollDto) {
+    public Poll save(CreatePollDto createPollDto) {
         var user = getCurrentUserFromContext();
 
         List<PollValueDto> tempValueDtoList = createPollDto.getPollValues().stream().map(str ->
@@ -168,8 +175,11 @@ public class PollServiceImpl implements PollService {
 
         long duration = getDuration(createPollDto.getStartDate(), createPollDto.getEndDate());
 
+        var schedule = getSchedule(createPollDto.getScheduleType());
+
+
         Poll poll = Poll.builder()
-                        .pollScheduleId(null) //todo: указать, когда сделаю cron
+                        .schedule(schedule)
                         .creatorUserId(user.getId())
                         .addressId(createPollDto.getAddressId())
                         .name(createPollDto.getName())
@@ -193,7 +203,7 @@ public class PollServiceImpl implements PollService {
 
         poll.setPollValues(valuesDtoList);
 
-        return pollRepository.save(poll).getId();
+        return pollRepository.save(poll);
     }
 
     private long getDuration(Date startDate, Date endDate) {
@@ -220,14 +230,14 @@ public class PollServiceImpl implements PollService {
 
     @Override
     @Transactional
-    public Long update(PollDto pollDto) {
+    public Poll update(PollDto pollDto) {
         var user = getCurrentUserFromContext();
 
         Poll originalEntity = pollRepository.findById(pollDto.getId()).orElseThrow(()
                 -> new IllegalArgumentException("Указан неверный идентификатор опроса!"));
 
-        if (! StatusEnum.valueOf(StatusEnum.class,originalEntity.getStatus()).equals(StatusEnum.proposed) ||
-                StatusEnum.valueOf(StatusEnum.class,originalEntity.getStatus()).equals(StatusEnum.returned)){
+        if (! (StatusEnum.valueOf(StatusEnum.class,originalEntity.getStatus()).equals(StatusEnum.proposed) ||
+                StatusEnum.valueOf(StatusEnum.class,originalEntity.getStatus()).equals(StatusEnum.returned)) ){
             throw new IllegalArgumentException("Невозможно редактировать опрос!");
         }
 
@@ -242,9 +252,11 @@ public class PollServiceImpl implements PollService {
 
         long duration = getDuration(pollDto.getStartDate(), pollDto.getEndDate());
 
+        var schedule = getSchedule(pollDto.getType());
+
         Poll poll = Poll.builder()
                 .id(pollDto.getId())
-                .pollScheduleId(pollDto.getPollScheduleId()) //todo: указать, когда сделаю cron
+                .schedule(schedule)
                 .creatorUserId(user.getId())
                 .addressId(originalEntity.getAddressId())
                 .name(pollDto.getName())
@@ -269,6 +281,12 @@ public class PollServiceImpl implements PollService {
 
         poll.setPollValues(valuesDtoList);
 
-        return pollRepository.save(poll).getId();
+        return pollRepository.save(poll);
+    }
+
+    private PollSchedule getSchedule(ScheduleType pollDto) {
+        var allSchedule = pollRepository.findAllSchedule();
+        return allSchedule.stream().filter(pollSchedule ->
+                pollDto.equals(pollSchedule.getType())).toList().getFirst();
     }
 }

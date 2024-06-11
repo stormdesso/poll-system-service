@@ -16,8 +16,7 @@ import ru.pstu.poll_system_service.web.dto.MessageDto;
 import java.time.ZoneId;
 import java.util.List;
 
-import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.CREATE;
-import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.READ;
+import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.*;
 import static ru.pstu.poll_system_service.web.security.constant.SystemObjectConstants.POLL;
 
 @RequestMapping("/api/v1/poll/chat")
@@ -40,6 +39,18 @@ public class ChatController {
             @Parameter(description = "Часовой пояс получающего")
             @RequestParam(required = true) String timeZone){
         return messageService.getAllByPollId(pollId, ZoneId.of(timeZone));
+    }
+
+    @Operation(description = "Написать в чате опроса")
+    @HasPermission(resource = POLL, action = WRITE)
+    @ResponseBody
+    @PutMapping("/send")
+    public void sendMessageByHttp(
+            @Payload @Parameter(description = "Идентификатор опроса")
+            @RequestParam(required = true) Long pollId,
+            @Payload @Parameter(description = "Сообщение")
+            @RequestBody(required = true) MessageDto messageDto){
+        messageService.save(pollId, messageDto);
     }
 
     /**

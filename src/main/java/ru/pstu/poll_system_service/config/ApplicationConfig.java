@@ -5,6 +5,6 @@ import ru.pstu.poll_system_service.web.config.SecurityConfig;
 import ru.pstu.poll_system_service.web.config.SwaggerConfig;
 import ru.pstu.poll_system_service.web.config.WebSocketConfig;
 
-@Import({SwaggerConfig.class, SecurityConfig.class, WebSocketConfig.class})
+@Import({SwaggerConfig.class, SecurityConfig.class, WebSocketConfig.class, ScheduleConfig.class})
 public class ApplicationConfig{
 }

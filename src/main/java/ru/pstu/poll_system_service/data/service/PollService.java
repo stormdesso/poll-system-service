@@ -1,5 +1,6 @@
 package ru.pstu.poll_system_service.data.service;
 
+import ru.pstu.poll_system_service.data.model.Poll;
 import ru.pstu.poll_system_service.web.common.entity.Page;
 import ru.pstu.poll_system_service.web.dto.poll.CreatePollDto;
 import ru.pstu.poll_system_service.web.dto.poll.PollDto;
@@ -15,6 +16,6 @@ public interface PollService{
 
     void vote(Long pollId, List<PollValueDto> pollValueDto);
 
-    Long save(CreatePollDto createPollDto);
-    Long update(PollDto pollDto);
+    Poll save(CreatePollDto createPollDto);
+    Poll update(PollDto pollDto);
 }

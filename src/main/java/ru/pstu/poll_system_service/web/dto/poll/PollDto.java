@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import ru.pstu.poll_system_service.business.model.ScheduleType;
 
 import java.util.List;
 
@@ -32,4 +33,7 @@ public class PollDto extends BasePollDto{
 
     @Schema(description = "Циклический опрос")
     private boolean cyclical;
+
+    @Schema(description = "Тип расписания")
+    private ScheduleType type;
 }
