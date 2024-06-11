@@ -14,7 +14,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker( PREFIX);//конфигурирует простой брокер сообщений
+        registry.enableSimpleBroker(PREFIX);//конфигурирует простой брокер сообщений
         // в памяти с одним адресом
         registry.setApplicationDestinationPrefixes(PREFIX);//префикс для метода API
         registry.setUserDestinationPrefix(PREFIX);//префикс который добавляется при отправке сообщения в очередь
@@ -30,7 +30,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/ws")
                 .setAllowedOrigins("*")
                 .withSockJS();
-
     }
 }
 

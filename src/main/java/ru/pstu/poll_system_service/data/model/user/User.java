@@ -14,9 +14,6 @@ public class User{
     @Id
     Long id;
 
-    @Column(name = "address_id")
-    Long addressId;
-
     @Column(name = "full_name")
     String fullName;
 

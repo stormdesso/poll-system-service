@@ -7,7 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import ru.pstu.poll_system_service.data.model.user.Role;
-import ru.pstu.poll_system_service.data.repository.UserRepository;
+import ru.pstu.poll_system_service.data.repository.user.UserRepository;
 import ru.pstu.poll_system_service.web.security.jwt.JwtService;
 import ru.pstu.poll_system_service.web.security.model.SecurityUser;
 import ru.pstu.poll_system_service.web.security.model.AccountCredentials;

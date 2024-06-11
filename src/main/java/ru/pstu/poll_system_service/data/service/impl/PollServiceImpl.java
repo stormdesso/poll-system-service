@@ -15,8 +15,8 @@ import ru.pstu.poll_system_service.data.model.PollValue;
 import ru.pstu.poll_system_service.data.model.UserAnswer;
 import ru.pstu.poll_system_service.data.model.user.Role;
 import ru.pstu.poll_system_service.data.repository.PollRepository;
-import ru.pstu.poll_system_service.data.repository.UserAnswerRepository;
-import ru.pstu.poll_system_service.data.repository.UserRepository;
+import ru.pstu.poll_system_service.data.repository.user.UserAnswerRepository;
+import ru.pstu.poll_system_service.data.repository.user.UserRepository;
 import ru.pstu.poll_system_service.data.service.GeneralService;
 import ru.pstu.poll_system_service.data.service.PollService;
 import ru.pstu.poll_system_service.web.common.entity.Page;
@@ -56,6 +56,23 @@ public class PollServiceImpl implements PollService {
 
         var ids = pollRepository.findAvailablePollsIdsForUser(ownershipId, getCurrentUserIdFromContext());
 
+        return getPollDtoPage(pollFilter, pageable, ids);
+    }
+
+    @Override
+    public Page<PollDto> getFilteredSuggestedPolls(PollFilter pollFilter){
+        Long ownershipId = getCurrentUserFromContext().getOwnershipId();
+
+        Pageable pageable = PageRequest.of( pollFilter.getPage().intValue(), pollFilter.getLimit().intValue(),
+                getSort(pollFilter.getSortableField(), pollFilter.getDirection()) );
+
+        var ids = pollRepository.findSuggestedPollsIdsForUser(ownershipId, getCurrentUserIdFromContext());
+
+        return getPollDtoPage(pollFilter, pageable, ids);
+    }
+
+    @NotNull
+    private Page<PollDto> getPollDtoPage(PollFilter pollFilter, Pageable pageable, List<Long> ids) {
         org.springframework.data.domain.Page<Poll> pollEntitiesPage;
         if (pollFilter.isSpecificationIsEmpty()){
             pollEntitiesPage = pollRepository.findAllByIdIn(ids,pageable);
@@ -69,9 +86,9 @@ public class PollServiceImpl implements PollService {
                 pollEntitiesPage.getTotalElements(), pollEntitiesPage.stream().count());
 
         pollDtoPage.getItems().forEach(pd ->{
-                pd.setMaxNumberVoted(pollRepository.getMaxNumberVoted(pd.getId()));
-                pd.setUserIsVoted(pollRepository.userIsVoted(pd.getId(), getCurrentUserIdFromContext()));
-            }
+                    pd.setMaxNumberVoted(pollRepository.getMaxNumberVoted(pd.getId()));
+                    pd.setUserIsVoted(pollRepository.userIsVoted(pd.getId(), getCurrentUserIdFromContext()));
+                }
         );
 
         return pollDtoPage;
@@ -209,14 +226,14 @@ public class PollServiceImpl implements PollService {
         Poll originalEntity = pollRepository.findById(pollDto.getId()).orElseThrow(()
                 -> new IllegalArgumentException("Указан неверный идентификатор опроса!"));
 
-        if (! StatusEnum.valueOf(StatusEnum.class,pollDto.getStatus()).equals(StatusEnum.proposed) ||
-                StatusEnum.valueOf(StatusEnum.class,pollDto.getStatus()).equals(StatusEnum.returned)){
+        if (! StatusEnum.valueOf(StatusEnum.class,originalEntity.getStatus()).equals(StatusEnum.proposed) ||
+                StatusEnum.valueOf(StatusEnum.class,originalEntity.getStatus()).equals(StatusEnum.returned)){
             throw new IllegalArgumentException("Невозможно редактировать опрос!");
         }
 
-        if (originalEntity.getCreatorUserId().equals(getCurrentUserIdFromContext()) ||
+        if (! (originalEntity.getCreatorUserId().equals(getCurrentUserIdFromContext()) ||
                 new HashSet<>(getCurrentUserFromContext().getRole().stream().map(Role::getRoleName).toList())
-                        .containsAll(List.of(admin.name(), root.name()))){
+                        .containsAll(List.of(admin.name(), root.name())))){
             throw new IllegalArgumentException("Нет прав на редактирование опроса!");
         }
 
@@ -243,6 +260,7 @@ public class PollServiceImpl implements PollService {
 
         List<PollValue> valuesDtoList = pollDto.getPollValues().stream().map(valueDto ->
                         PollValue.builder()
+                                .id(valueDto.getId() == null? null: valueDto.getId())
                                 .poll(poll)
                                 .value(valueDto.getValue())
                                 .votes(0L)

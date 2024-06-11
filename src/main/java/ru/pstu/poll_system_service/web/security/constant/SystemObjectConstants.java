@@ -12,6 +12,7 @@ import java.util.Arrays;
 public enum SystemObjectConstants {
     POLL("poll", "Опросы"),
     USER_ADMINISTRATION("user_administration", "Администрирование пользователей"),
+    RELOCATION("relocation", "Переезд"),
     ;
 
     private final String id;

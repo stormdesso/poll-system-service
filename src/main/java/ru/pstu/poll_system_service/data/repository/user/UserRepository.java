@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.data.repository;
+package ru.pstu.poll_system_service.data.repository.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -17,6 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     /**
      Поиск адресов пользователя по ownership id
     */
-    @Query(value = "select * from ownership_address where ownership_id = :ownershipId", nativeQuery = true)
+    @Query(value = "select address_id from ownership_address where ownership_id = :ownershipId", nativeQuery = true)
     List<Long> findAddressesIdByOwnershipId(@Param("ownershipId") Long ownershipId);
+
 }

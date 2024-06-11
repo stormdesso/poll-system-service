@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum StatusEnum {
-    proposed,
+    proposed, //ещё не рассмотренные админом
     active,
-    planned,
+    planned, //принятые админом, но ещё не начатые(задать автомтический старт через какой-то планировщик задач)
     closed,
-    returned
+    returned  // возвращённые для внесения измений в данные опроса
 }

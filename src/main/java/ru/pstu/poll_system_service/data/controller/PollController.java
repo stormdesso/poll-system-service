@@ -1,4 +1,4 @@
-package ru.pstu.poll_system_service.web.controller;
+package ru.pstu.poll_system_service.data.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -46,6 +46,26 @@ public class PollController{
                 PairParameter::getKey, PairParameter::getValue, (a, b) -> b));
 
         return pollService.getFilteredPolls(new PollFilter(sort, limit, page, parameters));
+    }
+
+    @Operation(description = "Получить отфильтрованный список предложенных пользователем опросов")
+    @HasPermission(resource = POLL, action = READ)
+    @ResponseBody
+    @PostMapping(value = "/suggested_filtered_list", consumes = APPLICATION_JSON_VALUE)
+    public Page<PollDto> getFilteredSuggestedPolls(
+            @Parameter(description = "Название поля по которому будет осуществляться сортировка(asc - default, desc -fieldName)")
+            @RequestParam(required = false) String sort,
+            @Parameter(description = "Количество результатов на странице")
+            @RequestParam(required = false) Long limit,
+            @Parameter(description = "Номер страницы с результатом")
+            @RequestParam(required = false) Long page,
+            @Parameter(description = "Параметры фильтрации")
+            @RequestBody(required = false) List<PairParameter> filteredFieldsByValue){
+
+        var parameters = filteredFieldsByValue.stream().collect(Collectors.toMap(
+                PairParameter::getKey, PairParameter::getValue, (a, b) -> b));
+
+        return pollService.getFilteredSuggestedPolls(new PollFilter(sort, limit, page, parameters));
     }
 
     @Operation(description = "Проголосовать в опросе")

@@ -1,8 +1,11 @@
 package ru.pstu.poll_system_service.data.service.impl;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,15 +13,25 @@ import org.springframework.stereotype.Service;
 import ru.pstu.poll_system_service.data.enums.RoleEnum;
 import ru.pstu.poll_system_service.data.mapper.UserMapper;
 import ru.pstu.poll_system_service.data.model.user.Role;
-import ru.pstu.poll_system_service.data.model.user.UserWithAddress;
-import ru.pstu.poll_system_service.data.repository.UserRepository;
-import ru.pstu.poll_system_service.data.repository.UserWithAddressRepository;
+import ru.pstu.poll_system_service.data.model.user.address.Address;
+import ru.pstu.poll_system_service.data.model.user.address.Ownership;
+import ru.pstu.poll_system_service.data.model.user.address.OwnershipAddress;
+import ru.pstu.poll_system_service.data.model.user.address.UserWithAddress;
+import ru.pstu.poll_system_service.data.repository.OwnershipRepository;
+import ru.pstu.poll_system_service.data.repository.address.AddressRepository;
+import ru.pstu.poll_system_service.data.repository.address.OwnershipAddressRepository;
+import ru.pstu.poll_system_service.data.repository.user.RoleRepository;
+import ru.pstu.poll_system_service.data.repository.user.UserRepository;
+import ru.pstu.poll_system_service.data.repository.user.UserWithAddressRepository;
 import ru.pstu.poll_system_service.data.service.UserService;
 import ru.pstu.poll_system_service.web.dto.user.UserDto;
 import ru.pstu.poll_system_service.web.security.model.SecurityUser;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static ru.pstu.poll_system_service.data.enums.RoleEnum.admin;
 import static ru.pstu.poll_system_service.data.enums.RoleEnum.root;
@@ -32,7 +45,17 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
 
+    private final RoleRepository roleRepository;
+
     private final UserWithAddressRepository userWithAddressRepository;
+
+    private final AddressRepository addressRepository;
+
+    private final OwnershipAddressRepository ownershipAddressRepository;
+
+    private final OwnershipRepository ownershipRepository;
+
+
 
     private List<RoleEnum> getCurrentRoles(){
        List<String> roles =  getCurrentUserFromContext().getRole().stream().map(Role::getRoleName).toList();
@@ -54,6 +77,35 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    void validate(@NotNull UserDto userDto){
+        final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+
+        if (userDto.getFullName() == null || !userDto.getFullName().matches("[a-zA-Zа-яА-Я\\s]+")) {
+            throw new IllegalArgumentException("Ошибка: ФИО должно состоять только из букв.");
+        }
+
+        if (userDto.getPhoneNumber() == null || !userDto.getPhoneNumber().matches("\\d+")) {
+            throw new IllegalArgumentException("Ошибка: Номер телефона не должен содержать букв.");
+        }
+
+        if (userDto.getBirthdate() == null || !userDto.getBirthdate().before(new Date())) {
+            throw new IllegalArgumentException("Ошибка: Дата рождения должна быть меньше сегодняшней даты.");
+        }
+
+        if (userDto.getEmail() == null || ! Pattern.matches(EMAIL_REGEX, userDto.getEmail())) {
+            throw new IllegalArgumentException("Ошибка: Неверный адрес электронной почты.");
+        }
+
+    }
+
+    @NotNull
+    private String validatePassword(@Nullable String password) {
+        if (password == null){
+            password = "";
+        }
+        return password;
+    }
+
     @Override
     public UserDetailsService userDetailsService(){
         return new UserDetailsService() {
@@ -70,11 +122,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<UserDto> findAllAvailableUsers() {
-        var addresses = userRepository.findAddressesIdByOwnershipId(getCurrentUserIdFromContext());
-        var users =  userWithAddressRepository.findAllByAddressIdIn(addresses);
-        excludeUnavailableUsersByRole(users);
+    public List<UserDto> findAllAvailableUsers(int page, int size) {
+        var users =  userWithAddressRepository.findAllAvailableUsersByOwnershipId(
+                getCurrentUserFromContext().getOwnershipId(), PageRequest.of(page, size));
 
+        excludeUnavailableUsersByRole(users);
         return UserMapper.INSTANCE.convertToUserDtos(users);
     }
 
@@ -86,5 +138,112 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDto getAuthenticatedUserInfo() {
         return findUsers(List.of(getCurrentUserIdFromContext())).getFirst();
+    }
+
+    @Override
+    @Transactional
+    public void editAuthenticatedUserInfo(UserDto userDto, String password) {
+        validate(userDto);
+        password = validatePassword(password);
+
+        var userEntity = userWithAddressRepository.findAllById(
+                List.of(getCurrentUserIdFromContext())).getFirst();
+
+        var changedUserEntity = userEntity.toBuilder()
+                .fullName(userDto.getFullName())
+                .phoneNumber(userDto.getPhoneNumber())
+                .birthdate(userDto.getBirthdate())
+                .email(userDto.getEmail())
+                .password( password.isBlank() ? password: userEntity.getPassword())
+                .build();
+
+        userWithAddressRepository.save(changedUserEntity);
+    }
+
+    @Override
+    public void editUsersInfos(@NotNull List<UserDto> userDtos) {
+        userDtos.forEach(this::validate);
+
+        var usersList = userWithAddressRepository.findAllByIdIn(
+                userDtos.stream().map(UserDto::getId).toList());
+
+        excludeUnavailableUsersByRole(usersList);
+
+        var allRoles  =roleRepository.findAll();
+
+        List<UserWithAddress> changedUsers = userDtos.stream().map(userDto -> {
+            var userEntity = usersList.stream().filter(userWithAddress ->
+                    userWithAddress.getId().equals(userDto.getId()))
+                    .findFirst().get();
+
+            return userEntity.toBuilder()
+                    .fullName(userDto.getFullName())
+                    .phoneNumber(userDto.getPhoneNumber())
+                    .birthdate(userDto.getBirthdate())
+                    .email(userDto.getEmail())
+                    .isBlocked(userDto.isBlocked())
+                    .role(UserMapper.INSTANCE.map(userDto.getRoles(), allRoles))
+                    .build();
+        }).toList();
+
+        userWithAddressRepository.saveAll(changedUsers);
+    }
+
+    @Override
+    public void deleteAuthenticatedAccount() {
+        userRepository.deleteById(getCurrentUserIdFromContext());
+    }
+
+    @Override
+    public void deleteAccountsInfos(List<Long> usersIds) {
+        var users =  userWithAddressRepository.findAllAvailableUsersByOwnershipIdAndUsersList(
+                getCurrentUserFromContext().getOwnershipId(), usersIds);
+
+        excludeUnavailableUsersByRole(users);
+
+        userRepository.deleteAllById(users.stream().map(UserWithAddress::getId).toList());
+    }
+
+    @Override
+    @Transactional
+    public void save(@NotNull UserDto userDto, @NotNull String password) {
+
+        validate(userDto);
+
+        var addressInfos = userDto.getAddressInfos();
+
+        List<Address> addresses = new ArrayList<>();
+
+        addressInfos.forEach(addressInfo -> {
+            var addressLocal = addressRepository.findByCityAndStreetAndHouseNumberEquals(
+                    addressInfo.getCity(), addressInfo.getStreet(), addressInfo.getHouseNumber()).orElseThrow(() ->
+                    new IllegalArgumentException("Указанный адрес не существует"));
+            addresses.add(addressLocal);
+        });
+
+        var allRoles = roleRepository.findAll();
+
+        var user = UserWithAddress.builder()
+                .login(userDto.getLogin())
+                .email(userDto.getEmail())
+                .password(password)
+                .fullName(userDto.getFullName())
+                .birthdate(userDto.getBirthdate())
+                .phoneNumber(userDto.getPhoneNumber())
+                .isBlocked(true)
+                .ownership(new Ownership())
+                .role(UserMapper.INSTANCE.map(userDto.getRoles(), allRoles))
+                .build();
+
+        var userId = userWithAddressRepository.save(user).getId();
+        ownershipRepository.save(user.getOwnership().toBuilder()
+                        .userId(userId)
+                .build());
+
+        List<OwnershipAddress> ownershipAddresses = UserMapper.INSTANCE.mapToList(addressInfos, addresses, user.getOwnership());
+
+
+        ownershipAddressRepository.saveAll(ownershipAddresses);
+
     }
 }
