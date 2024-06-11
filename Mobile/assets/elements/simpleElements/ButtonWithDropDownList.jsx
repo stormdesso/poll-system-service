@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Image, View, Text, TouchableOpacity } from "react-native";
 
 import {HeadderStyle} from "../styleSpecialElements/HeadderStyle"
-
+ 
 export const ButtonWithDropDownList = ({data, icon, onClick}) => {
     const [getIsShowDropDown, setIsShowDropDown] = useState(false)
     const renderDropDownItems = () => {
@@ -14,7 +14,7 @@ export const ButtonWithDropDownList = ({data, icon, onClick}) => {
                 onClick(data[item])
             }}
           >
-            <Text style={{ padding: 10 }}>{item}</Text>
+            <Text style={HeadderStyle.TextInDropdown}>{item}</Text>
           </TouchableOpacity>
         ));
       };
@@ -23,7 +23,10 @@ export const ButtonWithDropDownList = ({data, icon, onClick}) => {
         <>
             <View>
                 <TouchableOpacity style = {HeadderStyle.SortedButton} onPress={() => setIsShowDropDown(true)}>
-                    <Image source={icon} />
+                    <Image 
+                      source={icon} 
+                      style = {HeadderStyle.Image}
+                      />
                 </TouchableOpacity>
             </View>
             {getIsShowDropDown && (

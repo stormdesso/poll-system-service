@@ -1,11 +1,5 @@
 import { StyleSheet } from "react-native";
-
-const shortPollCardColor = "#304FFE";
-const TextColor = "#fff";
-const inputBlockBackgroundColor = "#E8EAF6";
-const inputBlockBorderColor = "#9FA9DA";
-const textColor = "#9E9E9E";
-const buttonColor = "#5C6BC0";
+import {ColorProperties} from "../../Data/ColorProperties"
 
 export const StatisticToVoteBlockStyle = StyleSheet.create({
   //Стиль блока с текстовыми полями
@@ -17,15 +11,12 @@ export const StatisticToVoteBlockStyle = StyleSheet.create({
     option: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 8,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
     },
 
     statisticBlock: {
         padding: 8,
         borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        borderBottomColor: ColorProperties.inputBlockBorderColor,
     },
 
     progressBlock: {

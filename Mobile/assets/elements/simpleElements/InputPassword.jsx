@@ -15,36 +15,42 @@ export default function InputPassword({ label, value, error, onChangeText }) {
   return (
     <View style={SimpleElementsStyle.authTextElementBox}>
       <Text style={SimpleElementsStyle.labelInputText}>{label}</Text>
-      <TextInput
-        placeholder={label}
-        secureTextEntry={passwordVision.passwordInputVision}
-        style={[
-          SimpleElementsStyle.authTextInputElement,
-          error === true ? SimpleElementsStyle.errorTextInput : null,
-        ]}
-        onChangeText={onChangeText}
-        value={value}
-      />
-
-      <Pressable
-        onPress={() => {
-          setPasswordVision((prevState) => ({
-            ...prevState,
-            passwordInputVision: !passwordVision.passwordInputVision,
-          }));
-          passwordVision.passwordInputVision
-            ? setPasswordVision((prevState) => ({
-                ...prevState,
-                passwordInputVisionImage: openEyeImage,
-              }))
-            : setPasswordVision((prevState) => ({
-                ...prevState,
-                passwordInputVisionImage: closeEyeImage,
-              }));
-        }}
-      >
-        <Image source={passwordVision.passwordInputVisionImage} />
-      </Pressable>
+      <View style={SimpleElementsStyle.passwordBox}>
+        <TextInput
+          placeholder={label}
+          secureTextEntry={passwordVision.passwordInputVision}
+          style={[
+            SimpleElementsStyle.authTextInputElement,
+            error === true ? SimpleElementsStyle.errorTextInput : null,
+          ]}
+          onChangeText={onChangeText}
+          value={value}
+        />
+        <Pressable
+          onPress={() => {
+            setPasswordVision((prevState) => ({
+              ...prevState,
+              passwordInputVision: !passwordVision.passwordInputVision,
+            }));
+            passwordVision.passwordInputVision
+              ? setPasswordVision((prevState) => ({
+                  ...prevState,
+                  passwordInputVisionImage: openEyeImage,
+                }))
+              : setPasswordVision((prevState) => ({
+                  ...prevState,
+                  passwordInputVisionImage: closeEyeImage,
+                }));
+          }}
+          style={SimpleElementsStyle.passwordImageBox}
+        >
+          <Image 
+            source={passwordVision.passwordInputVisionImage}
+            style={SimpleElementsStyle.passwordImage}
+            />
+        </Pressable>
+      </View>
+      
     </View>
   );
 }

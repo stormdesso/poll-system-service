@@ -6,9 +6,7 @@ import {InformationAboutThePoll} from "./InformationAboutThePoll"
 import {ChatAboutThePoll} from "./ChatAboutThePoll"
 
 import {PollInfoStyle} from "../../../style/PollInfoStyle"
-
-import {convertStatus} from "../../../../scripts/convertStatus"
-import {convertDate} from "../../../../scripts/convertDate"
+import {LinearGradient} from 'expo-linear-gradient';
   
 
 export const PollInfo = ({ route }) => {
@@ -23,29 +21,39 @@ export const PollInfo = ({ route }) => {
     chat: () => <ChatAboutThePoll item={route.params}/>,
   }), [route.params]);
 
+  const gradientColor = {
+    active: ['#66a1ff', '#18B7FB', '#0561ff'],
+    planned: ['#858585', '#5C5C5C', '#474747'],
+    proposed: ['#C6AEF8', '#A4B6FB', '#607ADC'],
+    returned: ['#FF8D8D', '#ff5656', '#fc3048'],
+    closed: ['#52da6b', '#19B37D', '#278A79'],
+  }
+
   const renderTabBar = props => (
-    <TabBar
-      {...props}
-      indicatorStyle={PollInfoStyle.indicator}
-      style={PollInfoStyle.tabBar}
-      labelStyle={PollInfoStyle.label}
-      activeColor="#fff"
-      inactiveColor="#999"
-    />
+    <LinearGradient
+        colors={gradientColor[route.params.status]} // Замените на ваши цвета
+        locations={[0.4, 0.8, 1]}
+        start={{ x: 0, y: 0 }} // Начало градиента в левом верхнем углу
+        end={{ x: 1, y: 1 }} // Конец градиента в правом нижнем углу
+        style={PollInfoStyle.ShortPollCard}
+      >
+        <View style={PollInfoStyle.TextBox}>
+          <Text style={PollInfoStyle.Text}>{route.params.name}</Text>
+        </View>
+        <TabBar
+          {...props}
+          indicatorStyle={PollInfoStyle.indicator}
+          style={PollInfoStyle.TabBar}
+          labelStyle={PollInfoStyle.label}
+          activeColor="#fff"
+          inactiveColor="#cfcfcf"
+        />
+      </LinearGradient>
+    
   );
 
   return (
-    <>
-      <View style={PollInfoStyle.ShortPollCard}>
-            <View>
-                <Text style={PollInfoStyle.Text}>{route.params.name}</Text>
-                <Text style={PollInfoStyle.Text}>Статус: {convertStatus(route.params.status)}</Text>
-            </View>
-            <View>
-                <Text style={PollInfoStyle.Text}>Сроки проведения: {convertDate(route.params.startDate)} - {convertDate(route.params.endDate)}</Text>
-                <Text style={PollInfoStyle.Text}>Проголосовало: {route.params.numberVotes}/{route.params.maxNumberVoted}</Text>
-            </View>
-      </View>
+    <View style={PollInfoStyle.Headder}> 
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -53,6 +61,7 @@ export const PollInfo = ({ route }) => {
         initialLayout={{ width: Dimensions.get('window').width }}
         renderTabBar={renderTabBar}
       />
-    </>
+    </View>
+    
   );
 }

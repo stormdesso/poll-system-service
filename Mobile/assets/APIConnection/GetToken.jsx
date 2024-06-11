@@ -27,11 +27,10 @@ export default async function GetToken(login, password) {
   try {
     const response = await fetch(url, options);
     if (!response.ok) {
-      throw new Error("Failed to fetch token");
+      throw new Error("Пользователь с данным логином и паролем не найден!");
     }
 
     const responseData = await response.json();
-    console.log(responseData);
 
     const keyValue = "Bearer " + responseData.token;
     const tokenSaveResult = await saveToken('Token', keyValue);

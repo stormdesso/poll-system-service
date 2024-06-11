@@ -1,18 +1,21 @@
 import { StyleSheet } from "react-native";
-
-const buttonColor = "#304FFE";
-const buttonTextColor = "#fff";
-const inputBlockBackgroundColor = "#E8EAF6";
-const inputBlockBorderColor = "#9FA9DA";
-const textColor = "#9E9E9E";
+import { ColorProperties } from "../../Data/ColorProperties";
 
 export const CreatePollPageStyle = StyleSheet.create({
   //Стиль для всей страницы
   container: {
     flex: 1,
-    backgroundColor: "whitesmoke",
+    backgroundColor: ColorProperties.backgroundColor,
     padding: 16,
     justifyContent: "center",
+  },
+
+  HeadderText: {
+    color: ColorProperties.lableColor,
+    paddingBottom: 15,
+    marginLeft: "10%",
+    fontSize: 30,
+    fontWeight: "500",
   },
 
   scrollView: {
@@ -39,7 +42,7 @@ export const CreatePollPageStyle = StyleSheet.create({
 
   //Стиль инпут поля
   authTextInputElement: {
-    borderColor: inputBlockBorderColor,
+    borderColor: ColorProperties.inputBlockBorderColor,
     borderWidth: 2,
     borderRadius: 2,
     paddingHorizontal: 8,
@@ -47,27 +50,13 @@ export const CreatePollPageStyle = StyleSheet.create({
     marginBottom: 15,
     paddingLeft: 10,
     zIndex: 1,
-    backgroundColor: inputBlockBackgroundColor,
-    color: textColor,
-  },
-
-  //Стиль для выпадающего списка
-  dropdown: {
-    position: "absolute",
-    left: 0,
-    top: 230,
-    marginLeft: "10%",
-    right: 0,
-    zIndex: 2,
-    backgroundColor: "#FFF",
-    borderColor: "gray",
-    borderWidth: 1,
-    width: "80%",
+    backgroundColor: ColorProperties.inputBlockBackgroundColor,
+    color: ColorProperties.textColor,
   },
 
   //Стиль для наименования поля
   labelInputText: {
-    color: textColor,
+    color: ColorProperties.textColor,
   },
 
   //Стиль для блока с кнопками
@@ -81,20 +70,20 @@ export const CreatePollPageStyle = StyleSheet.create({
   //Стиль для каждой кнопки
   buttonElement: {
     borderWidth: 1,
-    borderColor: buttonColor,
+    borderColor: ColorProperties.buttonColor,
     borderStyle: "solid",
     borderRadius: 2,
     width: "40%",
     height: 30,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: buttonColor,
+    backgroundColor: ColorProperties.buttonColor,
     height: 40,
   },
 
   //Стиль текста в кнопках
   buttonText: {
-    color: buttonTextColor,
+    color: ColorProperties.buttonTextColor,
   },
 
   //Стиль для ошибок
@@ -102,4 +91,16 @@ export const CreatePollPageStyle = StyleSheet.create({
     borderColor: "red", // Красная рамка
     borderWidth: 1,
   },
+
+  errorTextBlock: {
+    alignItems: "center",
+    paddingBottom: 10,
+    marginTop: -5
+  },
+
+  errorText: {
+    color: ColorProperties.errorBorderColor,
+    fontSize: 14,
+    fontWeight: "500"
+  }
 });

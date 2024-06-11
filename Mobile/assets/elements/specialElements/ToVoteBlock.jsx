@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Button, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import { View, Text, Pressable, FlatList, TouchableOpacity} from 'react-native';
 
 import {ToVoleBlockStyle} from "../styleSpecialElements/ToVoleBlockStyle"
+
 
 import ToVote from "../../APIConnection/ToVote"
 
@@ -49,7 +50,9 @@ export const ToVoteBlock = ({pollValues, maxAnswers, pollId, isVotedState}) => {
                 renderItem={renderOption}
                 keyExtractor={item => item.id.toString()}
             />
-            <Button title="Проголосовать" onPress={handleVote} />
+            <Pressable style={ToVoleBlockStyle.buttonElement} onPress={handleVote}>
+              <Text style={ToVoleBlockStyle.buttonText}>Проголосовать</Text>
+            </Pressable>
         </View>
     )
 }

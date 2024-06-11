@@ -7,7 +7,7 @@ import {SearchProp} from "../../Data/SearchProp"
 export const SearchInput = () => {
 
     const [text, setText] = useState('');
-
+ 
     const handleTextChange = (inputText) => {
         setText(inputText);
         SearchProp.setSearchText(inputText)

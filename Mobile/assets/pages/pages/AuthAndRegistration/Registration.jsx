@@ -62,6 +62,7 @@ export const Registration = ({ navigation }) => {
   return (
     <SafeAreaView style={AuthAndRegistrationStyle.container}>
       <ScrollView contentContainerStyle={AuthAndRegistrationStyle.scrollView}>
+      <Text style={AuthAndRegistrationStyle.labelInputText}>Регистрация</Text>
         <View style={AuthAndRegistrationStyle.inputBlock}>
           <Input
             label="ФИО"
@@ -135,12 +136,13 @@ export const Registration = ({ navigation }) => {
             editable = {true}
           />
         </View>
-
+        <View style={AuthAndRegistrationStyle.errorTextBlock}>
+          <Text style={AuthAndRegistrationStyle.errorText}>{getErrorText}</Text>
+        </View>
         <View style={AuthAndRegistrationStyle.buttonBlock}>
           <ButtonWithText label="Зарегистрироваться" onPress={() => validationData()} />
 
           <ButtonWithText label="Назад" onPress={() => navigation.navigate("Auth")} />
-          <Text>{getErrorText}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

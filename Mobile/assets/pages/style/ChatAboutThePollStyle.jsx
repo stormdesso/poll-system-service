@@ -1,40 +1,97 @@
 import { StyleSheet } from "react-native";
-
-const buttonColor = "#304FFE";
-const buttonTextColor = "#fff";
-const inputBlockBackgroundColor = "#E8EAF6";
-const inputBlockBorderColor = "#9FA9DA";
-const textColor = "#9E9E9E";
+import { ColorProperties } from "../../Data/ColorProperties";
 
 export const ChatAboutThePollStyle = StyleSheet.create({
   //Стиль для всей страницы
   Container: {
-    alignItems: "center",
     height: "97%"
   },
 
   //Стиль блока с информацией
   MessageBox: {
-    width: "90%",
     height: "100%",
-    borderColor: inputBlockBorderColor,
-    borderWidth: 1,
-    borderRadius: 15,
-    marginTop: 15,
     padding: 15,
-    
   },
 
   SendMessageBlock: {
-    marginTop: -50,
+    marginTop: -45,
     width: "90%",
     height: 50,
-    borderColor: inputBlockBorderColor,
+    marginLeft: "auto",
+    marginRight: "auto",
+    borderColor: ColorProperties.inputBlockBorderColor,
     borderWidth: 1,
     borderRadius: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: ColorProperties.inputBlockBackgroundColor
   },
 
   InfoTextDescription: {
     textAlign: "justify"
-  }
+  },
+
+  dateBlock: {
+    alignItems: "center",
+    marginBottom: 10,
+    marginTop: 10,
+    width: "100%",
+  },
+
+  date: {
+    color: ColorProperties.textColor,
+    fontWeight: "500"
+  },
+
+  messageUser: {
+    borderColor: ColorProperties.buttonColor,
+    borderRadius: 20,
+    backgroundColor: ColorProperties.buttonColor,
+    paddingLeft: 10,
+    paddingBottom: 5,
+    paddingTop: 10,
+    marginBottom: 5,
+    width: "60%",
+    marginLeft: "auto"
+  },
+
+  messageOtherUser: {
+    borderColor: ColorProperties.textColor,
+    borderRadius: 20,
+    backgroundColor: ColorProperties.textColor,
+    paddingLeft: 10,
+    paddingBottom: 5,
+    paddingTop: 10,
+    marginBottom: 5,
+    width: "65%",
+  },
+
+  userNameText: {
+    color: ColorProperties.otherUserMessageColor,
+    fontSize: 14,
+    fontWeight: "500",
+    marginBottom: 5
+  },
+
+  messageText: {
+    color: ColorProperties.otherUserMessageColor,
+    fontSize: 14,
+    fontWeight: "400",
+    marginBottom: 5
+  },
+
+  Input: {
+    paddingLeft: 10,
+    width: "89%"
+  },
+
+  ImageBox: {
+    marginLeft: "auto",
+    paddingRight: 10
+  },
+
+  Image: {
+    width: 40,
+    height: 40,
+  },
 });

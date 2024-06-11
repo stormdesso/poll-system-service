@@ -4,6 +4,7 @@ import { AdminPage } from "../../pages/pages/UsersPage/AdminPage/AdminPage";
 import {ChatAboutThePoll} from "../../pages/pages/ApplicationSections/PollPage/ChatAboutThePoll"
 import { Registration } from "../../pages/pages/AuthAndRegistration/Registration";
 import RoleSelectionScreen from '../../elements/specialElements/RoleSelectionScreen';
+import {PollInfo} from "../../pages/pages/ApplicationSections/PollPage/PollInfo"
 
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -38,6 +39,12 @@ export default function MainNavigation() {
         <Stack.Screen
             name = "RoleSelectionScreen"
             component={RoleSelectionScreen}
+            options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+            name = "PollInfo"
+            component={PollInfo}
             options={{ headerShown: false }}
         />
   </Stack.Navigator>

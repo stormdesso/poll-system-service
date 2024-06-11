@@ -19,7 +19,7 @@ export const InformationAboutThePoll = ({item}) => {
     useEffect(() => {
         setIsVotedInPoll(item.userIsVoted)
     }, [])
-
+ 
     //Отправляется в метод голосования для обновления состояния
     const setCurrentPollIsVoted = (state) => {
         setIsVotedInPoll(state)
@@ -30,10 +30,13 @@ export const InformationAboutThePoll = ({item}) => {
     return(
         <View style={InformationAboutThePollStyle.Container}>
             <View style={InformationAboutThePollStyle.InfoContainer}>
-                <Text style={InformationAboutThePollStyle.InfoTextNameBlock}>Описание опроса</Text>
-                <Text style={InformationAboutThePollStyle.InfoTextDescription}>{item.description}</Text>
+                <Text style={InformationAboutThePollStyle.InfoTextNameBlock}>Описание опроса:</Text>
+                <Text style={InformationAboutThePollStyle.InfoTextDescription}>   {item.description}</Text>
                 {otherFilesArray.length > 0 ? (
-                    <FileListInPollInfo pollId={item.id} selectFileId={otherFilesArray}/>
+                    <View style={InformationAboutThePollStyle.fileList}>
+                        <Text style={InformationAboutThePollStyle.InfoTextNameBlock}>Список файлов:</Text>
+                        <FileListInPollInfo pollId={item.id} selectFileId={otherFilesArray}/>
+                    </View>
                 ) : null}
             </View>
             {item.userIsVoted || isVotedInPoll ? (

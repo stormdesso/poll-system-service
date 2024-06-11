@@ -1,28 +1,39 @@
 import { StyleSheet } from "react-native";
-
-const shortPollCardColor = "#304FFE";
-const TextColor = "#fff";
-const inputBlockBackgroundColor = "#E8EAF6";
-const inputBlockBorderColor = "#9FA9DA";
-const textColor = "#9E9E9E";
+import { ColorProperties } from "../../Data/ColorProperties";
 
 export const ToVoleBlockStyle = StyleSheet.create({
   //Стиль блока с текстовыми полями
-    container: {
-        flex: 1,
-        padding: 16,
-    },
     option: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 8,
         borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        borderBottomColor: ColorProperties.inputBlockBorderColor,
     },
     selectedOption: {
-        backgroundColor: '#d3d3d3', // Цвет заднего фона для выбранного элемента
+        backgroundColor: ColorProperties.inputBlockBackgroundColor, // Цвет заднего фона для выбранного элемента
     },
     optionText: {
         marginLeft: 8,
+    },
+
+    //Стиль для каждой кнопки
+    buttonElement: {
+        borderWidth: 1,
+        borderColor: ColorProperties.buttonColor,
+        borderStyle: "solid",
+        borderRadius: 2,
+        width: "100%",
+        height: 30,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: ColorProperties.buttonColor,
+        height: 40,
+        marginTop: 15
+    },
+
+    //Стиль текста в кнопках
+    buttonText: {
+        color: ColorProperties.buttonTextColor,
     },
 });

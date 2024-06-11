@@ -1,26 +1,24 @@
 import { StyleSheet } from "react-native";
-
-const buttonColor = "#304FFE";
-const buttonTextColor = "#fff";
-const inputBlockBackgroundColor = "#E8EAF6";
-const inputBlockBorderColor = "#9FA9DA";
-const textColor = "#9E9E9E";
+import { ColorProperties } from "../../Data/ColorProperties";
 
 export const InformationAboutThePollStyle = StyleSheet.create({
   //Стиль для всей страницы
   Container: {
-    alignItems: "center"
+    alignItems: "center",
+    backgroundColor: ColorProperties.backgroundColor
   },
 
   //Стиль блока с информацией
   InfoContainer: {
     width: "90%",
-    borderColor: inputBlockBorderColor,
+    borderColor: ColorProperties.containerColorInPollInfoCard,
+    backgroundColor: ColorProperties.containerColorInPollInfoCard,
     borderWidth: 1,
     borderRadius: 15,
     marginTop: 15,
     padding: 15,
-    
+    elevation: 2,
+    shadowColor: ColorProperties.containerShadowInPollInfoCard,
   },
 
   InfoTextNameBlock: {
@@ -30,6 +28,12 @@ export const InformationAboutThePollStyle = StyleSheet.create({
   },
 
   InfoTextDescription: {
-    textAlign: "justify"
+    textAlign: "justify",
+    paddingLeft: 5,
+    lineHeight: 19,
+  },
+
+  fileList: {
+    marginTop: 30
   }
 });

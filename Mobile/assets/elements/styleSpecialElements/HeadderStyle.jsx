@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
+import {ColorProperties} from "../../Data/ColorProperties"
 
 const shortPollCardColor = "#304FFE";
 const TextColor = "#fff";
-const inputBlockBackgroundColor = "#E8EAF6";
-const inputBlockBorderColor = "#9FA9DA";
-const textColor = "#9E9E9E";
-const backgroundColor = "#FFFFFF"
+const inputBlockBackgroundColor = ColorProperties.inputBlockBackgroundColor;
+const inputBlockBorderColor = ColorProperties.inputBlockBorderColor;
+const textColor = ColorProperties.textColor
+const backgroundColor = ColorProperties.backgroundColor
 
 export const HeadderStyle = StyleSheet.create({
   //Стиль блока с текстовыми полями
@@ -18,7 +19,7 @@ export const HeadderStyle = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     flexDirection: "row",
-    zIndex: 1000
+    zIndex: 1000,
   },
 
   Search: {
@@ -30,7 +31,7 @@ export const HeadderStyle = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 2,
   },
-
+ 
   SortedButton: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -44,10 +45,20 @@ export const HeadderStyle = StyleSheet.create({
     marginLeft: "10%",
     right: 0,
     zIndex: 1000,
-    backgroundColor: "#FFF",
-    borderColor: "gray",
+    backgroundColor: backgroundColor,
+    borderColor: inputBlockBorderColor,
     borderWidth: 1,
     width: "40%",
   },
+
+  Image: {
+    width: 36,
+    height: 36
+  },
+
+  TextInDropdown: {
+    padding: 10,
+    color: textColor
+  }
 
 });

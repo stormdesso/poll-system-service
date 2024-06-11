@@ -1,4 +1,5 @@
-import { StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Platform } from 'react-native';
+import { ColorProperties } from "../../Data/ColorProperties";
 
 const backGroundColor = "#5C6BC0";
 const buttonTextColor = "#fff";
@@ -7,28 +8,46 @@ const inputBlockBorderColor = "#9FA9DA";
 const textColor = "#9E9E9E";
 
 export const PollInfoStyle = StyleSheet.create({
-    tabBar: {
-        backgroundColor: backGroundColor, // Цвет фона навигации
-      },
-
       indicator: {
         backgroundColor: '#fff', // Цвет индикатора активной вкладки
       },
 
       label: {
         fontWeight: 'bold',
+        textShadowColor: 'gray',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 0.5,
       },
 
+      Headder: {
+        flex: 1,
+        height: 30,
+      },  
+
       ShortPollCard: {
-        backgroundColor: "#5C6BC0",
         width: "100%",
-        paddingLeft: 15,
-        paddingTop: 5,
-        paddingBottom: 5
+      },
+
+      TextBox: {
+        backgroundColor: 'rgba(0,0,0,0.1)',
+        alignItems: "center"
       },
     
       Text: {
-        color: textColor,
-        paddingBottom: 3
+        color: ColorProperties.textColorInShortPollCard,
+        paddingBottom: 3,
+        fontWeight: "800",
+        fontSize: 18,
+        paddingTop: 15,
+        paddingBottom: 10,
+        textShadowColor: 'gray',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 0.5,
       },
+
+      TabBar: {
+        backgroundColor: 'rgba(0,0,0,0.1)',
+        width: '100%',
+        elevation: 0,
+      }
 });

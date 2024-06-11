@@ -1,16 +1,19 @@
 import { StyleSheet } from "react-native";
+import {ColorProperties} from "../../Data/ColorProperties"
 
-const buttonColor = "#304FFE";
-const buttonTextColor = "#fff";
-const inputBlockBackgroundColor = "#E8EAF6";
-const inputBlockBorderColor = "#9FA9DA";
-const textColor = "#9E9E9E";
+const buttonColor = ColorProperties.buttonColor;
+const buttonTextColor = ColorProperties.buttonTextColor;
+const inputBlockBackgroundColor = ColorProperties.inputBlockBackgroundColor;
+const inputBlockBorderColor = ColorProperties.inputBlockBorderColor;
+const lableColor = ColorProperties.lableColor
+const errorColor = ColorProperties.errorBorderColor
+const backgroundColor = ColorProperties.backgroundColor
 
 export const AuthAndRegistrationStyle = StyleSheet.create({
   //Стиль для всей страницы
   container: {
     flex: 1,
-    backgroundColor: "whitesmoke",
+    backgroundColor: backgroundColor,
     padding: 16,
     justifyContent: "center",
   },
@@ -48,26 +51,15 @@ export const AuthAndRegistrationStyle = StyleSheet.create({
     paddingLeft: 10,
     zIndex: 1,
     backgroundColor: inputBlockBackgroundColor,
-    color: textColor,
-  },
-
-  //Стиль для выпадающего списка
-  dropdown: {
-    position: "absolute",
-    left: 0,
-    top: 230,
-    marginLeft: "10%",
-    right: 0,
-    zIndex: 2,
-    backgroundColor: "#FFF",
-    borderColor: "gray",
-    borderWidth: 1,
-    width: "80%",
   },
 
   //Стиль для наименования поля
   labelInputText: {
-    color: textColor,
+    color: lableColor,
+    paddingBottom: 15,
+    marginLeft: "10%",
+    fontSize: 32,
+    fontWeight: "500",
   },
 
   //Стиль для блока с кнопками
@@ -99,7 +91,19 @@ export const AuthAndRegistrationStyle = StyleSheet.create({
 
   //Стиль для ошибок
   errorTextInput: {
-    borderColor: "red", // Красная рамка
+    borderColor: errorColor, // Красная рамка
     borderWidth: 1,
   },
+
+  errorTextBlock: {
+    alignItems: "center",
+    paddingBottom: 10,
+    marginTop: -5
+  },
+
+  errorText: {
+    color: errorColor,
+    fontSize: 14,
+    fontWeight: "500"
+  }
 });

@@ -33,7 +33,7 @@ export default function InputAddressWithDropDownList({
         key={index}
         onPress={() => handleChangeText(item, "address")}
       >
-        <Text style={{ padding: 10 }}>{item}</Text>
+        <Text style={SimpleElementsStyle.textInDropdown}>{item}</Text>
       </TouchableOpacity>
     ));
   };

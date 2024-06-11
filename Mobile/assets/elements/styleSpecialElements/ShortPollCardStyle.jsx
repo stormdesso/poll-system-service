@@ -1,38 +1,42 @@
 import { StyleSheet } from "react-native";
+import {ColorProperties} from "../../Data/ColorProperties"
 
-const shortPollCardColor = "#304FFE";
-const TextColor = "#fff";
-const inputBlockBackgroundColor = "#E8EAF6";
-const inputBlockBorderColor = "#9FA9DA";
-const textColor = "#9E9E9E";
+const textColor = ColorProperties.textColorInShortPollCard;
 
 export const ShortPollCardStyle = StyleSheet.create({
   //Стиль блока с текстовыми полями
+  Container: {
+    alignItems: "center"
+  },
+  
   ShortPollCard: {
-    backgroundColor: "#5C6BC0",
     marginBottom: 5,
-    width: "100%",
+    width: "97%",
     paddingLeft: 15,
     paddingTop: 5,
-    paddingBottom: 5
+    paddingBottom: 5,
+    borderRadius: 15
   },
 
-  Text: {
-    color: TextColor,
-    paddingBottom: 3
+  BlocksInShoerPollCard: {
+    flexDirection: "row",
+    alignItems: "center"
   },
 
-  FileList: {
-    flexDirection: "row"
+  IsVotedStatusImage: {
+    marginLeft: 110,
+    width: 100,
+    height: 100
   },
 
-  FileImageBlock: {
-    marginRight: 5
+  PollNameInShortCard: {
+    color: textColor,
+    paddingBottom: 3,
+    fontWeight: "800",
+    fontSize: 18,
+    textShadowColor: 'gray',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 0.1,
   },
-
-  FileImage: {
-    width: 15,
-    height: 15,
-  }
 
 });

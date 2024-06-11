@@ -30,7 +30,7 @@ export default function InputBoxWithDropdown({
         key={index}
         onPress={() => handleChangeText(item)}
       >
-        <Text style={{ padding: 10 }}>{item}</Text>
+        <Text style={SimpleElementsStyle.textInDropdown}>{item}</Text>
       </TouchableOpacity>
     ));
   };

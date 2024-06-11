@@ -13,9 +13,10 @@ export const StatisticToVoteBlock = ({pollValues, totalVotes}) => {
                 <View style={StatisticToVoteBlockStyle.progressBlock}>
                     <Progress.Bar 
                         progress={item.votes / totalVotes} 
-                        width={null} 
-                        color='#5C6BC0' 
-                        style={StatisticToVoteBlockStyle.progressBar} 
+                        width={null}
+                        height={10}
+                        color='#5C6BC0'
+                        style={StatisticToVoteBlockStyle.progressBar}
                     />
                     <Text style={StatisticToVoteBlockStyle.percentageText}>{percentage.toFixed(2)}%</Text>
                 </View>

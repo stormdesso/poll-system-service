@@ -15,17 +15,17 @@ export default function Input({
   return (
     <View style={SimpleElementsStyle.authTextElementBox}>
       <Text style={SimpleElementsStyle.labelInputText}>{label}</Text>
-      <TextInput
-        placeholder={label}
-        keyboardType={keyboardType}
-        style={[
-          editable === true ? SimpleElementsStyle.authTextInputElement : SimpleElementsStyle.authTextInputElementDisabled,
-          error === true ? SimpleElementsStyle.errorTextInput : null,
-        ]}
-        onChangeText={onChangeText}
-        value={value}
-        editable={editable}
-      />
+        <TextInput
+          placeholder={label}
+          keyboardType={keyboardType}
+          style={[
+            editable === true ? SimpleElementsStyle.authTextInputElement : SimpleElementsStyle.authTextInputElementDisabled,
+            error === true ? SimpleElementsStyle.errorTextInput : null,
+          ]}
+          onChangeText={onChangeText}
+          value={value}
+          editable={editable}
+        />   
     </View>
   );
 }

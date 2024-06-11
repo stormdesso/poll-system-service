@@ -3,9 +3,10 @@ import {
     View,
     Text,
     TextInput,
-    Button,
+    Image,
     FlatList,
     StyleSheet,
+    Pressable
 } from 'react-native';
 
 //import { Client } from '@stomp/stompjs';
@@ -13,6 +14,8 @@ import {
 import {getClientTimeZone} from "../../../../scripts/getClientTimeZone"
 import {convertDate} from "../../../../scripts/convertDate"
 import GetHistoryMessage from "../../../../APIConnection/GetHistoryMessage"
+import * as SecureStore from 'expo-secure-store';
+import sendMessage from "../../../../Img/Icon/sendMessage.png"
 
 import {ChatAboutThePollStyle} from "../../../style/ChatAboutThePollStyle"
 
@@ -22,12 +25,18 @@ import {ChatAboutThePollStyle} from "../../../style/ChatAboutThePollStyle"
 
 export const ChatAboutThePoll = ({item}) => {
   const [message, setMessage] = useState('');
+  const [userId, setUserId] = useState();
   const [historyMessages, setHistoryMessages] = useState([]);
   let supportDate = ""
-
+  
   //Получаем часовой пояс клиента при загрузке страницы
   useEffect(() => {
     const { regionName, cityName } = getClientTimeZone();
+    SecureStore.getItemAsync('Id')
+    .then(id => {
+      setUserId(id)
+    })
+
     GetHistoryMessage(item.id, regionName, cityName)
           .then((data) => {
             setHistoryMessages(data);
@@ -101,7 +110,6 @@ export const ChatAboutThePoll = ({item}) => {
   //   const showGreeting = (message) => {
   //       setMessages((prevMessages) => [...prevMessages, message]);
   //   };
-
   return(
     <View style={ChatAboutThePollStyle.Container}>
       <View style={ChatAboutThePollStyle.MessageBox}>
@@ -118,11 +126,15 @@ export const ChatAboutThePoll = ({item}) => {
                   }
                   return (
                     <>
-                      {showDate && <Text>{date}</Text>}
-                      <View style={styles.message}>
-                          <Text><Text style={styles.bold}>User ID:</Text> {item.userId}</Text>
-                          <Text><Text style={styles.bold}>Date Sent:</Text> {houre}</Text>
-                          <Text><Text style={styles.bold}>Message:</Text> {item.message}</Text>
+                      {showDate && (
+                        <View style={ChatAboutThePollStyle.dateBlock}>
+                          <Text style={ChatAboutThePollStyle.date}>{date}</Text>
+                        </View>
+                        
+                      )}
+                      <View style={item.userId == userId ? ChatAboutThePollStyle.messageUser : ChatAboutThePollStyle.messageOtherUser}>
+                          <Text style={ChatAboutThePollStyle.userNameText}> {item.userId}    {houre}</Text>
+                          <Text style={ChatAboutThePollStyle.messageText}> {item.message}</Text>
                       </View>
                     </>
                     
@@ -131,49 +143,19 @@ export const ChatAboutThePoll = ({item}) => {
             />
       </View>
       <View style={ChatAboutThePollStyle.SendMessageBlock}>
-        <Button title="Send"/>
         <TextInput
           placeholder="Отправить сообщение"
           value={message}
           onChangeText={setMessage}
+          style = {ChatAboutThePollStyle.Input}
         />
-        <Button title="Send"/>
+        <Pressable style = {ChatAboutThePollStyle.ImageBox}>
+          <Image 
+            source={sendMessage}
+            style = {ChatAboutThePollStyle.Image}
+          />
+        </Pressable>
       </View>
     </View>
-    // <View style={styles.container}>
-    //         <TextInput
-    //             style={styles.input}
-    //             placeholder="Enter your name"
-    //             value={name}
-    //             onChangeText={setName}
-    //         />
-    //         <Button title="Connect" onPress={connect} disabled={connected} />
-    //         <Button title="Disconnect" onPress={disconnect} disabled={!connected} />
-    //         <Button title="Send" onPress={sendName} />
-    //         <FlatList
-    //             data={messages}
-    //             renderItem={({ item }) => <Text style={styles.message}>{item}</Text>}
-    //             keyExtractor={(item, index) => index.toString()}
-    //         />
-    //     </View>
     );
 };
-
-const styles = StyleSheet.create({
-  container: {
-      flex: 1,
-      justifyContent: 'center',
-      padding: 20,
-  },
-  input: {
-      height: 40,
-      borderColor: 'gray',
-      borderWidth: 1,
-      marginBottom: 10,
-      paddingHorizontal: 10,
-  },
-  message: {
-      padding: 10,
-      fontSize: 18,
-  },
-});

@@ -1,10 +1,11 @@
 import { StyleSheet } from "react-native";
+import {ColorProperties} from "../../Data/ColorProperties"
 
 const buttonColor = "#5C6BC0";
 const buttonTextColor = "#fff";
 const inputBlockBackgroundColor = "#E8EAF6";
 const inputBlockBorderColor = "#9FA9DA";
-const textColor = "#9E9E9E";
+const textColor = "#858585"; 
 
 export const SimpleElementsStyle = StyleSheet.create({
   //Стиль блока с текстовыми полями
@@ -21,12 +22,16 @@ export const SimpleElementsStyle = StyleSheet.create({
   //Стиль блока с адресом
   authTextElementBoxAddress: {
     width: "80%",
-    zIndex: 4,
+    zIndex: 5,
+  },
+
+  shadowBox: {
+    width: "100%"
   },
 
   //Стиль инпут поля
   authTextInputElement: {
-    borderColor: inputBlockBorderColor,
+    borderColor: ColorProperties.inputBlockBorderColor,
     borderWidth: 2,
     borderRadius: 7,
     paddingHorizontal: 8,
@@ -34,12 +39,13 @@ export const SimpleElementsStyle = StyleSheet.create({
     marginBottom: 15,
     paddingLeft: 10,
     zIndex: 1,
-    backgroundColor: inputBlockBackgroundColor,
+    backgroundColor: ColorProperties.inputBlockBackgroundColor,
     color: textColor,
+    width: "100%"
   },
 
   authTextInputElementDisabled: {
-    borderColor: textColor,
+    borderColor: ColorProperties.textColor,
     borderWidth: 2,
     borderRadius: 7,
     paddingHorizontal: 8,
@@ -47,8 +53,8 @@ export const SimpleElementsStyle = StyleSheet.create({
     marginBottom: 15,
     paddingLeft: 10,
     zIndex: 1,
-    backgroundColor: textColor,
-    color: textColor,
+    backgroundColor: ColorProperties.textColor,
+    color: ColorProperties.textColor,
   },
 
   //Стиль для выпадающего списка
@@ -58,11 +64,17 @@ export const SimpleElementsStyle = StyleSheet.create({
     top: 230,
     marginLeft: "10%",
     right: 0,
-    zIndex: 2,
+    zIndex: 4,
     backgroundColor: "#FFF",
-    borderColor: "gray",
+    borderColor: ColorProperties.inputBlockBorderColor,
     borderWidth: 1,
     width: "80%",
+  },
+
+  textInDropdown: {
+    padding: 10,
+    borderBottomColor: ColorProperties.inputBlockBorderColor,
+    borderBottomWidth: 0.5
   },
 
   //Стиль для выпадающего списка цикличности
@@ -74,7 +86,7 @@ export const SimpleElementsStyle = StyleSheet.create({
     right: 0,
     zIndex: 5,
     backgroundColor: "#FFF",
-    borderColor: "gray",
+    borderColor: ColorProperties.inputBlockBorderColor,
     borderWidth: 1,
     width: "80%",
   },
@@ -140,4 +152,25 @@ export const SimpleElementsStyle = StyleSheet.create({
     borderColor: "red", // Красная рамка
     borderWidth: 1,
   },
+
+  //Стиль для поля с паролем
+  passwordBox: {
+    flexDirection: "row",
+  },
+
+  passwordImageBox: {
+    position: "absolute",
+    right: 0,
+    zIndex: 2,
+    width: 50,
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  passwordImage: {
+    width: 25,
+    height: 25,
+    zIndex: 2,
+  }
 });

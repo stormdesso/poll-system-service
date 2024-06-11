@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import {UsersRoleNavigation} from "../../Data/UsersRoleNavigation"
+
+import {RoleSelectionScreenStyle} from "../styleSpecialElements/RoleSelectionScreenStyle"
 
 const RoleSelectionScreen = ({ route, navigation }) => {
   const { roles } = route.params;
@@ -11,10 +13,16 @@ const RoleSelectionScreen = ({ route, navigation }) => {
   };
 
   return (
-    <View>
-      <Text>Выберите роль:</Text>
+    <View style={RoleSelectionScreenStyle.RoleSelectionBox}>
+      <Text style={RoleSelectionScreenStyle.LabelStyle}>Выберите роль:</Text>
       {roles.map((role) => (
-        <Button key={role} title={role} onPress={() => navigateToRole(role)} />
+        <TouchableOpacity 
+          style={RoleSelectionScreenStyle.RoleButton}
+          key={role} 
+          onPress={() => navigateToRole(role)}
+        >
+          <Text style = {RoleSelectionScreenStyle.RoleNameText}>{role}</Text>
+        </TouchableOpacity>
       ))}
     </View>
   );

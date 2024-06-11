@@ -44,6 +44,15 @@ export const CreatePollPage = () => {
 
   const [getErrorText, setErrorText] = useState("");
 
+  const clearFields = () => {
+    const clearedFields = Object.keys(inputValues).reduce((acc, key) => {
+      acc[key] = Array.isArray(inputValues[key]) ? [""] : "";
+      return acc;
+    }, {});
+
+    setInputValues(clearedFields);
+  };
+
   //Изменение текста в полях для ввода данных
   const handleChangeText = (text, fieldName) => {
     setInputValues((prevState) => ({
@@ -74,7 +83,7 @@ export const CreatePollPage = () => {
   return (
     <SafeAreaView style={CreatePollPageStyle.container}>
       <ScrollView contentContainerStyle={CreatePollPageStyle.scrollView}>
-        <Text>Создать опрос</Text>
+        <Text style={CreatePollPageStyle.HeadderText}>Создать опрос</Text>
         <View style={CreatePollPageStyle.inputBlock}>
           <Input
             label="Наименование опроса"
@@ -166,12 +175,14 @@ export const CreatePollPage = () => {
             error={getErrorStatus.newPollValue}
           />
         </View>
+        <View style={CreatePollPageStyle.errorTextBlock}>
+          <Text style={CreatePollPageStyle.errorText}>{getErrorText}</Text>
+        </View>
 
         <View style={CreatePollPageStyle.buttonBlock}>
-          <ButtonWithText label="Зарегистрироваться" onPress={() => validationData()} />
+          <ButtonWithText label="Создать опрос" onPress={() => validationData()} />
 
-          <ButtonWithText label="Назад" onPress={() => navigation.navigate("Auth")} />
-          <Text>{getErrorText}</Text>
+          <ButtonWithText label="Отмена" onPress={() => clearFields()} />
         </View>
       </ScrollView>
     </SafeAreaView>

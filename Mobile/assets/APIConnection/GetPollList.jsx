@@ -16,7 +16,7 @@ export default function GetPollList(currentPage) {
                     }];
                 }
 
-                let url = `http://192.168.0.159:8080/api/v1/poll/filtered_list?sort=${SearchProp.sortedType}&limit=6&page=${currentPage}`;
+                let url = `http://192.168.0.159:8080/api/v1/poll/filtered_list?sort=${SearchProp.sortedType}&limit=10&page=${currentPage}`;
                 let options = {
                     method: "POST",
                     headers: {

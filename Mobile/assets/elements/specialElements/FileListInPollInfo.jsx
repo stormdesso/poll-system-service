@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, FlatList, Linking } from 'react-na
 import {GetFileIcon} from "../../Data/GetFileIcon"
 import GetFile from "../../APIConnection/GetFile";
 
-import { ShortPollCardStyle } from "../styleSpecialElements/ShortPollCardStyle";
+import {FileListInPollInfoStyle} from "../styleSpecialElements/FileListInPollInfoStyle"
 
 export const FileListInPollInfo = ({ pollId, selectFileId }) => {
     const [files, setFiles] = useState([]);
@@ -22,13 +22,12 @@ export const FileListInPollInfo = ({ pollId, selectFileId }) => {
 
     return (
         <View>
-            <Text>Список файлов:</Text>
             <FlatList
                 data={files}
                 renderItem={({ item }) => (
-                <TouchableOpacity style={ShortPollCardStyle.FileList}>
-                    <Text style={ShortPollCardStyle.FileImageBlock}>
-                        <Image source={GetFileIcon(item.type)} style={ShortPollCardStyle.FileImage}></Image>
+                <TouchableOpacity style={FileListInPollInfoStyle.FileList}>
+                    <Text style={FileListInPollInfoStyle.FileImageBlock}>
+                        <Image source={GetFileIcon(item.type)} style={FileListInPollInfoStyle.FileImage}></Image>
                     </Text>
                     <Text>
                     {
