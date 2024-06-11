@@ -30,7 +30,8 @@ export const PollInfoStyle = StyleSheet.create({
 
       TextBox: {
         backgroundColor: 'rgba(0,0,0,0.1)',
-        alignItems: "center"
+        alignItems: "center",
+        flexDirection: "row"
       },
     
       Text: {
@@ -40,14 +41,25 @@ export const PollInfoStyle = StyleSheet.create({
         fontSize: 18,
         paddingTop: 15,
         paddingBottom: 10,
+        paddingRight: 30,
         textShadowColor: 'gray',
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 0.5,
+        margin: "auto"
       },
 
       TabBar: {
         backgroundColor: 'rgba(0,0,0,0.1)',
         width: '100%',
         elevation: 0,
-      }
+      },
+
+      ImageBox: {
+        paddingLeft: 10
+      },
+    
+      Image: {
+        width: 30,
+        height: 30,
+      },
 });

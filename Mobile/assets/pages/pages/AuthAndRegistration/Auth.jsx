@@ -72,6 +72,7 @@ export const Auth = ({ navigation }) => {
         else  
         {
           navigation.navigate(UsersRoleNavigation[roles[0]]);
+          SecureStore.setItemAsync("userSelectedRole", roles[0])
         }
       })
       

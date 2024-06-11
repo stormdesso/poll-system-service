@@ -1,13 +1,14 @@
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import {UsersRoleNavigation} from "../../Data/UsersRoleNavigation"
-
+import * as SecureStore from 'expo-secure-store';
 import {RoleSelectionScreenStyle} from "../styleSpecialElements/RoleSelectionScreenStyle"
 
 const RoleSelectionScreen = ({ route, navigation }) => {
   const { roles } = route.params;
 
   const navigateToRole = (role) => {
+    SecureStore.setItemAsync("userSelectedRole", role)
     let selectRole = UsersRoleNavigation[role]
     navigation.navigate(selectRole);
   };

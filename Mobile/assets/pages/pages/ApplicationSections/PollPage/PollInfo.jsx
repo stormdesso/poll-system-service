@@ -1,15 +1,19 @@
 import React, { useCallback } from 'react';
-import { StyleSheet, Dimensions, View, Text } from 'react-native';
+import { Image, Dimensions, View, Text, Pressable } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import * as SecureStore from 'expo-secure-store';
+import { UsersRoleNavigation } from '../../../../Data/UsersRoleNavigation';
 
 import {InformationAboutThePoll} from "./InformationAboutThePoll"
 import {ChatAboutThePoll} from "./ChatAboutThePoll"
 
 import {PollInfoStyle} from "../../../style/PollInfoStyle"
 import {LinearGradient} from 'expo-linear-gradient';
+
+import Back from "../../../../Img/Icon/Back.png"
   
 
-export const PollInfo = ({ route }) => {
+export const PollInfo = ({ navigation, route }) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'info', title: 'Информация' },
@@ -38,6 +42,19 @@ export const PollInfo = ({ route }) => {
         style={PollInfoStyle.ShortPollCard}
       >
         <View style={PollInfoStyle.TextBox}>
+          <Pressable style = {PollInfoStyle.ImageBox} onPress={() => {
+              SecureStore.getItemAsync('userSelectedRole')
+                .then(role => {
+                  console.log(role)
+                  navigation.navigate(UsersRoleNavigation[role])
+                })
+              
+            }}>
+            <Image 
+              source={Back}
+              style = {PollInfoStyle.Image}
+            />
+          </Pressable>
           <Text style={PollInfoStyle.Text}>{route.params.name}</Text>
         </View>
         <TabBar
