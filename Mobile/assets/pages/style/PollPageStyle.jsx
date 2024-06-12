@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native";
+import { ColorProperties } from "../../Data/ColorProperties";
+
 
 const buttonColor = "#304FFE";
 const buttonTextColor = "#fff";
@@ -11,7 +13,8 @@ export const PollPageStyle = StyleSheet.create({
   container: {
     width: "100%",
     flex: 1,
-    zIndex: 1
+    zIndex: 1,
+    backgroundColor: ColorProperties.backgroundColor
   },
   
   pollList: {

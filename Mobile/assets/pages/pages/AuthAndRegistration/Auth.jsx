@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, ActivityIndicator } from "react-native";
 import * as SecureStore from 'expo-secure-store';
 import { AuthAndRegistrationStyle } from "../../style/AuthAndRegistrationStyle";
+import { ColorProperties } from "../../../Data/ColorProperties";
 
 import validationDataInAuth from "../../../scripts/validationDataInAuth";
 import GetToken from "../../../APIConnection/GetToken";
@@ -29,6 +30,17 @@ export const Auth = ({ navigation }) => {
 
   //Состояние валидации
   const [getAuthSucsess, setAuthSucsess] = useState(false);
+
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
+
+  useEffect(() => {
+    const updateColor = () => {
+      setBackgroundColor(ColorProperties.backgroundColor);
+    };
+
+    ColorProperties.subscribe(updateColor);
+    return () => ColorProperties.unsubscribe(updateColor);
+  }, []);
 
 
 
@@ -81,7 +93,7 @@ export const Auth = ({ navigation }) => {
 
 
   return (
-    <SafeAreaView style={AuthAndRegistrationStyle.container}>
+    <SafeAreaView style={[AuthAndRegistrationStyle.container, {backgroundColor}]}>
       <Text style={AuthAndRegistrationStyle.labelInputText}>Авторизация</Text>
       <View style={AuthAndRegistrationStyle.inputBlock}>
         <Input

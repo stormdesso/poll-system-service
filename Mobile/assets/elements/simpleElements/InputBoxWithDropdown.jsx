@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { TextInput, View, Text, TouchableOpacity } from "react-native";
 
 import { SimpleElementsStyle } from "../styleSimleElements/SimpleElementsStyle";
+import { ColorProperties } from '../../Data/ColorProperties';
 
 export default function InputBoxWithDropdown({
   label,
@@ -14,6 +15,22 @@ export default function InputBoxWithDropdown({
   styleNameDropdownBox,
   disabled
 }) {
+
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
+  const [color, setTextColor] = useState(ColorProperties.textColor);
+  const [borderColor, setBorderColor] = useState(ColorProperties.inputBlockBorderColor);
+
+  useEffect(() => {
+      const updateColor = () => {
+        setBackgroundColor(ColorProperties.backgroundColor);
+        setTextColor(ColorProperties.textColor)
+        setBorderColor(ColorProperties.inputBlockBorderColor)
+      };
+  
+      ColorProperties.subscribe(updateColor);
+      return () => ColorProperties.unsubscribe(updateColor);
+  }, []);
+
   const [isListOpen, setIsListOpen] = useState(false);
   const [dropdownItems, setDropdownItems ] = useState('')
 
@@ -30,7 +47,7 @@ export default function InputBoxWithDropdown({
         key={index}
         onPress={() => handleChangeText(item)}
       >
-        <Text style={SimpleElementsStyle.textInDropdown}>{item}</Text>
+        <Text style={[SimpleElementsStyle.textInDropdown, {color}, {borderColor}]}>{item}</Text>
       </TouchableOpacity>
     ));
   };
@@ -52,13 +69,17 @@ export default function InputBoxWithDropdown({
                 style={[
                     disabled === false ? SimpleElementsStyle.authTextInputElement : SimpleElementsStyle.authTextInputElementDisabled,
                     error === true ? SimpleElementsStyle.errorTextInput : null,
+                    {color},
+                    {backgroundColor},
+                    {borderColor}
             ]}
             value={dropdownItems}
+            placeholderTextColor={color}
             />
         </TouchableOpacity>
       </View>
       {isListOpen && (
-        <View style={SimpleElementsStyle[styleNameDropdown]}>{renderDropdownItems()}</View>
+        <View style={[SimpleElementsStyle[styleNameDropdown], {backgroundColor}, {borderColor}]}>{renderDropdownItems()}</View>
       )}
     </>
   );

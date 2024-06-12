@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, ScrollView } from "react-native";
 
 import {CreatePollPageStyle} from "../../../style/CreatePollPageStyle"
+import { ColorProperties } from "../../../../Data/ColorProperties";
 
 import Input from "../../../../elements/simpleElements/Input";
 import InputBoxWithDropdown from "../../../../elements/simpleElements/InputBoxWithDropdown";
@@ -16,6 +17,16 @@ import validationDataInCreatePoll from "../../../../scripts/validationDataInCrea
 import deleteNonIntegerSymbol from "../../../../scripts/deleteNonIntegerSymbol"
 
 export const CreatePollPage = () => {
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
+  useEffect(() => {
+    const updateColor = () => {
+      setBackgroundColor(ColorProperties.backgroundColor);
+    };
+
+    ColorProperties.subscribe(updateColor);
+    return () => ColorProperties.unsubscribe(updateColor);
+  }, []);
+
   //Изменение текста в полях
   const [inputValues, setInputValues] = useState({
     name: "",
@@ -81,7 +92,7 @@ export const CreatePollPage = () => {
   };
 
   return (
-    <SafeAreaView style={CreatePollPageStyle.container}>
+    <SafeAreaView style={[CreatePollPageStyle.container, {backgroundColor}]}>
       <ScrollView contentContainerStyle={CreatePollPageStyle.scrollView}>
         <Text style={CreatePollPageStyle.HeadderText}>Создать опрос</Text>
         <View style={CreatePollPageStyle.inputBlock}>

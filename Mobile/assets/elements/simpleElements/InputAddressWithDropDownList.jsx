@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { TextInput, View, Text, TouchableOpacity } from "react-native";
 
 import { SimpleElementsStyle } from "../styleSimleElements/SimpleElementsStyle";
+import { ColorProperties } from '../../Data/ColorProperties';
 import AddressApiToRegistration from "../../APIConnection/addressApiToRegistration";
 
 export default function InputAddressWithDropDownList({
@@ -13,6 +14,20 @@ export default function InputAddressWithDropDownList({
 }) {
   const [isListOpen, setIsListOpen] = useState(false);
   const [addressInfo, setAddressInfo] = useState([]);
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
+  const [color, setTextColor] = useState(ColorProperties.textColor);
+  const [borderColor, setBorderColor] = useState(ColorProperties.inputBlockBorderColor);
+
+  useEffect(() => {
+      const updateColor = () => {
+        setBackgroundColor(ColorProperties.backgroundColor);
+        setTextColor(ColorProperties.textColor)
+        setBorderColor(ColorProperties.inputBlockBorderColor)
+      };
+  
+      ColorProperties.subscribe(updateColor);
+      return () => ColorProperties.unsubscribe(updateColor);
+    }, []);
 
   const handleChangeText = (value) => {
     onChangeText(value);
@@ -33,7 +48,7 @@ export default function InputAddressWithDropDownList({
         key={index}
         onPress={() => handleChangeText(item, "address")}
       >
-        <Text style={SimpleElementsStyle.textInDropdown}>{item}</Text>
+        <Text style={[SimpleElementsStyle.textInDropdown, {color}, {borderColor}]}>{item}</Text>
       </TouchableOpacity>
     ));
   };
@@ -48,17 +63,21 @@ export default function InputAddressWithDropDownList({
           style={[
             SimpleElementsStyle.authTextInputElement,
             error === true ? SimpleElementsStyle.errorTextInput : null,
+            {color},
+            {backgroundColor},
+            {borderColor}
           ]}
           onChangeText={(text) => {
             handleChangeText(text, "address");
             setIsListOpen(true);
           }}
+          placeholderTextColor={color}
           value={value}
           onFocus={() => setIsListOpen(true)}
         />
       </View>
       {isListOpen && addressInfo.length > 0 && (
-        <View style={SimpleElementsStyle.dropdown}>{renderAddressItems()}</View>
+        <View style={[SimpleElementsStyle.dropdown, {backgroundColor}, {borderColor}]}>{renderAddressItems()}</View>
       )}
     </>
   );

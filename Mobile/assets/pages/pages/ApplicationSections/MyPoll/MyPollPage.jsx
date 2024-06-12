@@ -8,7 +8,7 @@ import {
   ScrollView
 } from "react-native";
 
-import GetMyCreatePollList from "../../../../APIConnection/GetMyCreatePollList"
+import GetSuggestedPollList from "../../../../APIConnection/GetSuggestedPollList"
 
 import { SearchProp } from '../../../../Data/SearchProp';
 
@@ -16,6 +16,8 @@ import {Headder} from "../../../../elements/specialElements/Headder"
 import {ShortPollCard} from "../../../../elements/specialElements/ShortPollCard"
 
 import {PollPageStyle} from "../../../style/PollPageStyle"
+
+import { ColorProperties } from "../../../../Data/ColorProperties";
 
 export const MyPollPage = ({navigation}) => {
   //Данные
@@ -26,6 +28,8 @@ export const MyPollPage = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   //Сколько данных можем загрузить
   const [totalPages, setTotalPages] = useState(null);
+
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
 
   //Срабатывает при запуске страницы для получения данных
   useEffect(() => {
@@ -38,6 +42,13 @@ export const MyPollPage = ({navigation}) => {
       fetchData();
     }
     SearchProp.subscribe(update)
+
+    const updateColor = () => {
+      setBackgroundColor(ColorProperties.backgroundColor);
+    };
+
+    ColorProperties.subscribe(updateColor);
+    return () => ColorProperties.unsubscribe(updateColor);
   }, []);
 
   //Получение данных из апи
@@ -46,10 +57,8 @@ export const MyPollPage = ({navigation}) => {
     setLoading(true);
 
     // Вызываем функцию GetMyCreatePollList с номером страницы
-    GetMyCreatePollList(page)
+    GetSuggestedPollList(page)
       .then(responseJSON => {
-        console.log("data")
-        console.log(responseJSON)
         setMyPollData(prevData => [...prevData, ...responseJSON.items]);
         setLoading(false);
       })
@@ -73,11 +82,11 @@ export const MyPollPage = ({navigation}) => {
   }
 
   return (
-    <View style={PollPageStyle.container}>
+    <View style={[PollPageStyle.container, {backgroundColor}]}>
       <View>
         <Headder />
       </View>
-      <View style={PollPageStyle.container}>
+      <View style={[PollPageStyle.container, {backgroundColor}]}>
         <FlatList
           data={myPollData}
           keyExtractor={(item, index) => index.toString()}

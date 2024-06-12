@@ -5,6 +5,8 @@ import {ChatAboutThePoll} from "../../pages/pages/ApplicationSections/PollPage/C
 import { Registration } from "../../pages/pages/AuthAndRegistration/Registration";
 import RoleSelectionScreen from '../../elements/specialElements/RoleSelectionScreen';
 import {PollInfo} from "../../pages/pages/ApplicationSections/PollPage/PollInfo"
+import {UserSettingsModal} from "../../elements/specialElements/UserSettingsModal";
+import { Headder } from "../../elements/specialElements/Headder";
 
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -45,6 +47,18 @@ export default function MainNavigation() {
         <Stack.Screen
             name = "PollInfo"
             component={PollInfo}
+            options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+            name = "Headder"
+            component={Headder}
+            options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+            name = "UserSettingsModal"
+            component={UserSettingsModal}
             options={{ headerShown: false }}
         />
   </Stack.Navigator>

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { TextInput, View, Text, Modal } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 import { SimpleElementsStyle } from "../styleSimleElements/SimpleElementsStyle";
+import { ColorProperties } from '../../Data/ColorProperties';
 
 export default function InputWithCalendar({
   label,
@@ -11,6 +12,22 @@ export default function InputWithCalendar({
   onChangeText,
   keyboardType,
 }) {
+
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
+  const [color, setTextColor] = useState(ColorProperties.textColor);
+  const [borderColor, setBorderColor] = useState(ColorProperties.inputBlockBorderColor);
+
+  useEffect(() => {
+      const updateColor = () => {
+        setBackgroundColor(ColorProperties.backgroundColor);
+        setTextColor(ColorProperties.textColor)
+        setBorderColor(ColorProperties.inputBlockBorderColor)
+      };
+  
+      ColorProperties.subscribe(updateColor);
+      return () => ColorProperties.unsubscribe(updateColor);
+  }, []);
+
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
@@ -40,9 +57,13 @@ export default function InputWithCalendar({
         style={[
           SimpleElementsStyle.authTextInputElement,
           error === true ? SimpleElementsStyle.errorTextInput : null,
+          {color},
+          {backgroundColor},
+          {borderColor}
         ]}
         onFocus={showDatePicker}
         value={value}
+        placeholderTextColor={color}
       />
       <DateTimePickerModal
         isVisible={isDatePickerVisible}

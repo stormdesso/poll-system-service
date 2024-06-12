@@ -5,9 +5,20 @@ import {GetFileIcon} from "../../Data/GetFileIcon"
 import GetFile from "../../APIConnection/GetFile";
 
 import {FileListInPollInfoStyle} from "../styleSpecialElements/FileListInPollInfoStyle"
+import { ColorProperties } from "../../Data/ColorProperties";
 
 export const FileListInPollInfo = ({ pollId, selectFileId }) => {
     const [files, setFiles] = useState([]);
+    const [color, setColor] = useState(ColorProperties.textColorInPollInfoCard);
+  
+    useEffect(() => {
+      const updateColor = () => {
+        setColor(ColorProperties.textColorInPollInfoCard);
+      };
+  
+      ColorProperties.subscribe(updateColor);
+      return () => ColorProperties.unsubscribe(updateColor);
+    }, []);
 
     useEffect(() => {
         // Вызов GetFile внутри useEffect для предотвращения бесконечного цикла рендеринга
@@ -29,7 +40,7 @@ export const FileListInPollInfo = ({ pollId, selectFileId }) => {
                     <Text style={FileListInPollInfoStyle.FileImageBlock}>
                         <Image source={GetFileIcon(item.type)} style={FileListInPollInfoStyle.FileImage}></Image>
                     </Text>
-                    <Text>
+                    <Text style={{color: color}}>
                     {
                         item.originalName
                     }

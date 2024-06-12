@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Image, Dimensions, View, Text, Pressable } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import * as SecureStore from 'expo-secure-store';
@@ -8,12 +8,24 @@ import {InformationAboutThePoll} from "./InformationAboutThePoll"
 import {ChatAboutThePoll} from "./ChatAboutThePoll"
 
 import {PollInfoStyle} from "../../../style/PollInfoStyle"
+import { ColorProperties } from '../../../../Data/ColorProperties';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import Back from "../../../../Img/Icon/Back.png"
   
 
 export const PollInfo = ({ navigation, route }) => {
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
+
+  useEffect(() => {
+    const updateColor = () => {
+      setBackgroundColor(ColorProperties.backgroundColor);
+    };
+
+    ColorProperties.subscribe(updateColor);
+    return () => ColorProperties.unsubscribe(updateColor);
+  }, []);
+  
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'info', title: 'Информация' },
@@ -45,7 +57,6 @@ export const PollInfo = ({ navigation, route }) => {
           <Pressable style = {PollInfoStyle.ImageBox} onPress={() => {
               SecureStore.getItemAsync('userSelectedRole')
                 .then(role => {
-                  console.log(role)
                   navigation.navigate(UsersRoleNavigation[role])
                 })
               
@@ -70,7 +81,7 @@ export const PollInfo = ({ navigation, route }) => {
   );
 
   return (
-    <View style={PollInfoStyle.Headder}> 
+    <View style={[PollInfoStyle.Headder, {backgroundColor}]}> 
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}

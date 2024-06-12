@@ -11,11 +11,9 @@ const backgroundColor = ColorProperties.backgroundColor
 export const HeadderStyle = StyleSheet.create({
   //Стиль блока с текстовыми полями
   Headder: {
-    backgroundColor: backgroundColor,
+    backgroundColor: ColorProperties.backgroundColor,
     marginBottom: 5,
     width: "100%",
-    paddingLeft: 15,
-    paddingRight: 30,
     paddingTop: 5,
     paddingBottom: 5,
     flexDirection: "row",
@@ -35,7 +33,9 @@ export const HeadderStyle = StyleSheet.create({
   SortedButton: {
     justifyContent: 'center',
     alignItems: 'center',
-    margin: "auto"
+    margin: "auto",
+    paddingRight: 20,
+    paddingLeft: 15
   },
 
   Dropdown: {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import {Image} from "react-native";
 import {PollPageStackNavigation} from "./PollPageStackNavigation"
 import { CreatePollPage } from "../../pages/pages/ApplicationSections/CreatePoll/CreatePollPage";
@@ -19,6 +19,19 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 export const AdminTabNavigation = () => {
   const Tab = createBottomTabNavigator();
 
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
+  const [color, setTextColor] = useState(ColorProperties.textColor);
+
+  useEffect(() => {
+    const updateColor = () => {
+      setBackgroundColor(ColorProperties.backgroundColor);
+      setTextColor(ColorProperties.textColor)
+    };
+
+    ColorProperties.subscribe(updateColor);
+    return () => ColorProperties.unsubscribe(updateColor);
+  }, []);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -34,10 +47,10 @@ export const AdminTabNavigation = () => {
           }
           return <Image source={iconName} style={TabNavigationStyle.Image}/>;
         },
-        tabBarActiveTintColor: ColorProperties.lableColor,
+        tabBarActiveTintColor: color,
           tabBarInactiveTintColor: ColorProperties.textColor,
           tabBarStyle: {
-            backgroundColor: ColorProperties.backgroundColor,
+            backgroundColor: backgroundColor,
             paddingBottom: 5,
             paddingTop: 5
           },

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, ScrollView } from "react-native";
 
 import { AuthAndRegistrationStyle } from "../../style/AuthAndRegistrationStyle";
+import { ColorProperties } from "../../../Data/ColorProperties";
 
 import phoneNumberMask from "../../../scripts/phoneNumberMask";
 import validationDataInRegistration from "../../../scripts/validationDataInRegistration";
@@ -13,6 +14,17 @@ import InputWithCalendar from "../../../elements/simpleElements/InputWithCalenda
 import ButtonWithText from "../../../elements/simpleElements/ButtonWithText";
 
 export const Registration = ({ navigation }) => {
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
+
+  useEffect(() => {
+    const updateColor = () => {
+      setBackgroundColor(ColorProperties.backgroundColor);
+    };
+
+    ColorProperties.subscribe(updateColor);
+    return () => ColorProperties.unsubscribe(updateColor);
+  }, []);
+
   //Изменение текста в полях
   const [inputValues, setInputValues] = useState({
     name: "",
@@ -60,7 +72,7 @@ export const Registration = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={AuthAndRegistrationStyle.container}>
+    <SafeAreaView style={[AuthAndRegistrationStyle.container, {backgroundColor}]}>
       <ScrollView contentContainerStyle={AuthAndRegistrationStyle.scrollView}>
       <Text style={AuthAndRegistrationStyle.labelInputText}>Регистрация</Text>
         <View style={AuthAndRegistrationStyle.inputBlock}>

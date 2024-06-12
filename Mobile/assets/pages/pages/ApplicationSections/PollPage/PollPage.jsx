@@ -17,6 +17,8 @@ import {ShortPollCard} from "../../../../elements/specialElements/ShortPollCard"
 
 import {PollPageStyle} from "../../../style/PollPageStyle"
 
+import { ColorProperties } from '../../../../Data/ColorProperties';
+
 export const PollPage = ({navigation}) => {
   //Данные
   const [data, setData] = useState([]);
@@ -26,6 +28,7 @@ export const PollPage = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   //Сколько данных можем загрузить
   const [totalPages, setTotalPages] = useState(null);
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
 
   //Срабатывает при запуске страницы для получения данных
   useEffect(() => {
@@ -38,6 +41,13 @@ export const PollPage = ({navigation}) => {
       fetchData();
     }
     SearchProp.subscribe(update)
+
+    const updateColor = () => {
+      setBackgroundColor(ColorProperties.backgroundColor);
+    };
+
+    ColorProperties.subscribe(updateColor);
+    return () => ColorProperties.unsubscribe(updateColor);
   }, []);
 
   //Получение данных из апи
@@ -77,11 +87,11 @@ export const PollPage = ({navigation}) => {
   }
 
   return (
-    <View style={PollPageStyle.container}>
+    <View style={[PollPageStyle.container, {backgroundColor}]}>
       <View>
-        <Headder />
+        <Headder navigation={navigation}/>
       </View>
-      <View style={PollPageStyle.container}>
+      <View style={[PollPageStyle.container, {backgroundColor}]}>
         <FlatList
           data={data}
           keyExtractor={(item, index) => index.toString()}

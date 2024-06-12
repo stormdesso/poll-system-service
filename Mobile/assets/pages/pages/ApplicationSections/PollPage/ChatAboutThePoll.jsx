@@ -18,6 +18,7 @@ import * as SecureStore from 'expo-secure-store';
 import sendMessage from "../../../../Img/Icon/sendMessage.png"
 
 import {ChatAboutThePollStyle} from "../../../style/ChatAboutThePollStyle"
+import { ColorProperties } from '../../../../Data/ColorProperties';
 
     //"ws://echo.websocket.org"
     //"ws://192.168.0.159:8080"
@@ -28,6 +29,10 @@ export const ChatAboutThePoll = ({item}) => {
   const [userId, setUserId] = useState();
   const [historyMessages, setHistoryMessages] = useState([]);
   let supportDate = ""
+
+  const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
+  const [color, setTextColor] = useState(ColorProperties.textColor);
+  const [borderColor, setBorderColor] = useState(ColorProperties.inputBlockBorderColor);
   
   //Получаем часовой пояс клиента при загрузке страницы
   useEffect(() => {
@@ -41,6 +46,15 @@ export const ChatAboutThePoll = ({item}) => {
           .then((data) => {
             setHistoryMessages(data);
           })
+
+    const updateColor = () => {
+      setBackgroundColor(ColorProperties.backgroundColor);
+      setTextColor(ColorProperties.textColor)
+      setBorderColor(ColorProperties.inputBlockBorderColor)
+    };
+
+    ColorProperties.subscribe(updateColor);
+    return () => ColorProperties.unsubscribe(updateColor);
   },[])
 
   // const stompClient = useRef(null);
@@ -142,12 +156,16 @@ export const ChatAboutThePoll = ({item}) => {
                 }}
             />
       </View>
-      <View style={ChatAboutThePollStyle.SendMessageBlock}>
+      <View style={[ChatAboutThePollStyle.SendMessageBlock, {backgroundColor}, {borderColor}]}>
         <TextInput
           placeholder="Отправить сообщение"
           value={message}
           onChangeText={setMessage}
-          style = {ChatAboutThePollStyle.Input}
+          style = {[ChatAboutThePollStyle.Input,
+            {color},
+            {backgroundColor},
+          ]}
+          placeholderTextColor={color}
         />
         <Pressable style = {ChatAboutThePollStyle.ImageBox}>
           <Image 
