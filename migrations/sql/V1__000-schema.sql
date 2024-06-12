@@ -5,7 +5,7 @@
 -- Dumped from database version 15.3
 -- Dumped by pg_dump version 15.3
 
--- Started on 2024-06-10 18:48:09
+-- Started on 2024-06-12 12:37:47
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1022,7 +1022,7 @@ ALTER TABLE ONLY public.users_answer
     ADD CONSTRAINT users_answer_user_id_fkey FOREIGN KEY (user_id) REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
 
 
--- Completed on 2024-06-10 18:48:10
+-- Completed on 2024-06-12 12:37:48
 
 --
 -- PostgreSQL database dump complete
