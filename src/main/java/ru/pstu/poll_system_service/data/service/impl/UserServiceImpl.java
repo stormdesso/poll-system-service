@@ -154,7 +154,7 @@ public class UserServiceImpl implements UserService{
                 .phoneNumber(userDto.getPhoneNumber())
                 .birthdate(userDto.getBirthdate())
                 .email(userDto.getEmail())
-                .password( password.isBlank() ? password: userEntity.getPassword())
+                .password( password.isBlank() ? userEntity.getPassword(): password)
                 .build();
 
         userWithAddressRepository.save(changedUserEntity);
