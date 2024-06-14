@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.pstu.poll_system_service.data.enums.RoleEnum;
 import ru.pstu.poll_system_service.data.mapper.UserMapper;
@@ -56,7 +55,6 @@ public class UserServiceImpl implements UserService{
 
     private final OwnershipRepository ownershipRepository;
 
-    private final PasswordEncoder passwordEncoder;
 
 
 
@@ -157,7 +155,7 @@ public class UserServiceImpl implements UserService{
                 .phoneNumber(userDto.getPhoneNumber())
                 .birthdate(userDto.getBirthdate())
                 .email(userDto.getEmail())
-                .password( password.isBlank() ? userEntity.getPassword(): passwordEncoder.encode(password))
+                .password( password.isBlank() ? userEntity.getPassword(): password)
                 .build();
 
         userWithAddressRepository.save(changedUserEntity);

@@ -7,9 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
+import ru.pstu.poll_system_service.business.dto.RelocationRequestDto;
 import ru.pstu.poll_system_service.business.service.AddressService;
 import ru.pstu.poll_system_service.data.model.user.address.relocation.RelocationAction;
 import ru.pstu.poll_system_service.web.dto.user.AddressInfo;
+
+import java.util.List;
 
 import static ru.pstu.poll_system_service.web.security.constant.ActionConstants.*;
 import static ru.pstu.poll_system_service.web.security.constant.SystemObjectConstants.RELOCATION;
@@ -64,5 +67,13 @@ public class RelocationController {
             @RequestParam Long userId,
             @RequestParam RelocationAction relocationAction) {
         addressService.accept(addressInfo, userId, relocationAction);
+    }
+
+    @Operation(description = "Запросы на добавление/удаление адреса")
+    @HasPermission(resource = RELOCATION, action = READ)
+    @ResponseBody
+    @PostMapping("/request/all")
+    public List<RelocationRequestDto> findAll() {
+        return addressService.findAll();
     }
 }

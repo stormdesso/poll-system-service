@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
 import ru.pstu.poll_system_service.data.service.UserService;
@@ -20,6 +21,7 @@ import static ru.pstu.poll_system_service.web.security.constant.SystemObjectCons
 public class UserAccountController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Operation(description = "Получить информацию о доступных аккаунтах")
     @HasPermission(resource = USER_ADMINISTRATION, action = READ)
@@ -41,7 +43,8 @@ public class UserAccountController {
     @Operation(description = "Редактировать информацию о своём аккаунте")
     @PostMapping("/edit/me")
     public void editAccountInfo(@RequestBody UserDto userDto, @RequestParam(required = false) String password) {
-        userService.editAuthenticatedUserInfo(userDto, password);
+
+        userService.editAuthenticatedUserInfo(userDto, passwordEncoder.encode(password == null ? "": password));
     }
 
     @Operation(description = "Редактировать информацию об аккаунтах пользователей")

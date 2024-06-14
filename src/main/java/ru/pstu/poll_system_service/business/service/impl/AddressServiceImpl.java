@@ -4,6 +4,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
+import ru.pstu.poll_system_service.business.dto.RelocationRequestDto;
+import ru.pstu.poll_system_service.business.mapper.RelocationRequestMapper;
 import ru.pstu.poll_system_service.business.service.AddressService;
 import ru.pstu.poll_system_service.data.model.user.address.Address;
 import ru.pstu.poll_system_service.data.model.user.address.OwnershipAddress;
@@ -16,6 +18,8 @@ import ru.pstu.poll_system_service.data.repository.address.OwnershipAddressRepos
 import ru.pstu.poll_system_service.data.repository.address.RelocationRepository;
 import ru.pstu.poll_system_service.data.repository.user.UserWithAddressRepository;
 import ru.pstu.poll_system_service.web.dto.user.AddressInfo;
+
+import java.util.List;
 
 import static ru.pstu.poll_system_service.data.model.user.address.relocation.RelocationAction.ADD;
 import static ru.pstu.poll_system_service.data.model.user.address.relocation.RelocationAction.DELETE;
@@ -137,6 +141,12 @@ public class AddressServiceImpl implements AddressService {
                         .action(relocationAction)
                         .build())
                 .build());
+    }
+
+    @Override
+    public List<RelocationRequestDto> findAll() {
+        var req = relocationRepository.findAll();
+        return RelocationRequestMapper.INSTANCE.map(req);
     }
 
 }
