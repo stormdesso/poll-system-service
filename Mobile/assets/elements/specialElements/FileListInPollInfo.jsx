@@ -27,7 +27,6 @@ export const FileListInPollInfo = ({ pollId, selectFileId }) => {
                 setFiles(file);
             })
             .catch(error => {
-                console.error('Error fetching file info:', error);
             });
     }, [pollId, selectFileId]); // Зависимости: вызов происходит только при изменении pollId или selectFileId
 

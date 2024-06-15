@@ -5,7 +5,7 @@ export const UserSettingsModalStyle = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         margin: "auto",
-        paddingRight: 15,
+        marginRight: 15,
         paddingLeft: 20
       },
       modal: {

@@ -7,7 +7,7 @@ import { ColorProperties } from '../../Data/ColorProperties';
 
 import ToVote from "../../APIConnection/ToVote"
 
-export const ToVoteBlock = ({pollValues, maxAnswers, pollId, isVotedState}) => {
+export const ToVoteBlock = ({pollValues, maxAnswers, pollId, isVotedState, type}) => {
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [color, setColor] = useState(ColorProperties.textColorInPollInfoCard);
 
@@ -62,9 +62,12 @@ export const ToVoteBlock = ({pollValues, maxAnswers, pollId, isVotedState}) => {
                 renderItem={renderOption}
                 keyExtractor={item => item.id.toString()}
             />
-            <Pressable style={ToVoleBlockStyle.buttonElement} onPress={handleVote}>
-              <Text style={ToVoleBlockStyle.buttonText}>Проголосовать</Text>
-            </Pressable>
+            {type === "PollPage" && (
+              <Pressable style={ToVoleBlockStyle.buttonElement} onPress={handleVote}>
+                <Text style={ToVoleBlockStyle.buttonText}>Проголосовать</Text>
+              </Pressable>
+            )}
+            
         </View>
     )
 }

@@ -17,6 +17,7 @@ export const ColorProperties = {
   containerShadowInPollInfoCard: "gray",
   textColorInPollInfoCard: "black",
   userSettingsTextColor: "black",
+  disabledColor: "#9c9c9c",
   
   subscribe: (listener) => {
     listeners.push(listener);

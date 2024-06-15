@@ -78,7 +78,7 @@ export const MyPollPage = ({navigation}) => {
 
   //Перейти на страницу с информацией по опросу
   const goToPollInfo = (item) => {
-    navigation.navigate("PollInfo", item)
+    navigation.navigate("MyPollInfo", item)
   }
 
   return (

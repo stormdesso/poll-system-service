@@ -1,43 +1,37 @@
 import * as SecureStore from 'expo-secure-store';
 
-export default function ToVote(selectValue, pollValues, pollId) {
-    let requestBody = [];
+import { SearchProp } from '../Data/SearchProp';
 
-    const findObjectById = (id) => {
-        return pollValues.find(item => item.id === id)
-    };
-
-    for (const item of selectValue){
-        let poll = findObjectById(item)
-        poll.votes += 1
-        requestBody.push(poll)
-    }    
+export default function updateAccount(password, data) {
+    //Данные для API адресов
     return new Promise((resolve, reject) => {
         
         SecureStore.getItemAsync('Token')
             .then(token => {
-                let url = `http://192.168.0.159:8080/api/v1/poll/vote?pollId=${pollId}`;
+                let url = `http://192.168.0.159:8080/api/v1/user/account/edit/me?password=${password}`;
                 let options = {
                     method: "POST",
                     headers: {
                         "Connection": "keep-alive",
                         "Content-Type": "application/json",
                         "Accept": "*/*",
-                        "Authorization": token
+                        "Authorization": token,
                     },
-                    body: JSON.stringify(requestBody),
+                    body: JSON.stringify(data),
                 };
-
                 fetch(url, options)
                     .then((response) => {
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch vote");
-                    }
-                    resolve(true);
+                        if (!response.ok) {
+                            throw new Error("Failed to fetch update account");
+                        }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        resolve(true);
                     })
                     .catch((error) => {
-                    console.error("Error fetching vote:", error);
-                    reject(error);
+                        console.error("Error fetching update account:", error);
+                        reject(error);
                     });
             })
             .catch(error => {

@@ -1,4 +1,4 @@
-export const СyclicalState = {
+export const CyclicalState = {
     "Опрос циклический": true ,
     "Опрос не циклический": false 
 };

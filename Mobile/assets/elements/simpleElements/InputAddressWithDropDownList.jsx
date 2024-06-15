@@ -61,11 +61,11 @@ export default function InputAddressWithDropDownList({
           placeholder={label}
           keyboardType={keyboardType}
           style={[
-            SimpleElementsStyle.authTextInputElement,
+            [SimpleElementsStyle.authTextInputElement, {borderColor}],
             error === true ? SimpleElementsStyle.errorTextInput : null,
             {color},
             {backgroundColor},
-            {borderColor}
+            
           ]}
           onChangeText={(text) => {
             handleChangeText(text, "address");

@@ -77,7 +77,7 @@ export const Auth = ({ navigation }) => {
       SecureStore.getItemAsync('Role')
       .then(role => {
         let roles = JSON.parse(role)
-        if(roles.length > 0)
+        if(roles.length > 1)
         {
           navigation.navigate("RoleSelectionScreen", {roles})
         }
@@ -111,6 +111,7 @@ export const Auth = ({ navigation }) => {
           error={getErrorStatus.password}
           onChangeText={(text) => setPasswordInputValue(text)}
           keyboardType="default"
+          editable={true}
         />
       </View>
       <View style={AuthAndRegistrationStyle.errorTextBlock}>

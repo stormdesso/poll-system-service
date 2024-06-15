@@ -16,12 +16,14 @@ export default function Input({
   const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
   const [color, setTextColor] = useState(ColorProperties.textColor);
   const [borderColor, setBorderColor] = useState(ColorProperties.inputBlockBorderColor);
+  const [errorBorderColor, setErrorBorderColor] = useState(ColorProperties.errorBorderColor);
 
   useEffect(() => {
       const updateColor = () => {
         setBackgroundColor(ColorProperties.backgroundColor);
         setTextColor(ColorProperties.textColor)
         setBorderColor(ColorProperties.inputBlockBorderColor)
+        setErrorBorderColor(ColorProperties.errorBorderColor)
       };
   
       ColorProperties.subscribe(updateColor);
@@ -35,13 +37,10 @@ export default function Input({
           placeholder={label}
           keyboardType={keyboardType}
           style={[
-            editable === true ? SimpleElementsStyle.authTextInputElement : SimpleElementsStyle.authTextInputElementDisabled,
+            editable === true ? [SimpleElementsStyle.authTextInputElement, {backgroundColor}, {color}, {borderColor}] : SimpleElementsStyle.authTextInputElementDisabled,
             error === true ? SimpleElementsStyle.errorTextInput : null,
-            {color},
-            {backgroundColor},
-            {borderColor}
           ]}
-          placeholderTextColor={color}
+          placeholderTextColor={editable === true ? color : "white"}
           onChangeText={onChangeText}
           value={value}
           editable={editable}

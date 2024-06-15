@@ -32,7 +32,11 @@ export default function InputBoxWithDropdown({
   }, []);
 
   const [isListOpen, setIsListOpen] = useState(false);
-  const [dropdownItems, setDropdownItems ] = useState('')
+  const [dropdownItems, setDropdownItems ] = useState(value)
+
+  useEffect(() => {
+    setDropdownItems(value)
+  }, [value])
 
   //Вызывается при выборе элемента
   const handleChangeText = (value) => {
@@ -67,14 +71,13 @@ export default function InputBoxWithDropdown({
                 placeholder={label}
                 keyboardType={keyboardType}
                 style={[
-                    disabled === false ? SimpleElementsStyle.authTextInputElement : SimpleElementsStyle.authTextInputElementDisabled,
+                    disabled === false ? [SimpleElementsStyle.authTextInputElement, {backgroundColor}] : SimpleElementsStyle.authTextInputElementDisabled,
                     error === true ? SimpleElementsStyle.errorTextInput : null,
                     {color},
-                    {backgroundColor},
                     {borderColor}
             ]}
             value={dropdownItems}
-            placeholderTextColor={color}
+            placeholderTextColor={disabled === false ? color : "white"}
             />
         </TouchableOpacity>
       </View>

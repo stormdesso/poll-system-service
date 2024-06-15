@@ -75,7 +75,7 @@ export default function validationPasswordInRegistration(data) {
   if (error) {
     return [errorStatus, errorText];
   } else {
-    if (!/г\s.+ул\s.+д\s.+кв\s.+/.test(data.address)) {
+    if (!/г\s.+ул\s.+д\s.+кв\s.+/.test(data.addressInfos)) {
       error = true;
       changeErrorStatus("address", true);
       errorText =

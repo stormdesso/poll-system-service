@@ -11,6 +11,7 @@ export default function InputWithCalendar({
   error,
   onChangeText,
   keyboardType,
+  editable
 }) {
 
   const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
@@ -55,15 +56,13 @@ export default function InputWithCalendar({
         placeholder={label}
         keyboardType={keyboardType}
         style={[
-          SimpleElementsStyle.authTextInputElement,
+          editable === true ? [SimpleElementsStyle.authTextInputElement, {backgroundColor}, {color}, {borderColor}] : SimpleElementsStyle.authTextInputElementDisabled,
           error === true ? SimpleElementsStyle.errorTextInput : null,
-          {color},
-          {backgroundColor},
-          {borderColor}
         ]}
         onFocus={showDatePicker}
         value={value}
         placeholderTextColor={color}
+        editable={editable}
       />
       <DateTimePickerModal
         isVisible={isDatePickerVisible}

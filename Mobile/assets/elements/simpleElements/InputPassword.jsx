@@ -7,7 +7,7 @@ import { ColorProperties } from '../../Data/ColorProperties';
 import openEyeImage from "../../Img/Icon/open-eye.png";
 import closeEyeImage from "../../Img/Icon/close-eye.png";
 
-export default function InputPassword({ label, value, error, onChangeText }) {
+export default function InputPassword({ label, value, error, onChangeText, editable }) {
 
   const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
   const [color, setTextColor] = useState(ColorProperties.textColor);
@@ -37,15 +37,13 @@ export default function InputPassword({ label, value, error, onChangeText }) {
           placeholder={label}
           secureTextEntry={passwordVision.passwordInputVision}
           style={[
-            SimpleElementsStyle.authTextInputElement,
+            editable === true ? [SimpleElementsStyle.authTextInputElement, {backgroundColor}, {color}, {borderColor}] : SimpleElementsStyle.authTextInputElementDisabled,
             error === true ? SimpleElementsStyle.errorTextInput : null,
-            {color},
-            {backgroundColor},
-            {borderColor}
           ]}
           onChangeText={onChangeText}
-          placeholderTextColor={color}
+          placeholderTextColor={editable === true ? color : "white"}
           value={value}
+          editable={editable}
         />
         <Pressable
           onPress={() => {

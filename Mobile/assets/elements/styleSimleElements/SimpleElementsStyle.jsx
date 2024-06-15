@@ -1,12 +1,6 @@
 import { StyleSheet } from "react-native";
 import {ColorProperties} from "../../Data/ColorProperties"
 
-const buttonColor = "#5C6BC0";
-const buttonTextColor = "#fff";
-const inputBlockBackgroundColor = "#E8EAF6";
-const inputBlockBorderColor = "#9FA9DA";
-const textColor = "#858585"; 
-
 export const SimpleElementsStyle = StyleSheet.create({
   //Стиль блока с текстовыми полями
   inputBlock: {
@@ -40,7 +34,7 @@ export const SimpleElementsStyle = StyleSheet.create({
     paddingLeft: 10,
     zIndex: 1,
     backgroundColor: ColorProperties.inputBlockBackgroundColor,
-    color: textColor,
+    color: ColorProperties.textColor,
     width: "100%"
   },
 
@@ -53,8 +47,9 @@ export const SimpleElementsStyle = StyleSheet.create({
     marginBottom: 15,
     paddingLeft: 10,
     zIndex: 1,
-    backgroundColor: ColorProperties.textColor,
-    color: ColorProperties.textColor,
+    backgroundColor: ColorProperties.disabledColor,
+    color: "white",
+    width: "100%"
   },
 
   //Стиль для выпадающего списка
@@ -115,9 +110,66 @@ export const SimpleElementsStyle = StyleSheet.create({
     zIndex: 4,
   },
 
+  //Стиль для выпадающего списка статусов
+  StatusDropdown: {
+    position: "absolute",
+    left: 0,
+    top: 60,
+    marginLeft: "10%",
+    right: 0,
+    zIndex: 2,
+    backgroundColor: "#FFF",
+    borderColor: ColorProperties.inputBlockBorderColor,
+    borderWidth: 2,
+    width: "80%",
+  },
+
+  StatusDropdownBox: {
+    width: "80%",
+    zIndex: 3,
+  },
+
+  //Стиль для выпадающего списка цикличности в фильтрах
+  IsCyclicalDropdown: {
+    position: "absolute",
+    left: 0,
+    top: 315,
+    marginLeft: "10%",
+    right: 0,
+    zIndex: 5,
+    backgroundColor: "#FFF",
+    borderColor: ColorProperties.inputBlockBorderColor,
+    borderWidth: 1,
+    width: "80%",
+  },
+
+  IsCyclicalDropdownBox: {
+    width: "80%",
+    zIndex: 6,
+  },
+
+  //Стиль для выпадающего списка проголосовал или нет в фильтрах
+  IsVoitedDropdown: {
+    position: "absolute",
+    left: 0,
+    top: 400,
+    marginLeft: "10%",
+    right: 0,
+    zIndex: 3,
+    backgroundColor: "#FFF",
+    borderColor: "gray",
+    borderWidth: 1,
+    width: "80%",
+  },
+
+  IsVoitedDropdownBox: {
+    width: "80%",
+    zIndex: 4,
+  },
+
   //Стиль для наименования поля
   labelInputText: {
-    color: textColor,
+    color: ColorProperties.textColor,
   },
 
   //Стиль для блока с кнопками
@@ -131,26 +183,26 @@ export const SimpleElementsStyle = StyleSheet.create({
   //Стиль для каждой кнопки
   buttonElement: {
     borderWidth: 1,
-    borderColor: buttonColor,
+    borderColor: ColorProperties.buttonColor,
     borderStyle: "solid",
     borderRadius: 2,
     width: "40%",
     height: 30,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: buttonColor,
+    backgroundColor: ColorProperties.buttonColor,
     height: 40,
+    zIndex: 1
   },
 
   //Стиль текста в кнопках
   buttonText: {
-    color: buttonTextColor,
+    color: ColorProperties.buttonTextColor,
   },
 
   //Стиль для ошибок
   errorTextInput: {
     borderColor: "red", // Красная рамка
-    borderWidth: 1,
   },
 
   //Стиль для поля с паролем

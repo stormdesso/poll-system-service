@@ -8,12 +8,12 @@ export default function GetPollList(currentPage) {
         
         SecureStore.getItemAsync('Token')
             .then(token => {
-                let requestBody = [];
+                let requestBody = SearchProp.filterPollPage;
                 if (SearchProp.searchText !== "") {
-                    requestBody = [{
+                    requestBody.push({
                         "key": "name",
                         "value": SearchProp.searchText
-                    }];
+                    });
                 }
 
                 let url = `http://192.168.0.159:8080/api/v1/poll/filtered_list?sort=${SearchProp.sortedType}&limit=10&page=${currentPage}`;
@@ -33,6 +33,7 @@ export default function GetPollList(currentPage) {
                         if (!response.ok) {
                             throw new Error("Failed to fetch poll list");
                         }
+                        console.log(requestBody)
                         return response.json();
                     })
                     .then((data) => {

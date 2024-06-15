@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, ScrollView } from "react-native";
+import { SafeAreaView, View, Text, ScrollView, Alert } from "react-native";
 
 import { AuthAndRegistrationStyle } from "../../style/AuthAndRegistrationStyle";
 import { ColorProperties } from "../../../Data/ColorProperties";
 
 import phoneNumberMask from "../../../scripts/phoneNumberMask";
 import validationDataInRegistration from "../../../scripts/validationDataInRegistration";
+import { transformObjectToRegistration } from "../../../scripts/transformObjectToRegistration";
+import RegistrationAPI from "../../../APIConnection/RegistrationAPI"
 
 import Input from "../../../elements/simpleElements/Input";
 import InputPassword from "../../../elements/simpleElements/InputPassword";
@@ -27,21 +29,21 @@ export const Registration = ({ navigation }) => {
 
   //Изменение текста в полях
   const [inputValues, setInputValues] = useState({
-    name: "",
-    dateBirth: "",
-    address: "",
-    login: "",
-    password: "",
-    repeatPassword: "",
-    phoneNumber: "",
-    email: "",
+    fullName: "Пеленев Денис",
+    birthdate: "07.01.2001",
+    addressInfos: "г Пермь, ул улица 5, д 5, кв 2",
+    login: "Reeji",
+    password: "DENIS2486denis!",
+    repeatPassword: "DENIS2486denis!",
+    phoneNumber: "+7 (919) 471-70-86",
+    email: "denis-pelenev@inbox.ru",
   });
 
   //Ошибки в полях
   const [getErrorStatus, setErrorStatus] = useState({
-    name: false,
-    dateBirth: false,
-    address: false,
+    fullName: false,
+    birthdate: false,
+    addressInfos: false,
     login: false,
     password: false,
     repeatPassword: false,
@@ -69,6 +71,21 @@ export const Registration = ({ navigation }) => {
       }));
     });
     setErrorText(textError);
+    if(textError === ""){
+      RegistrationAPI(inputValues.password, transformObjectToRegistration(inputValues))
+      .then((result) => {
+        if(result) {
+          Alert.alert('Регистрация прошла успешно', 'Обратитесь к Управляющему домом для активации аккаунта. Спасибо за регистрацию!');
+        }
+      })
+      .then(() => {
+        navigation.navigate("Auth")
+      })
+      .catch((error) => {
+        Alert.alert('Ошибка регистрации', error.message);
+      });
+    }
+
   };
 
   return (
@@ -78,27 +95,28 @@ export const Registration = ({ navigation }) => {
         <View style={AuthAndRegistrationStyle.inputBlock}>
           <Input
             label="ФИО"
-            value={inputValues.name}
-            error={getErrorStatus.name}
-            onChangeText={(text) => handleChangeText(text, "name")}
+            value={inputValues.fullName}
+            error={getErrorStatus.fullName}
+            onChangeText={(text) => handleChangeText(text, "fullName")}
             keyboardType="default"
             editable = {true}
           />
 
           <InputWithCalendar
             label="Дата рождения"
-            value={inputValues.dateBirth}
-            error={getErrorStatus.dateBirth}
-            onChangeText={(text) => handleChangeText(text, "dateBirth")}
+            value={inputValues.birthdate}
+            error={getErrorStatus.birthdate}
+            onChangeText={(text) => handleChangeText(text, "birthdate")}
             keyboardType="default"
+            editable={true}
           />
 
           <InputAddressWithDropDownList
             label="Адрес проживания"
-            value={inputValues.address}
-            error={getErrorStatus.address}
+            value={inputValues.addressInfos}
+            error={getErrorStatus.addressInfos}
             onChangeText={(text) => {
-              handleChangeText(text, "address");
+              handleChangeText(text, "addressInfos");
             }}
             keyboardType="default"
           />
@@ -118,6 +136,7 @@ export const Registration = ({ navigation }) => {
             error={getErrorStatus.password}
             onChangeText={(text) => handleChangeText(text, "password")}
             keyboardType="default"
+            editable={true}
           />
 
           <InputPassword
@@ -126,6 +145,7 @@ export const Registration = ({ navigation }) => {
             error={getErrorStatus.repeatPassword}
             onChangeText={(text) => handleChangeText(text, "repeatPassword")}
             keyboardType="default"
+            editable={true}
           />
 
           <Input

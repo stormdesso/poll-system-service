@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { SafeAreaView, View, Text, ScrollView } from "react-native";
 
-import {CreatePollPageStyle} from "../../../style/CreatePollPageStyle"
+import {PollSettingsStyle} from "../../../style/PollSettingsStyle"
 import { ColorProperties } from "../../../../Data/ColorProperties";
+
+import updatePoll from "../../../../APIConnection/updatePoll"
 
 import Input from "../../../../elements/simpleElements/Input";
 import InputBoxWithDropdown from "../../../../elements/simpleElements/InputBoxWithDropdown";
@@ -12,35 +14,25 @@ import AddPollValueInCreatePoll from "../../../../elements/specialElements/AddPo
 
 import {CyclicalState} from "../../../../Data/CyclicalState"
 import {CyclicalType} from "../../../../Data/CyclicalType"
-import {transformObjectToCreatePoll} from "../../../../scripts/transformObjectToCreatePoll"
 
 import validationDataInCreatePoll from "../../../../scripts/validationDataInCreatePoll"
 import deleteNonIntegerSymbol from "../../../../scripts/deleteNonIntegerSymbol"
+import {formatDate} from "../../../../scripts/formatDate"
 
-import CreatePoll from "../../../../APIConnection/CreatePoll"
+export const PollSettings = ({item}) => {
 
-export const CreatePollPage = () => {
+  //Цвета для темной темы
   const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
-  useEffect(() => {
-    const updateColor = () => {
-      setBackgroundColor(ColorProperties.backgroundColor);
-    };
-
-    ColorProperties.subscribe(updateColor);
-    return () => ColorProperties.unsubscribe(updateColor);
-  }, []);
 
   //Изменение текста в полях
   const [inputValues, setInputValues] = useState({
-    name: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    cyclical: "",
-    cyclicalType: "",
-    cyclicalDayPeriod: "",
-    maxNumberAnswersByUser: "",
-    newPollValue: [""]
+    name: item.name,
+    description: item.description,
+    startDate: formatDate(item.startDate),
+    endDate: formatDate(item.endDate),
+    cyclical: item.cyclical.toString(),
+    maxNumberAnswersByUser: item.maxNumberAnswersByUser.toString(),
+    newPollValue: item.pollValues.map(item => item.value),
   });
 
   //Ошибки в полях
@@ -56,8 +48,23 @@ export const CreatePollPage = () => {
     newPollValue: false,
   });
 
+  const [isEditable, setIsEditable] = useState(true)
+
   const [getErrorText, setErrorText] = useState("");
 
+  useEffect(() => {
+    const updateColor = () => {
+      setBackgroundColor(ColorProperties.backgroundColor);
+    };
+    console.log(item)
+
+    item.status === "proposed" ? setIsEditable(false) : setIsEditable(true)
+
+    ColorProperties.subscribe(updateColor);
+    return () => ColorProperties.unsubscribe(updateColor);
+  }, []);
+
+  //Метод на чистку полей
   const clearFields = () => {
     const clearedFields = Object.keys(inputValues).reduce((acc, key) => {
       acc[key] = Array.isArray(inputValues[key]) ? [""] : "";
@@ -75,6 +82,7 @@ export const CreatePollPage = () => {
     }));
   };
 
+  //Изменение текста в полях для ввода вариантов ответов
   const handleNewPollValueChange = (newPollValue) => {
     setInputValues((prevState) => ({
       ...prevState,
@@ -83,7 +91,7 @@ export const CreatePollPage = () => {
   };
 
   //Функция на валидацию данных
-  const validationData = () => {
+  const validationData = (status) => {
     const [statusError, textError] = validationDataInCreatePoll(inputValues);
     Object.keys(statusError).forEach((key) => {
       setErrorStatus((prevError) => ({
@@ -93,33 +101,22 @@ export const CreatePollPage = () => {
     });
     setErrorText(textError);
     if(textError === ""){
-      CreatePoll(transformObjectToCreatePoll(inputValues))
-      .then((result) => {
-        if(result) {
-          Alert.alert('Регистрация прошла успешно', 'Обратитесь к Управляющему домом для активации аккаунта. Спасибо за регистрацию!');
-        }
-      })
-      .then(() => {
-        navigation.navigate("Auth")
-      })
-      .catch((error) => {
-        Alert.alert('Ошибка регистрации', error.message);
-      });
+      item.status = status
+      updatePoll(item)
     }
   };
 
   return (
-    <SafeAreaView style={[CreatePollPageStyle.container, {backgroundColor}]}>
-      <ScrollView contentContainerStyle={CreatePollPageStyle.scrollView}>
-        <Text style={CreatePollPageStyle.HeadderText}>Создать опрос</Text>
-        <View style={CreatePollPageStyle.inputBlock}>
+    <SafeAreaView style={[PollSettingsStyle.container, {backgroundColor}]}>
+      <ScrollView contentContainerStyle={PollSettingsStyle.scrollView}>
+        <View style={PollSettingsStyle.inputBlock}>
           <Input
             label="Наименование опроса"
             value={inputValues.name}
             error={getErrorStatus.name}
             onChangeText={(text) => handleChangeText(text, "name")}
             keyboardType="default"
-            editable = {true}
+            editable = {isEditable}
           />
 
           <Input
@@ -128,7 +125,7 @@ export const CreatePollPage = () => {
             error={getErrorStatus.description}
             onChangeText={(text) => handleChangeText(text, "description")}
             keyboardType="default"
-            editable = {true}
+            editable = {isEditable}
           />
 
           <InputWithCalendar
@@ -137,7 +134,7 @@ export const CreatePollPage = () => {
             error={getErrorStatus.startDate}
             onChangeText={(text) => handleChangeText(text, "startDate")}
             keyboardType="default"
-            editable={true}
+            editable={isEditable}
           />
 
           <InputWithCalendar
@@ -146,7 +143,7 @@ export const CreatePollPage = () => {
             error={getErrorStatus.endDate}
             onChangeText={(text) => handleChangeText(text, "endDate")}
             keyboardType="default"
-            editable={true}
+            editable={isEditable}
           />
 
           <InputBoxWithDropdown
@@ -160,7 +157,7 @@ export const CreatePollPage = () => {
             data = {CyclicalState}
             styleNameDropdown = {"CyclicalDropdown"}
             styleNameDropdownBox = {"CyclicalDropdownBox"}
-            disabled={false}
+            disabled={!isEditable}
           />
 
           <InputBoxWithDropdown
@@ -174,7 +171,7 @@ export const CreatePollPage = () => {
             data = {CyclicalType}
             styleNameDropdown = {"CyclicalTypeDropdown"}
             styleNameDropdownBox = {"CyclicalTypeDropdownBox"}
-            disabled={inputValues.cyclical !== "Опрос циклический"}
+            disabled={inputValues.cyclical !== "Опрос циклический" || !isEditable}
           />
 
           <Input
@@ -185,7 +182,7 @@ export const CreatePollPage = () => {
               handleChangeText(text, "cyclicalDayPeriod")
             }
             keyboardType="numeric"
-            editable={inputValues.cyclicalType === 'Пользовательский'}
+            editable={inputValues.cyclicalType === 'Пользовательский' || isEditable}
           />
 
           <Input
@@ -196,24 +193,24 @@ export const CreatePollPage = () => {
               handleChangeText(deleteNonIntegerSymbol(text), "maxNumberAnswersByUser")
             }
             keyboardType="numeric"
-            editable={true}
+            editable={isEditable}
           />
 
           <AddPollValueInCreatePoll 
             newPollValue={inputValues.newPollValue}
             setNewPollValue={handleNewPollValueChange}
             error={getErrorStatus.newPollValue}
-            editable={true}
+            editable={isEditable}
           />
         </View>
-        <View style={CreatePollPageStyle.errorTextBlock}>
-          <Text style={CreatePollPageStyle.errorText}>{getErrorText}</Text>
+        <View style={PollSettingsStyle.errorTextBlock}>
+          <Text style={PollSettingsStyle.errorText}>{getErrorText}</Text>
         </View>
 
-        <View style={CreatePollPageStyle.buttonBlock}>
-          <ButtonWithText label="Создать опрос" onPress={() => validationData()} />
+        <View style={PollSettingsStyle.buttonBlock}>
+          <ButtonWithText label="Принять" onPress={() => validationData("planned")} />
 
-          <ButtonWithText label="Отмена" onPress={() => clearFields()} />
+          <ButtonWithText label="Отклонить" onPress={() => validationData("returned")} />
         </View>
       </ScrollView>
     </SafeAreaView>

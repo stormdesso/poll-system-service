@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import {SearchInput} from "../simpleElements/SearchInput"
 import {ButtonWithDropDownList} from "../simpleElements/ButtonWithDropDownList"
 import UserSettingsModal from "../specialElements/UserSettingsModal"
+import { Filter } from './Filter';
 
 import {SortedType} from "../../Data/SortedType"
 import {SearchProp} from "../../Data/SearchProp"
@@ -12,7 +13,7 @@ import {HeadderStyle} from "../styleSpecialElements/HeadderStyle"
 
 import { ColorProperties } from "../../Data/ColorProperties";
 
-export const Headder = ({navigation}) => {
+export const Headder = ({navigation, type}) => {
     const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
 
     useEffect(() => {
@@ -32,6 +33,10 @@ export const Headder = ({navigation}) => {
         <View style={[HeadderStyle.Headder, {backgroundColor}]}>
             <UserSettingsModal navigation={navigation} />
             <SearchInput />
+            {type==="PollPage" && (
+                <Filter />
+            )
+            }
             <ButtonWithDropDownList 
                 data = {SortedType} 
                 icon={sorted}

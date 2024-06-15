@@ -47,8 +47,9 @@ export const UserSettingsModal = ({ navigation }) => {
       toggleModal()
   }
   
-  const handleOptionPress = (option) => {
-    console.log(option);
+  const MyAccount = () => {
+    navigation.navigate("MyAccount")
+    toggleModal()
   };
 
   const exit = () => {
@@ -74,10 +75,10 @@ export const UserSettingsModal = ({ navigation }) => {
           <TouchableOpacity onPress={() => useDarkTheme()}>
             <Text style={[UserSettingsModalStyle.optionText, {color}]}>Темная тема</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleOptionPress('Мой аккаунт')}>
+          <TouchableOpacity onPress={() => MyAccount()}>
             <Text style={[UserSettingsModalStyle.optionText, {color}]}>Мой аккаунт</Text>
           </TouchableOpacity>
-          {countUserRoles>0 && (
+          {countUserRoles > 1 && (
             <TouchableOpacity onPress={() => changeUserRole()}>
               <Text style={[UserSettingsModalStyle.optionText, {color}]}>Сменить роль</Text>
             </TouchableOpacity>

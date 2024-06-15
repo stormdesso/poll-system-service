@@ -65,7 +65,7 @@ export const ChatAboutThePoll = ({item}) => {
     
   //   useEffect(() => {
   //       stompClient.current = new Client({
-  //           brokerURL: 'ws://192.168.0.159:8080/gs-guide-websocket',
+  //           brokerURL: 'http://192.168.0.159:8080/gs-guide-websocket',
   //           debug: (str) => {
   //               console.log(new Date(), str);
   //           },

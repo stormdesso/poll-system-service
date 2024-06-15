@@ -12,7 +12,7 @@ import {FileListInPollInfo} from "../../../../elements/specialElements/FileListI
 import GetFileInfo from "../../../../scripts/GetFileInfo"
 
 
-export const InformationAboutThePoll = ({item}) => {
+export const InformationAboutTheSuggestedPoll = ({item}) => {
 
     const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
     const [color, setColor] = useState(ColorProperties.textColorInPollInfoCard);
@@ -68,7 +68,6 @@ export const InformationAboutThePoll = ({item}) => {
                         maxAnswers = {item.maxNumberAnswersByUser} 
                         pollId={item.id}
                         isVotedState = {setCurrentPollIsVoted}
-                        type = {"PollPage"}
                     />
                 </View>
             )}

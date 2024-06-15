@@ -35,6 +35,7 @@ export const PollPage = ({navigation}) => {
     fetchData();
   }, [page]);
 
+  //Подписки на объект с цветами и объект с настройками поиска
   useEffect(() => {
     const update = () => {
       setData([]);
@@ -89,7 +90,7 @@ export const PollPage = ({navigation}) => {
   return (
     <View style={[PollPageStyle.container, {backgroundColor}]}>
       <View>
-        <Headder navigation={navigation}/>
+        <Headder navigation={navigation} type={"PollPage"}/>
       </View>
       <View style={[PollPageStyle.container, {backgroundColor}]}>
         <FlatList

@@ -1,6 +1,7 @@
 export const SearchProp = {
     searchText: "",
     sortedType: "name",
+    filterPollPage: [],
     listeners: [],
     
     setSearchText(value) {
@@ -10,6 +11,12 @@ export const SearchProp = {
     
     setSortedType(value) {
       this.sortedType = value;
+      this.notify();
+    },
+
+    setFilterPollPage(value) {
+      this.filterPollPage = value;
+      console.log(value)
       this.notify();
     },
     

@@ -4,7 +4,7 @@ import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet, TextInput } 
 import {AddPollValueInCreatePollStyle} from "../styleSpecialElements/AddPollValueInCreatePollStyle"
 import { ColorProperties } from '../../Data/ColorProperties';
 
-export default function AddPollValueInCreatePoll ({ newPollValue, setNewPollValue, error }) {
+export default function AddPollValueInCreatePoll ({ newPollValue, setNewPollValue, error, editable }) {
 
   const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
   const [color, setTextColor] = useState(ColorProperties.textColor);
@@ -38,17 +38,18 @@ export default function AddPollValueInCreatePoll ({ newPollValue, setNewPollValu
   };
   
     return (
-      <View style={AddPollValueInCreatePollStyle.container}>
-        <Text style = {{color: color}}>Варианты голосования:</Text>
+      <View style={[AddPollValueInCreatePollStyle.container,
+        editable === true ? [ {backgroundColor}, {color}, {borderColor}] : {backgroundColor: "gray", color: "white"}
+      ]}>
+        <Text style = {[editable === true ? [ {backgroundColor}, {color}, {borderColor}] : {backgroundColor: "gray", color: "white"}]}>Варианты голосования:</Text>
         {newPollValue.map((input, index) => (
           <TextInput
             key={index}
             style={[
+              editable === true ? [ {backgroundColor}, {color}, {borderColor}] : {backgroundColor: "gray", color: "white"},
               error === false ? AddPollValueInCreatePollStyle.input : AddPollValueInCreatePollStyle.errorInput,
-              {color},
-              {backgroundColor},
-              {borderColor}
             ]}
+            editable = {editable}
             value={input}
             onChangeText={(text) => handleTextChange(text, index)}
           />

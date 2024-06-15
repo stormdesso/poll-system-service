@@ -24,9 +24,10 @@ export const ShortPollCardStyle = StyleSheet.create({
   },
 
   IsVotedStatusImage: {
-    marginLeft: 110,
+    left: 360,
     width: 100,
-    height: 100
+    height: 100,
+    position: "absolute"
   },
 
   PollNameInShortCard: {
