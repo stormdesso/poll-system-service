@@ -129,7 +129,7 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
 
 
     public void createTaskFromTemplate(Poll poll) {
-        if (needTask(poll)) return;
+        if (!needTask(poll)) return;
 
         var period = poll.getSchedule().getType().getCountDays();
         var startDate = calculateNextStartDate(getLocalDateFrom(poll.getStartDate()), period);
@@ -147,11 +147,8 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
     }
 
     private boolean needTask(Poll poll) {
-        if(poll.getSchedule().getType().equals(ScheduleType.NO_SCHEDULE)
-                || !StatusEnum.getWorkStatus().contains(poll.getStatus())){
-            return false;
-        }
-        return true;
+        return ! (poll.getSchedule().getType().equals(ScheduleType.NO_SCHEDULE)
+                || !StatusEnum.getWorkStatus().contains(poll.getStatus()));
     }
 
     private void recreate(@NotNull Poll poll) {
