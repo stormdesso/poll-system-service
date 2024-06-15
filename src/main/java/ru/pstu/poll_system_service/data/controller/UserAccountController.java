@@ -43,8 +43,8 @@ public class UserAccountController {
     @Operation(description = "Редактировать информацию о своём аккаунте")
     @PostMapping("/edit/me")
     public void editAccountInfo(@RequestBody UserDto userDto, @RequestParam(required = false) String password) {
-
-        userService.editAuthenticatedUserInfo(userDto, passwordEncoder.encode(password == null ? "": password));
+        userService.editAuthenticatedUserInfo(
+                userDto, password == null || password.isBlank()? null: passwordEncoder.encode(password) );
     }
 
     @Operation(description = "Редактировать информацию об аккаунтах пользователей")
