@@ -232,18 +232,18 @@ public class PollServiceImpl implements PollService {
     @Transactional
     public Poll update(PollDto pollDto) {
         var user = getCurrentUserFromContext();
+        var roles = getCurrentUserFromContext().getRole().stream().map(Role::getRoleName).collect(Collectors.toSet());
 
         Poll originalEntity = pollRepository.findById(pollDto.getId()).orElseThrow(()
                 -> new IllegalArgumentException("Указан неверный идентификатор опроса!"));
 
-        if (! (StatusEnum.valueOf(StatusEnum.class,originalEntity.getStatus()).equals(StatusEnum.proposed) ||
-                StatusEnum.valueOf(StatusEnum.class,originalEntity.getStatus()).equals(StatusEnum.returned)) ){
+        if (!(StatusEnum.valueOf(StatusEnum.class, originalEntity.getStatus()).equals(StatusEnum.proposed) ||
+                StatusEnum.valueOf(StatusEnum.class, originalEntity.getStatus()).equals(StatusEnum.returned))) {
             throw new IllegalArgumentException("Невозможно редактировать опрос!");
         }
 
-        if (! (originalEntity.getCreatorUserId().equals(getCurrentUserIdFromContext()) ||
-                new HashSet<>(getCurrentUserFromContext().getRole().stream().map(Role::getRoleName).toList())
-                        .containsAll(List.of(admin.name(), root.name())))){
+        if (!(originalEntity.getCreatorUserId().equals(getCurrentUserIdFromContext()) ||
+                roles.contains(admin.name()) || roles.contains(root.name()))) {
             throw new IllegalArgumentException("Нет прав на редактирование опроса!");
         }
 
