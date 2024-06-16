@@ -12,6 +12,8 @@ import {PollInfoStyle} from "../../../style/PollInfoStyle"
 import { ColorProperties } from '../../../../Data/ColorProperties';
 import {LinearGradient} from 'expo-linear-gradient';
 
+import { SearchProp } from '../../../../Data/SearchProp';
+
 import Back from "../../../../Img/Icon/Back.png"
   
 
@@ -24,6 +26,7 @@ export const MyPollInfo = ({ navigation, route }) => {
     };
 
     ColorProperties.subscribe(updateColor);
+
     return () => ColorProperties.unsubscribe(updateColor);
   }, []);
   

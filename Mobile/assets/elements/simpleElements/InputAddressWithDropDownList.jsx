@@ -11,6 +11,7 @@ export default function InputAddressWithDropDownList({
   error,
   onChangeText,
   keyboardType,
+  page
 }) {
   const [isListOpen, setIsListOpen] = useState(false);
   const [addressInfo, setAddressInfo] = useState([]);
@@ -55,7 +56,7 @@ export default function InputAddressWithDropDownList({
 
   return (
     <>
-      <View style={SimpleElementsStyle.authTextElementBoxAddress}>
+      <View style={page === "MyAccount" ? SimpleElementsStyle.myAccountBoxAddress : SimpleElementsStyle.authTextElementBoxAddress}>
         <Text style={SimpleElementsStyle.labelInputText}>{label}</Text>
         <TextInput
           placeholder={label}
@@ -77,7 +78,10 @@ export default function InputAddressWithDropDownList({
         />
       </View>
       {isListOpen && addressInfo.length > 0 && (
-        <View style={[SimpleElementsStyle.dropdown, {backgroundColor}, {borderColor}]}>{renderAddressItems()}</View>
+        <View style={
+          page === "MyAccount" ? [SimpleElementsStyle.dropdownMyAccount, {backgroundColor}, {borderColor}] : [SimpleElementsStyle.dropdown, {backgroundColor}, {borderColor}]
+          
+        }>{renderAddressItems()}</View>
       )}
     </>
   );

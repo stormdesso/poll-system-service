@@ -19,6 +19,12 @@ export const SimpleElementsStyle = StyleSheet.create({
     zIndex: 5,
   },
 
+  //Стиль блока с адресом
+  authTextElementBoxAddress2: {
+    width: "90%",
+    zIndex: 5,
+  },
+
   shadowBox: {
     width: "100%"
   },
@@ -37,6 +43,7 @@ export const SimpleElementsStyle = StyleSheet.create({
     color: ColorProperties.textColor,
     width: "100%"
   },
+  
 
   authTextInputElementDisabled: {
     borderColor: ColorProperties.textColor,
@@ -70,6 +77,24 @@ export const SimpleElementsStyle = StyleSheet.create({
     padding: 10,
     borderBottomColor: ColorProperties.inputBlockBorderColor,
     borderBottomWidth: 0.5
+  },
+
+  myAccountBoxAddress: {
+    width: "90%",
+    zIndex: 3,
+  },
+
+  dropdownMyAccount: {
+    position: "absolute",
+    left: 0,
+    top: 80,
+    marginLeft: "4%",
+    right: 0,
+    zIndex: 2,
+    backgroundColor: "#FFF",
+    borderColor: ColorProperties.inputBlockBorderColor,
+    borderWidth: 1,
+    width: "89%",
   },
 
   //Стиль для выпадающего списка цикличности

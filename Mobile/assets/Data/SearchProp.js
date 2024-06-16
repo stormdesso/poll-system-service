@@ -3,6 +3,7 @@ export const SearchProp = {
     sortedType: "name",
     filterPollPage: [],
     listeners: [],
+    updatePolls: [],
     
     setSearchText(value) {
       this.searchText = value;
@@ -16,8 +17,12 @@ export const SearchProp = {
 
     setFilterPollPage(value) {
       this.filterPollPage = value;
-      console.log(value)
       this.notify();
+    },
+
+    updatePoll(newPoll) {
+      this.updatePolls.push(newPoll); // Добавляем новый опрос в polls
+      this.notify(); // Уведомляем всех подписчиков
     },
     
     notify() {

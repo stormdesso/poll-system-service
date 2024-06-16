@@ -37,11 +37,11 @@ export const MyPollPage = ({navigation}) => {
   }, [page]);
 
   useEffect(() => {
-    const update = () => {
+    const updateMyPoll = () => {
       setMyPollData([]);
       fetchData();
     }
-    SearchProp.subscribe(update)
+    SearchProp.subscribe(updateMyPoll)
 
     const updateColor = () => {
       setBackgroundColor(ColorProperties.backgroundColor);

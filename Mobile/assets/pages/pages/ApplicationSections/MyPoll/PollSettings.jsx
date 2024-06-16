@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View, Text, ScrollView } from "react-native";
+import { SafeAreaView, View, Text, ScrollView, Alert } from "react-native";
 
 import {PollSettingsStyle} from "../../../style/PollSettingsStyle"
 import { ColorProperties } from "../../../../Data/ColorProperties";
 
 import updatePoll from "../../../../APIConnection/updatePoll"
+import { SearchProp } from '../../../../Data/SearchProp';
 
 import Input from "../../../../elements/simpleElements/Input";
 import InputBoxWithDropdown from "../../../../elements/simpleElements/InputBoxWithDropdown";
@@ -103,6 +104,8 @@ export const PollSettings = ({item}) => {
     if(textError === ""){
       item.status = status
       updatePoll(item)
+      SearchProp.updatePoll(`${inputValues.name}`)
+      Alert.alert(`Опрос успешно переведен в статус: ${status}`)
     }
   };
 
