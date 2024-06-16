@@ -5,7 +5,7 @@
 -- Dumped from database version 15.3
 -- Dumped by pg_dump version 15.3
 
--- Started on 2024-06-12 12:38:12
+-- Started on 2024-06-16 11:47:01
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -56,6 +56,7 @@ INSERT INTO public.address OVERRIDING SYSTEM VALUE VALUES (10, 'Москва', '
 INSERT INTO public."poll_sсhedule" OVERRIDING SYSTEM VALUE VALUES (3, 'EVERY_WEEK', 7);
 INSERT INTO public."poll_sсhedule" OVERRIDING SYSTEM VALUE VALUES (1, 'EVERY_MONTH', 30);
 INSERT INTO public."poll_sсhedule" OVERRIDING SYSTEM VALUE VALUES (4, 'EVERY_YEAR', 365);
+INSERT INTO public."poll_sсhedule" OVERRIDING SYSTEM VALUE VALUES (6, 'NO_SCHEDULE', 0);
 
 
 --
@@ -68,10 +69,10 @@ INSERT INTO public."user" OVERRIDING SYSTEM VALUE VALUES (2, 'Имя2 Фамил
 INSERT INTO public."user" OVERRIDING SYSTEM VALUE VALUES (5, 'Имя5 Фамилия5', '1977-05-05', 'user5', 'password5', '2222222222', 'user5@example.com', false, 5);
 INSERT INTO public."user" OVERRIDING SYSTEM VALUE VALUES (1, 'Имя1 Фамилия1', '1990-01-01', 'user1', 'password1', '1234567890', 'user1@example.com', false, 1);
 INSERT INTO public."user" OVERRIDING SYSTEM VALUE VALUES (3, 'Имя3 Фамилия3', '1980-03-03', 'user3', 'password3', '5555555555', 'user3@example.com', false, 3);
-INSERT INTO public."user" OVERRIDING SYSTEM VALUE VALUES (7, 'Админ', '1990-01-01', 'admin', '98da855b7dfc93c6b25543a00923f48055c50adddf9c4831fc23eb6820775b7b116c197b197c4a4a', '1234567890', 'admin7@example.com', false, 7);
 INSERT INTO public."user" OVERRIDING SYSTEM VALUE VALUES (4, 'Имя четыре Фамилия четыре  Отчество четыре ', '1982-04-04', 'user4', 'password4', '1111111111', 'user4@example.com', false, 4);
 INSERT INTO public."user" OVERRIDING SYSTEM VALUE VALUES (11, 'Удалённый пользователь', '2024-06-07', 'deleted', '98da855b7dfc93c6b25543a00923f48055c50adddf9c4831fc23eb6820775b7b116c197b197c4a4a', '666', NULL, true, NULL);
 INSERT INTO public."user" OVERRIDING SYSTEM VALUE VALUES (36, 'Иванов Иван Иваныч', '1972-06-09', 'Ivan_II', 'ed7c6e4f249b53d9d89f570da783fa4035ddde440e5b4ec5292779300c062a64a5548da7e5d0b6e1', '8988888821', 'ivanich@gmail.com', false, 33);
+INSERT INTO public."user" OVERRIDING SYSTEM VALUE VALUES (7, 'Админ', '1990-01-01', 'admin', '4bf77b0d45ca806df7116271619397b76b715f79a36e9067cbbf8f02add9440469f5918235ad2b05', '1234567890', 'admin7@example.com', false, 7);
 
 
 --
@@ -81,6 +82,8 @@ INSERT INTO public."user" OVERRIDING SYSTEM VALUE VALUES (36, 'Иванов Ив
 --
 
 INSERT INTO public.poll OVERRIDING SYSTEM VALUE VALUES (23, 7, 4, 9, 'Субботник', '2024-06-09', '2024-06-15', 6, 'active', 'Выбираем в какой день необходимо провести субботник', false, 1);
+INSERT INTO public.poll OVERRIDING SYSTEM VALUE VALUES (24, 7, 6, 9, 'Утренник', '2024-06-09', '2024-06-15', 6, 'proposed', 'Выбираем в какой день необходимо провести утренник', false, 1);
+INSERT INTO public.poll OVERRIDING SYSTEM VALUE VALUES (25, 7, 6, 9, 'ТЕСТ', '2024-06-09', '2024-06-15', 6, 'proposed', 'ТЕСТ', false, 1);
 
 
 --
@@ -148,6 +151,10 @@ INSERT INTO public.ownership_address VALUES (10, 7, 0);
 
 INSERT INTO public.poll_value OVERRIDING SYSTEM VALUE VALUES (25, 23, '15.06');
 INSERT INTO public.poll_value OVERRIDING SYSTEM VALUE VALUES (26, 23, '22.06');
+INSERT INTO public.poll_value OVERRIDING SYSTEM VALUE VALUES (27, 24, '19.06');
+INSERT INTO public.poll_value OVERRIDING SYSTEM VALUE VALUES (28, 24, '27.06');
+INSERT INTO public.poll_value OVERRIDING SYSTEM VALUE VALUES (29, 25, '1');
+INSERT INTO public.poll_value OVERRIDING SYSTEM VALUE VALUES (30, 25, '2');
 
 
 --
@@ -187,6 +194,7 @@ INSERT INTO public.privilege OVERRIDING SYSTEM VALUE VALUES (13, 'relocation', '
 -- Data for Name: relocation_request; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
+INSERT INTO public.relocation_request VALUES (7, 'Хуево', 'Кукуево', '123', '3', 'ADD');
 
 
 --
@@ -288,7 +296,7 @@ SELECT pg_catalog.setval('public.message_id_seq', 19, true);
 -- Name: ownership_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.ownership_id_seq', 33, true);
+SELECT pg_catalog.setval('public.ownership_id_seq', 34, true);
 
 
 --
@@ -297,7 +305,7 @@ SELECT pg_catalog.setval('public.ownership_id_seq', 33, true);
 -- Name: poll_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.poll_id_seq', 23, true);
+SELECT pg_catalog.setval('public.poll_id_seq', 25, true);
 
 
 --
@@ -306,7 +314,7 @@ SELECT pg_catalog.setval('public.poll_id_seq', 23, true);
 -- Name: poll_sсhedule_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public."poll_sсhedule_id_seq"', 5, true);
+SELECT pg_catalog.setval('public."poll_sсhedule_id_seq"', 6, true);
 
 
 --
@@ -315,7 +323,7 @@ SELECT pg_catalog.setval('public."poll_sсhedule_id_seq"', 5, true);
 -- Name: poll_value_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.poll_value_id_seq', 26, true);
+SELECT pg_catalog.setval('public.poll_value_id_seq', 30, true);
 
 
 --
@@ -342,7 +350,7 @@ SELECT pg_catalog.setval('public.role_id_seq', 6, true);
 -- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_id_seq', 36, true);
+SELECT pg_catalog.setval('public.user_id_seq', 37, true);
 
 
 --
@@ -354,7 +362,7 @@ SELECT pg_catalog.setval('public.user_id_seq', 36, true);
 SELECT pg_catalog.setval('public.users_answer_id_seq', 41, true);
 
 
--- Completed on 2024-06-12 12:38:13
+-- Completed on 2024-06-16 11:47:03
 
 --
 -- PostgreSQL database dump complete
