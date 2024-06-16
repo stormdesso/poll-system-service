@@ -15,9 +15,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import ru.pstu.poll_system_service.business.aspect.SecurityPermissionEvaluator;
 import ru.pstu.poll_system_service.data.service.UserService;
 import ru.pstu.poll_system_service.web.security.jwt.JwtAuthenticationFilter;
+
+import java.util.List;
 
 import static org.springframework.http.HttpMethod.*;
 
@@ -31,8 +36,23 @@ public class SecurityConfig{
     private static final String AUTH_URL = "/api/v1/auth/**";
 
     @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("X-Total-Count"));
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(request -> request
+        http.
+                cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request -> request
                         .requestMatchers(GET, getSwaggerPatterns()).permitAll()
                         .requestMatchers(POST, AUTH_URL).permitAll()
                         .requestMatchers(PUT, AUTH_URL).permitAll()
