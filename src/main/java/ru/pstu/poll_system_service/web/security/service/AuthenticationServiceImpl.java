@@ -2,6 +2,7 @@ package ru.pstu.poll_system_service.web.security.service;
 
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import java.util.Collections;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationServiceImpl implements AuthenticationService{
     private final UserRepository userRepository;
     private final JwtService jwtService;
@@ -28,9 +30,11 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     public JwtAuthenticationResponse signIn(AccountCredentials request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword()));
-
         var user = userRepository.findUserByLogin(request.getLogin())
-                .orElseThrow(() -> new AccessDeniedException("Неправильный login или пароль"));
+                .orElseThrow(() -> {
+                    log.info("Неверные login или пароль");
+                    return new AccessDeniedException("Неверные login или пароль");
+                });
 
         String jwt = jwtService.addAuthentication(new SecurityUser(user, Collections.emptyList()), httpServletResponse);
 

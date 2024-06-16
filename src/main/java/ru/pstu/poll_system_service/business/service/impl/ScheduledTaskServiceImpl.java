@@ -34,14 +34,14 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
 
     private Map<Long, ScheduledFuture<?>> scheduledTasks = new ConcurrentHashMap<>();
 
-    private boolean todayIsStartDate(Poll poll){
+    private boolean todayIsStartDate(Poll poll) {
         final var now = new Date();
         return poll.getStartDate().before(now) && poll.getEndDate().after(now);
     }
 
     private static long getDateDiff(@NotNull Date startDate, @NotNull Date endDate) {
         long diffInMillis = endDate.getTime() - startDate.getTime();
-        return TimeUnit.DAYS.convert(diffInMillis,TimeUnit.DAYS);
+        return TimeUnit.DAYS.convert(diffInMillis, TimeUnit.DAYS);
     }
 
     private @NotNull Date calculateNextStartDate(LocalDate startDate, int duration) {
@@ -57,7 +57,7 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
 
     /**
      * @param newStartDate дата старта нового опроса(уже рассчитанная)
-     * */
+     */
     private Date calculateNextEndDate(@NotNull LocalDate newStartDate, int duration) {
         return Date.from(newStartDate.plusDays(duration).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
@@ -66,13 +66,13 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
-    void logStatus(@NotNull Poll poll){
+    void logStatus(@NotNull Poll poll) {
         log.info("Опрос \"{}\" с id={} переведён в состояние:{}", poll.getName(), poll.getId(), poll.getStatus());
     }
 
     /**
      * Будет выполняться каждый день в 00:01
-     * */
+     */
     @Scheduled(cron = "0 1 0 * * ?")
     private void runDailyTask() {
         log.info("Запуск плановой задачи по переводу опросов в статус active/closed");
@@ -80,9 +80,9 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
         log.info("Задание завершено");
 
         log.info("Запуск плановой задачи по удалению старых опросов");
-        var allClosedPollsIds =pollRepository.findAllClosed();
+        var allClosedPollsIds = pollRepository.findAllClosed();
         allClosedPollsIds.forEach(id -> {
-            if (scheduledTasks.containsKey(id)){
+            if (scheduledTasks.containsKey(id)) {
                 cancelTask(id);
             }
         });
@@ -92,9 +92,9 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
 
     /**
      * Метод инициализирует отложенные задачи при старте приложения
-     * */
+     */
     @PostConstruct
-    private void initTasks(){
+    private void initTasks() {
         var polls = pollRepository.findAllActiveAndPlannedPollWithSchedule();
 
         polls.forEach(poll -> {
@@ -109,11 +109,11 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
     private void updateStatus() {
         var allPolls = pollRepository.findAll();
         allPolls.forEach(poll -> {
-            if ( todayIsStartDate(poll) && poll.getStatus().equals(planned.name()) ){
+            if (todayIsStartDate(poll) && poll.getStatus().equals(planned.name())) {
                 poll.setStatus(active.name());
                 logStatus(poll);
             }
-            if ( poll.getEndDate().before(new Date()) && poll.getStatus().equals(active.name()) ){
+            if (poll.getEndDate().before(new Date()) && poll.getStatus().equals(active.name())) {
                 poll.setStatus(closed.name());
                 logStatus(poll);
             }
@@ -123,7 +123,7 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
 
     @Override
     public void createTask(@NotNull Poll poll, Runnable task, @NotNull Date startDate, Duration duration) {
-        ScheduledFuture<?> scheduledTask =  taskScheduler.scheduleAtFixedRate(task, startDate.toInstant(), duration);
+        ScheduledFuture<?> scheduledTask = taskScheduler.scheduleAtFixedRate(task, startDate.toInstant(), duration);
         scheduledTasks.put(poll.getId(), scheduledTask);
     }
 
@@ -137,7 +137,7 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
     }
 
     public void rescheduleTaskFromTemplate(Poll poll) {
-        if (! needTask(poll))
+        if (!needTask(poll))
             return;
 
         var period = poll.getSchedule().getType().getCountDays();
@@ -147,16 +147,17 @@ public class ScheduledTaskServiceImpl implements ru.pstu.poll_system_service.bus
     }
 
     private boolean needTask(Poll poll) {
-        return ! (poll.getSchedule().getType().equals(ScheduleType.NO_SCHEDULE)
+        return !(poll.getSchedule().getType().equals(ScheduleType.NO_SCHEDULE)
                 || !StatusEnum.getWorkStatus().contains(poll.getStatus()));
     }
 
     private void recreate(@NotNull Poll poll) {
         var startDate = new Date();
-        var endDate = calculateNextEndDate(LocalDate.from(startDate.toInstant()),poll.getDuration());
+        var endDate = calculateNextEndDate(LocalDate.from(startDate.toInstant()), poll.getDuration());
         var duration = getDateDiff(startDate, endDate);
 
         if (duration != poll.getDuration()) {
+            log.info("Неверный рассчёт дат!");
             throw new IllegalArgumentException("Неверный рассчёт дат!");
         }
 

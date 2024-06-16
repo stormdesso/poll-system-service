@@ -2,9 +2,12 @@ package ru.pstu.poll_system_service.business.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
 import ru.pstu.poll_system_service.business.dto.RelocationRequestDto;
@@ -21,6 +24,7 @@ import static ru.pstu.poll_system_service.web.security.constant.SystemObjectCons
 @Slf4j
 @Controller
 @RequiredArgsConstructor
+@Validated
 public class RelocationController {
 
     private final AddressService addressService;
@@ -31,7 +35,7 @@ public class RelocationController {
     @PutMapping("/address/add")
     public void add(
             @Parameter(description = "Адрес")
-            @RequestBody(required = true) AddressInfo addressInfo) {
+            @RequestBody(required = true) @Valid AddressInfo addressInfo) {
         addressService.add(addressInfo);
     }
 
@@ -41,7 +45,7 @@ public class RelocationController {
     @PutMapping("/address/delete")
     public void delete(
             @Parameter(description = "Адрес")
-            @RequestBody(required = true) AddressInfo addressInfo) {
+            @RequestBody(required = true) @Valid AddressInfo addressInfo) {
         addressService.delete(addressInfo.getId(), addressInfo.getApartmentNumber());
     }
 
@@ -51,8 +55,8 @@ public class RelocationController {
     @DeleteMapping("/request/deny")
     public void deny(
             @Parameter(description = "Адрес (id - можно не заполнять)")
-            @RequestBody(required = true) AddressInfo addressInfo,
-            @RequestParam Long userId,
+            @RequestBody(required = true) @Valid AddressInfo addressInfo,
+            @RequestParam @Min(1) Long userId,
             @RequestParam RelocationAction relocationAction) {
         addressService.deny(addressInfo, userId, relocationAction);
     }
@@ -63,8 +67,8 @@ public class RelocationController {
     @PostMapping("/request/accept")
     public void accept(
             @Parameter(description = "Адрес (id - можно не заполнять)")
-            @RequestBody(required = true) AddressInfo addressInfo,
-            @RequestParam Long userId,
+            @RequestBody(required = true) @Valid AddressInfo addressInfo,
+            @RequestParam @Min(1) Long userId,
             @RequestParam RelocationAction relocationAction) {
         addressService.accept(addressInfo, userId, relocationAction);
     }

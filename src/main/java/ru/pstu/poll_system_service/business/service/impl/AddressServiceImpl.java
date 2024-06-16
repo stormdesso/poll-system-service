@@ -2,8 +2,11 @@ package ru.pstu.poll_system_service.business.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.pstu.poll_system_service.business.dto.RelocationRequestDto;
 import ru.pstu.poll_system_service.business.mapper.RelocationRequestMapper;
 import ru.pstu.poll_system_service.business.service.AddressService;
@@ -28,6 +31,7 @@ import static ru.pstu.poll_system_service.web.common.UserDetailsUtil.getCurrentU
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AddressServiceImpl implements AddressService {
 
     private final RelocationRepository relocationRepository;
@@ -40,7 +44,7 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     @Transactional
-    public void add(@NotNull AddressInfo addressInfo){
+    public void add(@NotNull AddressInfo addressInfo) {
         relocationRepository.save(new RelocationRequest(RelocationRequestKey.builder()
                 .action(ADD)
                 .apartmentNumber(addressInfo.getApartmentNumber().toString())
@@ -55,8 +59,10 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public void delete(@NotNull Long addressId, @NotNull Long apartmentNumber) {
         var address = userWithAddressRepository.findByOwnershipIdAndAddressIdAndApartmentNumber(
-                addressId, getCurrentUserFromContext().getOwnershipId(), apartmentNumber).orElseThrow(() ->
-                new IllegalArgumentException("Указан несуществующий адрес!"));
+                addressId, getCurrentUserFromContext().getOwnershipId(), apartmentNumber).orElseThrow(() -> {
+            log.info("Указан несуществующий адрес!");
+            return new ResponseStatusException(HttpStatus.NOT_FOUND, "Указан несуществующий адрес!");
+        });
 
         relocationRepository.save(new RelocationRequest(RelocationRequestKey.builder()
                 .action(DELETE)
@@ -71,14 +77,14 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public void deny(@NotNull AddressInfo addressInfo, @NotNull Long userId, @NotNull RelocationAction relocationAction) {
         relocationRepository.delete(RelocationRequest.builder()
-                        .relocationRequestKey(RelocationRequestKey.builder()
-                                .userId(userId)
-                                .city(addressInfo.getCity())
-                                .street(addressInfo.getStreet())
-                                .houseNumber(addressInfo.getHouseNumber())
-                                .apartmentNumber(addressInfo.getApartmentNumber().toString())
-                                .action(relocationAction)
-                                .build())
+                .relocationRequestKey(RelocationRequestKey.builder()
+                        .userId(userId)
+                        .city(addressInfo.getCity())
+                        .street(addressInfo.getStreet())
+                        .houseNumber(addressInfo.getHouseNumber())
+                        .apartmentNumber(addressInfo.getApartmentNumber().toString())
+                        .action(relocationAction)
+                        .build())
                 .build());
     }
 
@@ -86,7 +92,10 @@ public class AddressServiceImpl implements AddressService {
     @Transactional
     public void accept(@NotNull AddressInfo addressInfo, @NotNull Long userId, @NotNull RelocationAction relocationAction) {
         var ownership = userWithAddressRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Неверный user id!"))
+                .orElseThrow(() -> {
+                    log.info("Неверный user id!");
+                    return new ResponseStatusException(HttpStatus.NOT_FOUND, "Неверный user id!");
+                })
                 .getOwnership();
 
         var addressOpt = addressRepository
@@ -96,18 +105,18 @@ public class AddressServiceImpl implements AddressService {
                         addressInfo.getHouseNumber());
 
         Address address;
-        if(relocationAction == ADD){
+        if (relocationAction == ADD) {
             address = addressOpt.orElseGet(() -> addressRepository.save(Address.builder()
                     .city(addressInfo.getCity())
                     .street(addressInfo.getStreet())
                     .houseNumber(addressInfo.getHouseNumber())
                     .build()));
+        } else {
+            address = addressRepository.findById(addressInfo.getId()).orElseThrow(() -> {
+                log.info("Указанный адрес не существует");
+                return new ResponseStatusException(HttpStatus.NOT_FOUND, "Указанный адрес не существует");
+            });
         }
-        else {
-            address = addressRepository.findById(addressInfo.getId()).orElseThrow(() ->
-                    new IllegalArgumentException("Указанный адрес не существует"));
-        }
-
 
         var ownershipAddressKey = OwnershipAddressKey.builder()
                 .addressId(address.getId())
@@ -115,14 +124,13 @@ public class AddressServiceImpl implements AddressService {
                 .apartmentNumber(addressInfo.getApartmentNumber())
                 .build();
 
-        if(relocationAction == ADD){
+        if (relocationAction == ADD) {
             ownershipAddressRepository.save(OwnershipAddress.builder()
                     .ownership(ownership)
                     .ownershipAddressKey(ownershipAddressKey)
                     .address(address)
                     .build());
-        }
-        else{
+        } else {
             ownershipAddressRepository.deleteByKey(
                     ownershipAddressKey.getAddressId(),
                     ownershipAddressKey.getOwnershipId(),
@@ -148,5 +156,4 @@ public class AddressServiceImpl implements AddressService {
         var req = relocationRepository.findAll();
         return RelocationRequestMapper.INSTANCE.map(req);
     }
-
 }

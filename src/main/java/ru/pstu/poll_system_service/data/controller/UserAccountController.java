@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
 import ru.pstu.poll_system_service.data.service.UserService;
@@ -18,6 +19,7 @@ import static ru.pstu.poll_system_service.web.security.constant.SystemObjectCons
 @RestController
 @RequestMapping("/api/v1/user/account")
 @RequiredArgsConstructor
+@Validated
 public class UserAccountController {
 
     private final UserService userService;

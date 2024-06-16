@@ -1,6 +1,10 @@
 package ru.pstu.poll_system_service.web.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,12 +17,17 @@ public class AddressInfo {
 
     private Long id;
 
+    @NotBlank(message = "Поле city не должно быть пустым")
     private String city;
 
+    @NotBlank(message = "Поле street не должно быть пустым")
     private String street;
 
+    @NotBlank(message = "Поле houseNumber не должно быть пустым")
     private String houseNumber;
 
+    @NotNull
+    @Positive(message = "Поле apartmentNumber не может быть меньше 1")
     private Long apartmentNumber;
 
     @Override

@@ -2,8 +2,11 @@ package ru.pstu.poll_system_service.data.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.pstu.poll_system_service.business.aspect.HasPermission;
 import ru.pstu.poll_system_service.business.service.ScheduledTaskService;
@@ -25,7 +28,8 @@ import static ru.pstu.poll_system_service.web.security.constant.SystemObjectCons
 @RequestMapping("/api/v1/poll")
 @Controller
 @RequiredArgsConstructor
-public class PollController{
+@Validated
+public class PollController {
 
     private final PollService pollService;
     private final ScheduledTaskService scheduledTaskService;
@@ -38,9 +42,9 @@ public class PollController{
             @Parameter(description = "Название поля по которому будет осуществляться сортировка(asc - default, desc -fieldName)")
             @RequestParam(required = false) String sort,
             @Parameter(description = "Количество результатов на странице")
-            @RequestParam(required = false) Long limit,
+            @RequestParam(required = false) @Min(1) Long limit,
             @Parameter(description = "Номер страницы с результатом")
-            @RequestParam(required = false) Long page,
+            @RequestParam(required = false) @Min(0) Long page,
             @Parameter(description = "Параметры фильтрации")
             @RequestBody(required = false) List<PairParameter> filteredFieldsByValue){
 
@@ -58,9 +62,9 @@ public class PollController{
             @Parameter(description = "Название поля по которому будет осуществляться сортировка(asc - default, desc -fieldName)")
             @RequestParam(required = false) String sort,
             @Parameter(description = "Количество результатов на странице")
-            @RequestParam(required = false) Long limit,
+            @RequestParam(required = false) @Min(1) Long limit,
             @Parameter(description = "Номер страницы с результатом")
-            @RequestParam(required = false) Long page,
+            @RequestParam(required = false) @Min(0) Long page,
             @Parameter(description = "Параметры фильтрации")
             @RequestBody(required = false) List<PairParameter> filteredFieldsByValue){
 
@@ -75,7 +79,7 @@ public class PollController{
     @ResponseBody
     @PostMapping("/vote")
     public void vote(
-            @Parameter(description = "Идентификатор опроса") @RequestParam(required = true) Long pollId,
+            @Parameter(description = "Идентификатор опроса") @RequestParam(required = true) @Min(1) Long pollId,
             @Parameter(description = "Вариант опроса") @RequestBody(required = true) List<PollValueDto> pollValueDto){
         pollService.vote(pollId, pollValueDto);
     }

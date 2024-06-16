@@ -6,10 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.pstu.poll_system_service.data.enums.RoleEnum;
 import ru.pstu.poll_system_service.data.mapper.UserMapper;
 import ru.pstu.poll_system_service.data.model.user.Role;
@@ -82,18 +84,22 @@ public class UserServiceImpl implements UserService{
         final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
 
         if (userDto.getFullName() == null || !userDto.getFullName().matches("[a-zA-Zа-яА-Я\\s]+")) {
+            log.info("Ошибка: ФИО должно состоять только из букв.");
             throw new IllegalArgumentException("Ошибка: ФИО должно состоять только из букв.");
         }
 
         if (userDto.getPhoneNumber() == null || !userDto.getPhoneNumber().matches("\\d+")) {
+            log.info("Ошибка: Номер телефона не должен содержать букв.");
             throw new IllegalArgumentException("Ошибка: Номер телефона не должен содержать букв.");
         }
 
         if (userDto.getBirthdate() == null || !userDto.getBirthdate().before(new Date())) {
+            log.info("Ошибка: Дата рождения должна быть меньше сегодняшней даты.");
             throw new IllegalArgumentException("Ошибка: Дата рождения должна быть меньше сегодняшней даты.");
         }
 
         if (userDto.getEmail() == null || ! Pattern.matches(EMAIL_REGEX, userDto.getEmail())) {
+            log.info("Ошибка: Неверный адрес электронной почты.");
             throw new IllegalArgumentException("Ошибка: Неверный адрес электронной почты.");
         }
 
@@ -114,7 +120,8 @@ public class UserServiceImpl implements UserService{
             public UserDetails loadUserByUsername(String username) {
                 log.debug("Поиск пользователя с login:{} в базе", username);
                 var user =  userRepository.findUserByLogin(username);
-                if (user.isEmpty()){
+                if (user.isEmpty()) {
+                    log.info("Пользователь не найден");
                     throw new AccessDeniedException("Пользователь не найден");
                 }
                 return new SecurityUser(user.get(), Collections.emptyList());
@@ -217,8 +224,10 @@ public class UserServiceImpl implements UserService{
 
         addressInfos.forEach(addressInfo -> {
             var addressLocal = addressRepository.findByCityAndStreetAndHouseNumberEquals(
-                    addressInfo.getCity(), addressInfo.getStreet(), addressInfo.getHouseNumber()).orElseThrow(() ->
-                    new IllegalArgumentException("Указанный адрес не существует"));
+                    addressInfo.getCity(), addressInfo.getStreet(), addressInfo.getHouseNumber()).orElseThrow(() -> {
+                        log.info("Указанный адрес не существует");
+                        return new ResponseStatusException(HttpStatus.NOT_FOUND, "Указанный адрес не существует");
+            });
             addresses.add(addressLocal);
         });
 
