@@ -32,6 +32,18 @@ export const RoleSelectionScreenStyle = StyleSheet.create({
 
     RoleNameText: {
         color: lableColor,
+    },
+
+    RoleNameTextRootBox: {
+        backgroundColor: backgroundColor,
+        marginTop: 10,
+        padding: 16,
+        alignItems: "center",
+    },
+
+    RoleNameTextRoot: {
+        color: lableColor,
+        textAlign: "center"
     }
 
 });

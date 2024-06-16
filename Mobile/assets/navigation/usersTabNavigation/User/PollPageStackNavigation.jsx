@@ -10,7 +10,7 @@ export const PollPageStackNavigation = () => {
   return (
       <Stack.Navigator>
         <Stack.Screen
-          name="Опросы"
+          name="Перечень опросов"
           component={PollPage} // Заменил на UserTabNavigation
           options={{ headerShown: false }}
         />

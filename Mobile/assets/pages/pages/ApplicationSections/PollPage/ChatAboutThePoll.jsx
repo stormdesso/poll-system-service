@@ -15,7 +15,8 @@ import {getClientTimeZone} from "../../../../scripts/getClientTimeZone"
 import {convertDate} from "../../../../scripts/convertDate"
 import GetHistoryMessage from "../../../../APIConnection/GetHistoryMessage"
 import * as SecureStore from 'expo-secure-store';
-import sendMessage from "../../../../Img/Icon/sendMessage.png"
+import SendMessage from '../../../../APIConnection/SendMessage';
+import sendMessageImg from "../../../../Img/Icon/sendMessage.png"
 
 import {ChatAboutThePollStyle} from "../../../style/ChatAboutThePollStyle"
 import { ColorProperties } from '../../../../Data/ColorProperties';
@@ -33,19 +34,23 @@ export const ChatAboutThePoll = ({item}) => {
   const [backgroundColor, setBackgroundColor] = useState(ColorProperties.backgroundColor);
   const [color, setTextColor] = useState(ColorProperties.textColor);
   const [borderColor, setBorderColor] = useState(ColorProperties.inputBlockBorderColor);
+  const { regionName, cityName } = getClientTimeZone();
   
+  const fetchData = () => {
+    GetHistoryMessage(item.id, regionName, cityName)
+          .then((data) => {
+            setHistoryMessages(data);
+          })
+  }
+
   //Получаем часовой пояс клиента при загрузке страницы
   useEffect(() => {
-    const { regionName, cityName } = getClientTimeZone();
     SecureStore.getItemAsync('Id')
     .then(id => {
       setUserId(id)
     })
 
-    GetHistoryMessage(item.id, regionName, cityName)
-          .then((data) => {
-            setHistoryMessages(data);
-          })
+    fetchData()
 
     const updateColor = () => {
       setBackgroundColor(ColorProperties.backgroundColor);
@@ -57,73 +62,25 @@ export const ChatAboutThePoll = ({item}) => {
     return () => ColorProperties.unsubscribe(updateColor);
   },[])
 
-  // const stompClient = useRef(null);
-  //   const [connected, setConnected] = useState(false);
-  //   const [name, setName] = useState('');
-  //   const [messages, setMessages] = useState([]);
+  const sendMessage = () => {
+    const now = new Date();
 
+    let newMessage = {
+      userId: userId,
+      dateSentMessage: now.toISOString(),
+      message: message
+    }
+
+    SendMessage(newMessage, item.id)
+    .then((result) => {
+      setMessage('')
+      fetchData()
+    })
     
-  //   useEffect(() => {
-  //       stompClient.current = new Client({
-  //           brokerURL: 'http://192.168.0.159:8080/gs-guide-websocket',
-  //           debug: (str) => {
-  //               console.log(new Date(), str);
-  //           },
-  //       });
+  }
 
-  //       stompClient.current.onConnect = (frame) => {
-  //           console.log('Connected: ' + frame);
-  //           console.log('УРА!');
-  //           setConnected(true);
-  //           stompClient.current.subscribe('/topic/greetings', (message) => {
-  //               showGreeting(JSON.parse(message.body).content);
-  //           });
-  //       };
 
-  //       stompClient.current.onStompError = (frame) => {
-  //           console.error('Broker reported error: ' + frame.headers['message']);
-  //           console.error('Additional details: ' + frame.body);
-  //       };
 
-  //       stompClient.current.onWebSocketError = (error) => {
-  //           console.error('WebSocket error: ' + error);
-  //       };
-
-  //       stompClient.current.onDisconnect = () => {
-  //           console.log('Disconnected');
-  //           setConnected(false);
-  //       };
-  //   }, []);
-
-  //   const connect = () => {
-  //       if (!connected && stompClient.current) {
-  //           console.log('Activating STOMP client...');
-  //           stompClient.current.activate();
-  //       }
-  //   };
-
-  //   const disconnect = () => {
-  //       if (stompClient.current && connected) {
-  //           console.log('Deactivating STOMP client...');
-  //           stompClient.current.deactivate();
-  //       }
-  //   };
-
-  //   const sendName = () => {
-  //     if (stompClient.current && connected && name) {
-  //         console.log('Sending name: ' + name);
-  //         stompClient.current.publish({
-  //             destination: '/app/hello',
-  //             body: JSON.stringify({ 'name': name })
-  //         });
-  //     } else {
-  //         console.log('STOMP client is not connected or name is empty.');
-  //     }
-  // };
-
-  //   const showGreeting = (message) => {
-  //       setMessages((prevMessages) => [...prevMessages, message]);
-  //   };
   return(
     <View style={ChatAboutThePollStyle.Container}>
       <View style={ChatAboutThePollStyle.MessageBox}>
@@ -167,9 +124,9 @@ export const ChatAboutThePoll = ({item}) => {
           ]}
           placeholderTextColor={color}
         />
-        <Pressable style = {ChatAboutThePollStyle.ImageBox}>
+        <Pressable style = {ChatAboutThePollStyle.ImageBox} onPress={sendMessage}>
           <Image 
-            source={sendMessage}
+            source={sendMessageImg}
             style = {ChatAboutThePollStyle.Image}
           />
         </Pressable>

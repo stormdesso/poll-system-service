@@ -16,6 +16,8 @@ const RoleSelectionScreen = ({ route, navigation }) => {
       setBorderColor(ColorProperties.inputBlockBorderColor)
     };
 
+    console.log(roles)
+
     ColorProperties.subscribe(updateColor);
     return () => ColorProperties.unsubscribe(updateColor);
   }, []);
@@ -30,17 +32,26 @@ const RoleSelectionScreen = ({ route, navigation }) => {
   
 
   return (
-    <View style={[RoleSelectionScreenStyle.RoleSelectionBox, {backgroundColor}]}>
-      <Text style={[RoleSelectionScreenStyle.LabelStyle]}>Выберите роль:</Text>
+    <View style={[RoleSelectionScreenStyle.RoleSelectionBox, { backgroundColor }]}>
+      <Text style={RoleSelectionScreenStyle.LabelStyle}>Выберите роль:</Text>
       {roles.map((role) => (
-        <TouchableOpacity 
-          style={[RoleSelectionScreenStyle.RoleButton, {borderColor}, {backgroundColor}]}
-          key={role} 
-          onPress={() => navigateToRole(role)}
-        >
-          <Text style = {[RoleSelectionScreenStyle.RoleNameText]}>{role}</Text>
-        </TouchableOpacity>
+        role !== "root" && (
+          <TouchableOpacity 
+            style={[RoleSelectionScreenStyle.RoleButton, { borderColor, backgroundColor }]}
+            key={role} 
+            onPress={() => navigateToRole(role)}
+          >
+            <Text style={RoleSelectionScreenStyle.RoleNameText}>{role}</Text>
+          </TouchableOpacity>
+        )
       ))}
+      {roles.includes("root") && (
+        <View style={[RoleSelectionScreenStyle.RoleNameTextRootBox, { backgroundColor }]}>
+          <Text style={RoleSelectionScreenStyle.RoleNameTextRoot}>
+            Авторизация под системной ролью "Супер-пользователь" не доступна в мобильной версии приложения "Мой дом"
+          </Text>
+        </View>
+      )}
     </View>
   );
 };

@@ -19,7 +19,8 @@ export const transformObjectToCreatePoll = (inputData) => {
         name: inputData.name,
         startDate: isoStringStart, // Преобразуем в ISO строку
         endDate: isoStringEnd, // Преобразуем в ISO строку
-        maxNumberAnswersByUser: parseInt(inputData.maxNumberAnswersByUser, 10) || 1 // Преобразуем в число
+        maxNumberAnswersByUser: parseInt(inputData.maxNumberAnswersByUser, 10) || 1, // Преобразуем в число
+        scheduleType: CyclicalType[inputData.cyclical]
     }
     
   };

@@ -82,16 +82,19 @@ export const ChatAboutThePollStyle = StyleSheet.create({
 
   Input: {
     paddingLeft: 10,
-    width: "89%"
+    width: "89%",
+    zIndex: 1
   },
 
   ImageBox: {
     marginLeft: "auto",
-    paddingRight: 10
+    paddingRight: 10,
+    zIndex: 30
   },
 
   Image: {
     width: 40,
     height: 40,
+    zIndex: 30
   },
 });

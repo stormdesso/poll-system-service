@@ -29,14 +29,14 @@ export const Registration = ({ navigation }) => {
 
   //Изменение текста в полях
   const [inputValues, setInputValues] = useState({
-    fullName: "Пеленев Денис",
-    birthdate: "07.01.2001",
-    addressInfos: "г Пермь, ул улица 5, д 5, кв 2",
-    login: "Reeji",
-    password: "DENIS2486denis!",
-    repeatPassword: "DENIS2486denis!",
-    phoneNumber: "+7 (919) 471-70-86",
-    email: "denis-pelenev@inbox.ru",
+    fullName: "",
+    birthdate: "",
+    addressInfos: "",
+    login: "",
+    password: "",
+    repeatPassword: "",
+    phoneNumber: "",
+    email: "",
   });
 
   //Ошибки в полях
