@@ -26,7 +26,7 @@ public class AddressInfo {
     @NotBlank(message = "Поле houseNumber не должно быть пустым")
     private String houseNumber;
 
-    @NotNull
+    @NotNull(message = "Поле apartmentNumber не может быть null")
     @Positive(message = "Поле apartmentNumber не может быть меньше 1")
     private Long apartmentNumber;
 
