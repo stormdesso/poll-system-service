@@ -3,6 +3,7 @@ package ru.pstu.poll_system_service.data.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
@@ -65,5 +66,12 @@ public class UserAccountController {
     @DeleteMapping("/delete/users")
     public void deleteAccountsInfos(@RequestParam List<Long> usersIds) {
         userService.deleteAccountsInfos(usersIds);
+    }
+
+    @Operation(description = "Получение пользователя по id")
+    @HasPermission(resource = USER_ADMINISTRATION, action = READ)
+    @GetMapping("/{userId}")
+    public UserDto getById(@PathVariable @Positive Long userId) {
+        return userService.findUserById(userId);
     }
 }

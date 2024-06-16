@@ -1,6 +1,7 @@
 package ru.pstu.poll_system_service.data.service.impl;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -56,9 +57,6 @@ public class UserServiceImpl implements UserService{
     private final OwnershipAddressRepository ownershipAddressRepository;
 
     private final OwnershipRepository ownershipRepository;
-
-
-
 
     private List<RoleEnum> getCurrentRoles(){
        List<String> roles =  getCurrentUserFromContext().getRole().stream().map(Role::getRoleName).toList();
@@ -141,6 +139,13 @@ public class UserServiceImpl implements UserService{
     private List<UserDto> findUsers(List<Long> userIds) {
         var users = userWithAddressRepository.findAllByIdIn(userIds);
         return UserMapper.INSTANCE.convertToUserDtos(users);
+    }
+
+    @Override
+    public UserDto findUserById(@Positive Long userId) {
+        var users = findUsers(List.of(userId));
+        if (users.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Пользователь не найден");
+        return users.getFirst();
     }
 
     @Override
