@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  font-family: "Montserrat Alternates";
+}
+
+button, input {
+  font-family: "Montserrat Alternates";
+  border-radius: 5px;
+}
+
+code {
+  font-family: "Montserrat Alternates"
+}

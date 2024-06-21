@@ -1,0 +1,60 @@
+.user-card {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 10px;
+  background-color: #D9D9D9;
+}
+
+.user-header {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-header h2 {
+  margin: 0;
+}
+
+.user-card .details {
+  margin: 8px 0;
+  font-weight: bold;
+  padding: 20px;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.edit-button,
+.block-button,
+.activate-button,
+.delete-button {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  width: 200px;
+}
+
+.edit-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.block-button {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.activate-button {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.delete-button {
+  background-color: #6c757d;
+  color: #fff;
+}
